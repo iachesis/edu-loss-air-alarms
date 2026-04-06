@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Air Alarms and Education in Ukraine</title>
+  <meta name="description" content="Public dashboard on the impact of air alarms on education in Ukraine.">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-copy">
+        <p class="eyebrow">Public analytical dashboard</p>
+        <h1>Air Alarms and Education in Ukraine</h1>
+        <p class="subtitle">How air alarms disrupt instruction, homework, and sleep across Ukraine’s education landscape.</p>
+      </div>
+      <div class="header-actions">
+        <button id="open-rankings-button" class="button button-secondary">Rankings</button>
+        <button id="methodology-button" class="button button-secondary" aria-controls="methodology-drawer" aria-expanded="false">
+          About the methodology, metrics and assumptions
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content" class="dashboard-layout">
+      <section class="toolbar card" aria-label="Dashboard filters">
+        <div class="toolbar-grid">
+          <div class="control-group">
+            <label for="metric-select">Metric</label>
+            <select id="metric-select"></select>
+          </div>
+
+          <div class="control-group">
+            <label for="time-granularity-select">Time view</label>
+            <select id="time-granularity-select"></select>
+          </div>
+
+          <div class="control-group" id="school-year-group">
+            <label for="school-year-select">School year</label>
+            <select id="school-year-select"></select>
+          </div>
+
+          <div class="control-group" id="school-month-group">
+            <label for="school-month-select">School month</label>
+            <select id="school-month-select"></select>
+          </div>
+
+          <div class="control-group">
+            <label for="rank-scope-select">Ranking scope</label>
+            <select id="rank-scope-select">
+              <option value="current">Current selection</option>
+              <option value="national">National</option>
+            </select>
+          </div>
+
+          <div class="toolbar-actions">
+            <button id="reset-button" class="button button-primary">Reset view</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="ghost-hooks" aria-hidden="true">
+        <div id="breadcrumbs"></div>
+        <dl id="selection-summary-list"></dl>
+      </div>
+
+      <section class="hero-layout">
+        <section class="map-stage card">
+          <div id="map-status" class="status-inline" aria-live="polite"></div>
+
+          <div class="map-frame">
+            <div class="map-overlay map-overlay-left">
+              <p id="map-caption" class="map-context">Ukraine · Instruction disruption minutes · 2025_2026</p>
+            </div>
+
+            <div class="map-overlay map-overlay-right">
+              <button id="back-to-oblasts-button" class="button button-secondary hidden">Back to oblasts</button>
+            </div>
+
+            <div id="map" class="map-container" role="img" aria-label="Interactive map"></div>
+          </div>
+        </section>
+
+        <aside class="right-rail">
+          <section class="context-panel card" aria-label="Selection details">
+            <div class="compact-card-head">
+              <h2 class="panel-title">Focused summary</h2>
+            </div>
+            <div id="detail-panel-content" class="detail-panel-content"></div>
+          </section>
+
+          <section class="trend-card card">
+            <div class="compact-card-head">
+              <h2 class="panel-title">Trend</h2>
+              <p id="trend-caption" class="card-caption">Selected metric over time.</p>
+            </div>
+            <div id="chart-status" class="status-inline" aria-live="polite"></div>
+            <div class="chart-wrap">
+              <canvas id="trend-chart" aria-label="Trend chart"></canvas>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <aside id="rankings-drawer" class="drawer drawer-wide" aria-hidden="true" aria-labelledby="rankings-title">
+    <div class="drawer-backdrop" id="rankings-drawer-backdrop"></div>
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <div>
+          <h2 id="rankings-title">Ranking</h2>
+          <p id="ranking-caption" class="card-caption">Top areas by selected metric.</p>
+        </div>
+        <button id="close-rankings-button" class="button button-secondary" aria-label="Close rankings panel">Close</button>
+      </div>
+      <div class="drawer-content">
+        <div class="table-wrap drawer-table-wrap">
+          <table class="ranking-table">
+            <thead>
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">Area</th>
+                <th scope="col" id="ranking-metric-header">Metric</th>
+                <th scope="col">Students</th>
+              </tr>
+            </thead>
+            <tbody id="ranking-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <aside id="methodology-drawer" class="drawer" aria-hidden="true" aria-labelledby="methodology-title">
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <h2 id="methodology-title">About the methodology, metrics and assumptions</h2>
+        <button id="methodology-close-button" class="button button-secondary" aria-label="Close methodology panel">Close</button>
+      </div>
+
+      <div class="drawer-content">
+        <section>
+          <h3>Methodology</h3>
+
+          <h4>Instruction disruption</h4>
+          <p>Instruction disruption is estimated within the school-day window of 08:00–15:00. When an air alarm overlaps this window, the overlapping minutes are counted as disrupted instruction time. A 5-minute return-to-class allowance is then added after each overlapping event fragment to reflect the time needed to resume learning once the alarm ends.</p>
+
+          <h4>Homework disruption</h4>
+          <p>Homework disruption is estimated within the assumed homework window of 16:00–20:00. It captures alarm-related disruption outside formal classroom time. No additional return-time allowance is added for this window.</p>
+
+          <h4>Sleep disruption</h4>
+          <p>Sleep disruption is estimated within the assumed sleep window of 22:00–06:00. It is used as an indirect education-related measure, reflecting conditions that may affect rest, fatigue, and next-day readiness to learn.</p>
+
+          <h4>School-year filtering</h4>
+          <p>The analytical dataset excludes weekends and assumed vacation periods and retains only agreed school-year windows. The dashboard is therefore intended to describe disruption during periods when learning activity would reasonably be expected to occur.</p>
+
+          <h4>How events are treated</h4>
+          <p>Alarm intervals that are very close to one another are merged during preprocessing in order to avoid overstating disruption through artificial fragmentation. The dashboard therefore reflects processed disruption events rather than raw source intervals.</p>
+        </section>
+
+        <section>
+          <h3>About the metrics</h3>
+
+          <h4>Instruction disruption minutes</h4>
+          <p>Total estimated minutes during which teaching time was affected by air alarms within the school-day window. This is the main measure of direct disruption to classroom learning.</p>
+
+          <h4>Homework disruption minutes</h4>
+          <p>Total estimated minutes during which the assumed homework period was affected by air alarms. This captures interference with learning outside formal school hours.</p>
+
+          <h4>Sleep disruption minutes</h4>
+          <p>Total estimated minutes during which the assumed sleep window was affected by air alarms. This is an indirect education-related measure reflecting possible effects on rest and next-day learning conditions.</p>
+
+          <h4>Instruction disruption events</h4>
+          <p>Count of processed alarm event fragments that overlapped the school-day instruction window. This shows how often instruction was interrupted, regardless of how long the interruptions lasted.</p>
+
+          <h4>Affected instruction days</h4>
+          <p>Number of days on which at least one air alarm disrupted the instruction window. This shows how widely disruption is spread across the calendar, not just how long it lasted.</p>
+
+          <h4>Students total</h4>
+          <p>Total number of students associated with the selected geography and time context in the education dataset. This is the baseline population for interpreting scale.</p>
+
+          <h4>Students in person</h4>
+          <p>Number of students studying offline, physically present in schools. This is the most relevant group for direct school-site exposure and shelter-related planning.</p>
+
+          <h4>Students in person (expanded)</h4>
+          <p>Number of students in offline plus mixed formats. This broader measure captures a wider group of school-connected learners who may still be affected by school-site conditions.</p>
+
+          <h4>Students online</h4>
+          <p>Number of students studying remotely. These students are less directly exposed to school-site interruption but remain important for contextual interpretation.</p>
+
+          <h4>Instruction minutes per in-person student</h4>
+          <p>Estimated instruction disruption minutes divided by the number of in-person students. This expresses average direct disruption burden per offline student.</p>
+
+          <h4>Instruction minutes per in-person student (expanded)</h4>
+          <p>Estimated instruction disruption minutes divided by the expanded in-person population. This provides a broader measure of disruption burden across school-connected learners.</p>
+
+          <h4>Homework minutes per student</h4>
+          <p>Estimated homework disruption minutes divided by total students. This expresses average out-of-class disruption burden per student.</p>
+
+          <h4>Sleep minutes per student</h4>
+          <p>Estimated sleep disruption minutes divided by total students. This expresses average night-time disruption burden per student and serves as a proxy for broader educational stress exposure.</p>
+        </section>
+
+        <section>
+          <h3>Assumptions and interpretation</h3>
+
+          <h4>What this dashboard is for</h4>
+          <p>This dashboard is designed for comparative analysis, prioritization, and public understanding. It helps show where disruption is greater, where students may face heavier burdens, and how patterns change across time and geography.</p>
+
+          <h4>What this dashboard is not for</h4>
+          <p>The dashboard should not be interpreted as a direct operational record of school-by-school interruption on a given day. It is based on modeled disruption exposure using processed air-alarm data, time-window assumptions, and aggregated education data.</p>
+
+          <h4>Important interpretation note</h4>
+          <p>All results depend on the defined time windows, preprocessing rules, and available education data. The metrics should therefore be read as analytical estimates rather than exact administrative counts of lost learning time.</p>
+        </section>
+      </div>
+    </div>
+  </aside>
+
+  <div id="global-status" class="global-status" aria-live="polite"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
