@@ -1,0 +1,556 @@
+{
+  "website_release_id": "AAE-WEB-REVISED-PROTOTYPE-0.3-STAGE3P3",
+  "website_release_status": "STAGE3_ALL_GEOGRAPHY_INTERACTION_CHECKPOINT",
+  "analytical_build_id": "AAE-FULL-9c94bc374ab5e7cf29",
+  "analytical_build_status": "FROZEN_APPROVED",
+  "analytical_source_sha256": "6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004",
+  "source_url": "https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/main/datasets/official_data_uk.csv",
+  "source_retrieved_at_utc": null,
+  "source_coverage_start_utc": "2022-03-15T16:10:34+00:00",
+  "source_coverage_end_utc": "2026-07-30T02:20:14+00:00",
+  "methodology_version": "0.2",
+  "indicator_dictionary_version": "0.3",
+  "input_data_contract_version": "0.1",
+  "assumptions_version": "0.1",
+  "geography_reference": {
+    "adm1_sha256": "a4d355ec7536a1248589e3dfbaccd7e76005c8909f1bd2d8194aa60988eb9362",
+    "adm3_sha256": "ac22b7ff802419e7182b21934d484b1defb8356666ed6b889040f69119ee3c14"
+  },
+  "school_linkage_coverage_pct": 100.0,
+  "learner_count_coverage_pct": 100.0,
+  "available_school_years": [
+    "2022_2023",
+    "2023_2024",
+    "2024_2025",
+    "2025_2026"
+  ],
+  "modality_rules_version": "0.1",
+  "prototype_scope": {
+    "all_oblasts": true,
+    "hromada_oblasts": [
+      "UA01",
+      "UA05",
+      "UA07",
+      "UA12",
+      "UA14",
+      "UA18",
+      "UA21",
+      "UA23",
+      "UA26",
+      "UA32",
+      "UA35",
+      "UA44",
+      "UA46",
+      "UA48",
+      "UA51",
+      "UA53",
+      "UA56",
+      "UA59",
+      "UA61",
+      "UA63",
+      "UA65",
+      "UA68",
+      "UA71",
+      "UA73",
+      "UA74",
+      "UA80"
+    ],
+    "hromada_payload_coverage": {
+      "controlled_hromadas": 1773,
+      "monthly_rows": 70920,
+      "school_year_rows": 7092,
+      "oblast_payload_pairs": 26
+    },
+    "hromada_geometry_coverage": {
+      "controlled_hromadas": 1773,
+      "features_available": 1767,
+      "source_geometry_gaps": 6,
+      "gap_policy": "unavailable_not_invented"
+    }
+  },
+  "files": [
+    {
+      "path": "geography/hromadas/UA01.geojson",
+      "size_bytes": 619101,
+      "sha256": "4f58a5ed3331a237ec4b9b60466ec99651335a043646690179722a3445d98a60"
+    },
+    {
+      "path": "geography/hromadas/UA05.geojson",
+      "size_bytes": 386692,
+      "sha256": "ce6e392751d84c9c115830e7723604774dcd9cbca0c935ca26bc24d6e68424a3"
+    },
+    {
+      "path": "geography/hromadas/UA07.geojson",
+      "size_bytes": 300225,
+      "sha256": "9d97a4c39e569f4b8181daf861ed3f1b8e83cf20e944e863a2167459660ee28c"
+    },
+    {
+      "path": "geography/hromadas/UA12.geojson",
+      "size_bytes": 416355,
+      "sha256": "8bd2958b4ea3f6996f0a79baa8cfa249de40f9c15d06f3a50263cdedc0b9efa8"
+    },
+    {
+      "path": "geography/hromadas/UA14.geojson",
+      "size_bytes": 412523,
+      "sha256": "739168e035e30a1a51e3f9b2322653510a489df23e2548966e1d5fb47011d1b4"
+    },
+    {
+      "path": "geography/hromadas/UA18.geojson",
+      "size_bytes": 385748,
+      "sha256": "ae2bb941ad9e1bc49837a45b118303df8308a8cab2effed052e17d5a38cab420"
+    },
+    {
+      "path": "geography/hromadas/UA21.geojson",
+      "size_bytes": 393084,
+      "sha256": "3c90780a0b4bb9cec0b944677912ff8bb925d0c8ef3982b5ba56956858876cb9"
+    },
+    {
+      "path": "geography/hromadas/UA23.geojson",
+      "size_bytes": 226060,
+      "sha256": "fb7c671c86b9902b7ad9fc9254d5e1cb28f679548f786c563552465384478e1c"
+    },
+    {
+      "path": "geography/hromadas/UA26.geojson",
+      "size_bytes": 349417,
+      "sha256": "12d111a0822c57f24e28814bbbc152d4cd6c911f5931566e76da3e6b7a65bc16"
+    },
+    {
+      "path": "geography/hromadas/UA32.geojson",
+      "size_bytes": 364501,
+      "sha256": "f347a8c7953e21b5be28511756ab4ee3871e1299655ec204de6f08ec28a7c776"
+    },
+    {
+      "path": "geography/hromadas/UA35.geojson",
+      "size_bytes": 227404,
+      "sha256": "a8ba5cd27460510ea99a676c9cf271fe27eece2bb1dc9f7ae9dbabac0ddfcba4"
+    },
+    {
+      "path": "geography/hromadas/UA44.geojson",
+      "size_bytes": 299931,
+      "sha256": "1f9fb5a1553c04a4a33dccf75633cdcbd1c9d2640a334cb53459dad40efe15c7"
+    },
+    {
+      "path": "geography/hromadas/UA46.geojson",
+      "size_bytes": 467819,
+      "sha256": "f476c8e5e3d384cffc31ebce5893b79400e0218d9b997e05d85848a461ab6fbd"
+    },
+    {
+      "path": "geography/hromadas/UA48.geojson",
+      "size_bytes": 200972,
+      "sha256": "5b2ee27b0c131111bc5ae1d3bf1ea6168e956df7723885d40d6dcac4f24fd285"
+    },
+    {
+      "path": "geography/hromadas/UA51.geojson",
+      "size_bytes": 356480,
+      "sha256": "373c08add993ff3375b32ad272db5a633b0d90d0d1738009f4bdbe7b631f0764"
+    },
+    {
+      "path": "geography/hromadas/UA53.geojson",
+      "size_bytes": 325516,
+      "sha256": "7c08e66b87ea1725aa63a5011f7474c08923c2cd81cf9297c40f7bf0cccdbfcb"
+    },
+    {
+      "path": "geography/hromadas/UA56.geojson",
+      "size_bytes": 328931,
+      "sha256": "8c130a4f68efd847cd2e8206ab92214a959e5438e211ae90d2fd6ea2ee0d0421"
+    },
+    {
+      "path": "geography/hromadas/UA59.geojson",
+      "size_bytes": 351898,
+      "sha256": "f8ac0ec015d55b5c1a82e5b2d50f209777bfc3b3ae53d031bc6818d995f9e9b6"
+    },
+    {
+      "path": "geography/hromadas/UA61.geojson",
+      "size_bytes": 260573,
+      "sha256": "ae4b18c24fed12d41ed75f9d2d5c6ade0a64222c624c0264b12117752e644ac0"
+    },
+    {
+      "path": "geography/hromadas/UA63.geojson",
+      "size_bytes": 405051,
+      "sha256": "538dd7e165b5836eaa7253e79c6ef848e8f55476d2d78a08098b2644b08cf6f1"
+    },
+    {
+      "path": "geography/hromadas/UA65.geojson",
+      "size_bytes": 163685,
+      "sha256": "fdab1c8169bd8b03f7cd13ffbe2f387f0302654ecdfebcd88719beb7744f9ac5"
+    },
+    {
+      "path": "geography/hromadas/UA68.geojson",
+      "size_bytes": 393994,
+      "sha256": "a9a473e2eefd1d02ae57aadea7db85831578476114d50a3b10300d2f16113f06"
+    },
+    {
+      "path": "geography/hromadas/UA71.geojson",
+      "size_bytes": 332465,
+      "sha256": "202e5357806cd426bf6893bad795cd0634fce9d91beab45e0eb23bb67972c2fc"
+    },
+    {
+      "path": "geography/hromadas/UA73.geojson",
+      "size_bytes": 201530,
+      "sha256": "c0e1dc2f0e15ff3b8eae97102336f2b03cb5444ab26457c7a3ad5778a54d8a21"
+    },
+    {
+      "path": "geography/hromadas/UA74.geojson",
+      "size_bytes": 447059,
+      "sha256": "1c32ccc9c5a1b2ef8dd0f8c37400c5c8ed7025b0f25077ba41fe9a0f203c4150"
+    },
+    {
+      "path": "geography/hromadas/UA80.geojson",
+      "size_bytes": 12393,
+      "sha256": "47ebd186fca2ea1e0e868cf632a2b455f713c8f2e63de5e94723b627d682e29d"
+    },
+    {
+      "path": "geography/oblasts.geojson",
+      "size_bytes": 581327,
+      "sha256": "9c05ab6fc7895881e422eb4227ce3a8125fa19519e95771736f0e79fb68eca9f"
+    },
+    {
+      "path": "geography_lookup.json",
+      "size_bytes": 4089290,
+      "sha256": "7479747f4c92466a33ff51399c79a0e24855d46d2b097f028763414bd2a6b0cf"
+    },
+    {
+      "path": "hromada_monthly_UA01.json",
+      "size_bytes": 7502282,
+      "sha256": "d5c656801042466887889830df042c7b02c711c2c59d37adf6ee7c902c2d679f"
+    },
+    {
+      "path": "hromada_monthly_UA05.json",
+      "size_bytes": 1621017,
+      "sha256": "c259f974f3921789ee01a6b0f839887e0a975021b18109d0b707bd62171fa12a"
+    },
+    {
+      "path": "hromada_monthly_UA07.json",
+      "size_bytes": 1387285,
+      "sha256": "eb5869c7e1297fc7081fb8b37575f05d04f9706a647bef4737ffddb2d2c527b5"
+    },
+    {
+      "path": "hromada_monthly_UA12.json",
+      "size_bytes": 2224180,
+      "sha256": "7e60f7bb542a3fa8bf9fc3f07d10c7f18539a7a048b23cfa5f1207760e7a2f52"
+    },
+    {
+      "path": "hromada_monthly_UA14.json",
+      "size_bytes": 1704148,
+      "sha256": "3eb66c315ac6f86a3efcfec5fb840e79c7e2ecf387e6fbc7383b9b9427ee4569"
+    },
+    {
+      "path": "hromada_monthly_UA18.json",
+      "size_bytes": 1698283,
+      "sha256": "01ffd2d33672c5b05b7e57fba88321d4f45eb7763248421485bdb41f7d1da91b"
+    },
+    {
+      "path": "hromada_monthly_UA21.json",
+      "size_bytes": 1644017,
+      "sha256": "c52b96996dc32ae915629aac88769076f1717d5164515d58c4c857f1bf19b947"
+    },
+    {
+      "path": "hromada_monthly_UA23.json",
+      "size_bytes": 1731415,
+      "sha256": "2d64d6e3d47df05aaf20e47df148ca8a649ffa8ab16733d2c9bc88a950ba2dc1"
+    },
+    {
+      "path": "hromada_monthly_UA26.json",
+      "size_bytes": 1590469,
+      "sha256": "ad8694df805c566adee3749cd78195464444544c2f1647df1b2133473e44d842"
+    },
+    {
+      "path": "hromada_monthly_UA32.json",
+      "size_bytes": 1779447,
+      "sha256": "0df9b7fc515e4e164309fda4441d9f592220e3f77101464ddcfc2218c997ccda"
+    },
+    {
+      "path": "hromada_monthly_UA35.json",
+      "size_bytes": 1265050,
+      "sha256": "480efe600fae5a1bfd6dbb5b9da7ba776367dc22e5b3088ec2cccd1fa2e4bddf"
+    },
+    {
+      "path": "hromada_monthly_UA44.json",
+      "size_bytes": 920452,
+      "sha256": "f13fe5f8926db96f6fe0e64163c07fffb346e433855cbc5ada8c91b9c0accffd"
+    },
+    {
+      "path": "hromada_monthly_UA46.json",
+      "size_bytes": 1878273,
+      "sha256": "c525a819a59c54b62f54f1449d36b15c147487efb2060adb7f9ee65b5723c822"
+    },
+    {
+      "path": "hromada_monthly_UA48.json",
+      "size_bytes": 1344490,
+      "sha256": "85251ee93eec365cde2d94b76c60da9bf09c1172e33b4f6f92e6a835598d743c"
+    },
+    {
+      "path": "hromada_monthly_UA51.json",
+      "size_bytes": 2348462,
+      "sha256": "b8b25addf1965293191b8acb928cbf4923aef269f8d3b18675a41ea3ba6bd6a6"
+    },
+    {
+      "path": "hromada_monthly_UA53.json",
+      "size_bytes": 1550888,
+      "sha256": "79eecc6a0e8e9cb184c317bcaf6a35a051c37f1edd30e0db8ebedb030c64b1af"
+    },
+    {
+      "path": "hromada_monthly_UA56.json",
+      "size_bytes": 1643772,
+      "sha256": "1361b8463935ab25d346c838d9e3e1c1df09de6cb9b32dfd668d5efc4f884675"
+    },
+    {
+      "path": "hromada_monthly_UA59.json",
+      "size_bytes": 1321191,
+      "sha256": "f985eee27260c5cc512b6a0f5b909b2a5a016bf3d1065fb6bc1fe727837005bd"
+    },
+    {
+      "path": "hromada_monthly_UA61.json",
+      "size_bytes": 1411082,
+      "sha256": "5a72626e22e6b1ea6dd84dd207c0ac6295d140979af0b03af836c0d9450c8551"
+    },
+    {
+      "path": "hromada_monthly_UA63.json",
+      "size_bytes": 1451685,
+      "sha256": "b3a62084a2037747f7f078ef4f4d9089b8469fff799e927bffe60a80dc109e93"
+    },
+    {
+      "path": "hromada_monthly_UA65.json",
+      "size_bytes": 1262954,
+      "sha256": "6c071e1892606ebbf7ee261d69807bd1c85453782225603e852757e465fb8e57"
+    },
+    {
+      "path": "hromada_monthly_UA68.json",
+      "size_bytes": 1541407,
+      "sha256": "0e7b14c281c077066b948a6216ef5753ac91478f83e0820eaafcd62d27339fc7"
+    },
+    {
+      "path": "hromada_monthly_UA71.json",
+      "size_bytes": 1696403,
+      "sha256": "d50cff2cb2aad4732b4531af9f48c9ff4646566b258e376eefded15b0b0002f1"
+    },
+    {
+      "path": "hromada_monthly_UA73.json",
+      "size_bytes": 1335484,
+      "sha256": "16b2e108feee8b28fc2a9158fd890acd9e157f7555307bc9be44dafef73bc19e"
+    },
+    {
+      "path": "hromada_monthly_UA74.json",
+      "size_bytes": 1473491,
+      "sha256": "457be8220f0f7cf8e2248047bc477adc8929c4493bcb18fc3bc01744d0b245d6"
+    },
+    {
+      "path": "hromada_monthly_UA80.json",
+      "size_bytes": 26254,
+      "sha256": "e4e826155a13d99088a03ff3fec67469b7d406d02171e33ca74888494ea7a493"
+    },
+    {
+      "path": "hromada_school_year_UA01.json",
+      "size_bytes": 762350,
+      "sha256": "bb640272882b5767b6bbf8177f608cdcf2f71b3f1c89183771ba9208d91f4b51"
+    },
+    {
+      "path": "hromada_school_year_UA05.json",
+      "size_bytes": 165655,
+      "sha256": "c28b45cedf1cbc7d8e9aec71702f97af30660c218055a7e644d22f4d025ee88b"
+    },
+    {
+      "path": "hromada_school_year_UA07.json",
+      "size_bytes": 141628,
+      "sha256": "1377dfc0600b87e1f32943fce6d340da6e17514222f8dbcf28b8c62a48fdd850"
+    },
+    {
+      "path": "hromada_school_year_UA12.json",
+      "size_bytes": 226636,
+      "sha256": "133a54df0854c1e29ef7105e4685b520f26d785262f8dd04616746100d947ea0"
+    },
+    {
+      "path": "hromada_school_year_UA14.json",
+      "size_bytes": 173989,
+      "sha256": "22c43298837811323dab2a533356bc6819d18e80e45ffa68ba2074c49d3c3f5e"
+    },
+    {
+      "path": "hromada_school_year_UA18.json",
+      "size_bytes": 173184,
+      "sha256": "15ad1347f4d0342f21ea37c04015c2e719c94c5ccda96dd15ad77dabd877a082"
+    },
+    {
+      "path": "hromada_school_year_UA21.json",
+      "size_bytes": 168080,
+      "sha256": "b9820b744b7ea061fadfa5da8adf2f4d5ad65ab5a704e8f03c4bd72dca1173e2"
+    },
+    {
+      "path": "hromada_school_year_UA23.json",
+      "size_bytes": 176359,
+      "sha256": "23218796098e695e033e1e2e0eb6b98c4bcd005bf944fb00c9930f3e29de398f"
+    },
+    {
+      "path": "hromada_school_year_UA26.json",
+      "size_bytes": 162513,
+      "sha256": "3b76c906949d656af7a6e9f43a74d0cda23754b3ca65b67fa7dbfe3da6187faf"
+    },
+    {
+      "path": "hromada_school_year_UA32.json",
+      "size_bytes": 181886,
+      "sha256": "7c28a8f24e7c507f69c30694984c20ce85bb42f569b8fd41822299691f8796f1"
+    },
+    {
+      "path": "hromada_school_year_UA35.json",
+      "size_bytes": 129341,
+      "sha256": "9badb920a912181436413efaf1ced458235d25e0f581c7e399c681543c27696e"
+    },
+    {
+      "path": "hromada_school_year_UA44.json",
+      "size_bytes": 93527,
+      "sha256": "dbb8d5b10653e590d31e77588137193391d748034cb6012ac738b78887baf039"
+    },
+    {
+      "path": "hromada_school_year_UA46.json",
+      "size_bytes": 191898,
+      "sha256": "55cd221ddb38d0e2418c383fd92955310a7e80083c2e33b07ba189f39d3bf13c"
+    },
+    {
+      "path": "hromada_school_year_UA48.json",
+      "size_bytes": 137309,
+      "sha256": "8207a4f98fe9fd53fd809e96d8299fe78fb5ec8e04dc9b0c76d6067bdfe1222e"
+    },
+    {
+      "path": "hromada_school_year_UA51.json",
+      "size_bytes": 239802,
+      "sha256": "a9c93a4419b410541c273a58efe110253b358faa8e7bd9e0c7a9e330337a7dd2"
+    },
+    {
+      "path": "hromada_school_year_UA53.json",
+      "size_bytes": 158477,
+      "sha256": "4e274538be23aefd9fe9b17d52f3a2d2ea8d41cb4aa285f5f95e40b7e9656c55"
+    },
+    {
+      "path": "hromada_school_year_UA56.json",
+      "size_bytes": 167854,
+      "sha256": "d3b7ab9216df43561ad02cd5a2d5d19157b5860bfb7ffe5e30532ad6323b4952"
+    },
+    {
+      "path": "hromada_school_year_UA59.json",
+      "size_bytes": 134873,
+      "sha256": "41c97776fb47ca2dcfda8f4cd80b7ff81a88b021139db8a87f77be0ba6abe978"
+    },
+    {
+      "path": "hromada_school_year_UA61.json",
+      "size_bytes": 144245,
+      "sha256": "c05008a6164e240c5076b1021665c497aeed56b3cd67517d8d72ec3d259f3958"
+    },
+    {
+      "path": "hromada_school_year_UA63.json",
+      "size_bytes": 147821,
+      "sha256": "a041886cf4ebcc7afee813eeb192b7a6c35761ac536abc6c1e0af4548c79f37a"
+    },
+    {
+      "path": "hromada_school_year_UA65.json",
+      "size_bytes": 129167,
+      "sha256": "9d8277f6cadf26cb11ccf1f6e17958cf0cba9acfce63c7e22500729aadea9615"
+    },
+    {
+      "path": "hromada_school_year_UA68.json",
+      "size_bytes": 158107,
+      "sha256": "cb225960f54ed2af39e950690a0d2829bd49ed466f1efc71a9c9e4e24bdee075"
+    },
+    {
+      "path": "hromada_school_year_UA71.json",
+      "size_bytes": 173079,
+      "sha256": "9383af042b551d47df86c2d099fc3e2ac6dae7a1609fec16947ff94777e66676"
+    },
+    {
+      "path": "hromada_school_year_UA73.json",
+      "size_bytes": 136102,
+      "sha256": "e3cc533f510ffaa0198c5a11ce0ed95bca2042f91efbdf0b3fd92638ef67d613"
+    },
+    {
+      "path": "hromada_school_year_UA74.json",
+      "size_bytes": 150037,
+      "sha256": "e4e130bf3f6d2ca6a5145089f8e56f7a2481ef46aa3e11dc437331e38d6c59c2"
+    },
+    {
+      "path": "hromada_school_year_UA80.json",
+      "size_bytes": 2691,
+      "sha256": "2f4030a6bc3b1bc09843f9d54cd61ac6279458195c0f1d3a7c9e8fb1ad3eaf7c"
+    },
+    {
+      "path": "i18n/en.json",
+      "size_bytes": 165,
+      "sha256": "e06e3490cf2e4dffa10ea9ce255d7cb43278c410bf1a5db699ecdfcba7a8d68d"
+    },
+    {
+      "path": "i18n/uk.json",
+      "size_bytes": 314,
+      "sha256": "3b32b8a4daaf952eb9c1e689435ebb106c7f17e9032d7b807ca172dfca5e7f83"
+    },
+    {
+      "path": "modality_rules.json",
+      "size_bytes": 2248,
+      "sha256": "1888a35a6d10f8503f2a10f774066b40eb9ac1961c0ce485edb775d4a09ff768"
+    },
+    {
+      "path": "national_monthly.json",
+      "size_bytes": 35006,
+      "sha256": "77e2aad90a6995b4412448794863c12de6100ae08f9335f2a90bd8e5d6257db5"
+    },
+    {
+      "path": "national_school_year.json",
+      "size_bytes": 3565,
+      "sha256": "5b22f6e09cc9a8e532362a8b0560b6bd3cf80e5f651fa877a5601e946645a846"
+    },
+    {
+      "path": "oblast_monthly.json",
+      "size_bytes": 883494,
+      "sha256": "da380ecaf27aadc95d964d6d417dcc81196c96e9d3601abebe3dbe1834c29e48"
+    },
+    {
+      "path": "oblast_school_year.json",
+      "size_bytes": 90107,
+      "sha256": "51e4ac41ae1e2bcf86dae673839bd0c51d88e69b3970797fbd8cfbfaa82c60dc"
+    },
+    {
+      "path": "schemas/payload-row.schema.json",
+      "size_bytes": 1195,
+      "sha256": "7e09aeafe8c2cf68c7e58f9ec3436849e5b93dba734c70f8824691a0702b7ef8"
+    },
+    {
+      "path": "schemas/release.schema.json",
+      "size_bytes": 657,
+      "sha256": "012770c9948f07ffc07e05cf67198dd9ae86ce509c2a2427d5282e4b5f38855b"
+    }
+  ],
+  "source_retrieval_timestamp_status": "NOT_RECORDED_IN_FROZEN_BUILD",
+  "product_specification_version": "0.3",
+  "dashboard_tor_version": "0.3",
+  "architecture": {
+    "map": "Leaflet 1.9.4 vendored browser build",
+    "charts": "Apache ECharts 6.1.0 vendored browser build with SVG renderer",
+    "search": "Fuse.js 7.5.0 vendored ES module",
+    "i18n": "i18next 26.3.6 vendored browser build",
+    "payload_validation": "JSON Schema Draft 2020-12 through Python jsonschema 4.26.0",
+    "build": "Vendored static Python build; no Node.js or npm required"
+  },
+  "publication_gate": "STAGE 3 COMPLETE CHECKPOINT: full controlled geography search and all-geography analytical interaction are implemented and independently audited; hostile Stage 4 review and production Stage 5 remain pending.",
+  "package_version": "0.12.0-stage3p3",
+  "node_required": false,
+  "runtime_external_network_required": false,
+  "stage3": {
+    "completed_points": [
+      1,
+      2,
+      3
+    ],
+    "current_checkpoint": 3,
+    "stage4_started": false,
+    "stage5_started": false
+  },
+  "release_marker": {
+    "visible_element": "#footer-release",
+    "machine_readable_source": "data/release.json:website_release_id",
+    "value": "AAE-WEB-REVISED-PROTOTYPE-0.3-STAGE3P3"
+  },
+  "geography_catalogue": {
+    "version": "0.4-stage3p2",
+    "path": "geography_lookup.json",
+    "national_records": 1,
+    "oblast_records": 26,
+    "hromada_records": 1773,
+    "transliteration_rule": "UA_NATIONAL_2010_DETERMINISTIC_V1"
+  }
+}

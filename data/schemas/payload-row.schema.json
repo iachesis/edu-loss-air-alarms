@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/aae/payload-row.schema.json",
+  "type": "object",
+  "required": [
+    "area_level",
+    "school_year",
+    "period_type",
+    "period_id",
+    "school_time_under_alarm_pct",
+    "coverage_status",
+    "school_count",
+    "learners_total",
+    "education_snapshot_date"
+  ],
+  "properties": {
+    "area_level": {
+      "enum": [
+        "national",
+        "oblast",
+        "hromada"
+      ]
+    },
+    "school_year": {
+      "type": "string",
+      "pattern": "^(20[0-9]{2}_[0-9]{4})$"
+    },
+    "period_type": {
+      "enum": [
+        "month",
+        "school_year"
+      ]
+    },
+    "period_id": {
+      "type": "string"
+    },
+    "school_time_under_alarm_pct": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "coverage_status": {
+      "type": "string"
+    },
+    "school_count": {
+      "type": "number",
+      "minimum": 0
+    },
+    "learners_total": {
+      "type": "number",
+      "minimum": 0
+    },
+    "education_snapshot_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "additionalProperties": true
+}

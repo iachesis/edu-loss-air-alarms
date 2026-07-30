@@ -1,0 +1,36 @@
+{
+  "version": "0.1",
+  "status": "APPROVED",
+  "build_id": "AAE-FULL-9c94bc374ab5e7cf29",
+  "school_year_rules": {
+    "2022_2023": {
+      "classification_scheme": "BINARY_ONLINE_OFFLINE",
+      "offline_mode": "DERIVED_TOTAL_MINUS_ONLINE",
+      "public_fields": ["learners_total", "learners_offline", "learners_online"],
+      "not_separately_classified": ["learners_mixed", "learners_other_modalities"],
+      "display_note": "For 2022/23, offline learners are derived as total learners minus online learners because a more granular modality classification was not yet available."
+    },
+    "2023_2024": {
+      "classification_scheme": "DETAILED_NON_EXHAUSTIVE",
+      "offline_mode": "REPORTED",
+      "public_fields": ["learners_total", "learners_offline", "learners_online", "learners_mixed", "learners_other_modalities"],
+      "other_modalities_formula": "learners_total - learners_offline - learners_online - learners_mixed",
+      "other_modalities_interpretation": "Predominantly non-in-person modalities, including family-based and related arrangements."
+    },
+    "2024_2025": {
+      "classification_scheme": "DETAILED_NON_EXHAUSTIVE",
+      "offline_mode": "REPORTED",
+      "public_fields": ["learners_total", "learners_offline", "learners_online", "learners_mixed", "learners_other_modalities"],
+      "other_modalities_formula": "learners_total - learners_offline - learners_online - learners_mixed",
+      "other_modalities_interpretation": "Predominantly non-in-person modalities, including family-based and related arrangements."
+    },
+    "2025_2026": {
+      "classification_scheme": "DETAILED_NON_EXHAUSTIVE",
+      "offline_mode": "REPORTED",
+      "public_fields": ["learners_total", "learners_offline", "learners_online", "learners_mixed", "learners_other_modalities"],
+      "other_modalities_formula": "learners_total - learners_offline - learners_online - learners_mixed",
+      "other_modalities_interpretation": "Predominantly non-in-person modalities, including family-based and related arrangements."
+    }
+  },
+  "validation_rule": "Do not require reported offline, online and mixed counts to sum to total learners in later school years. Validate non-negative values and a non-negative residual instead."
+}
