@@ -5,7 +5,8 @@ import { affectedDaysPct, formatDuration, formatNumber, isAnalyticallyUnavailabl
 let map;
 let layer;
 
-const palette = ['#EDF4F8', '#CFE1EC', '#9BC5D9', '#5B9DBB', '#286B8D', '#123B5D'];
+const palette = ['#EEF0ED', '#E1D5CF', '#D2AA9A', '#BE745A', '#993E29'];
+const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
 function value(row, measure) {
     if (isAnalyticallyUnavailable(row))
@@ -22,11 +23,11 @@ function breaks(values) {
 
 function colour(raw, thresholds) {
     if (raw === null)
-        return '#E5E7EB';
+        return '#D8D7D1';
     let index = 0;
     while (index < thresholds.length && raw > thresholds[index])
         index++;
-    return palette[index + 1] ?? palette.at(-1);
+    return palette[index] ?? palette.at(-1);
 }
 
 function areaId(feature) {
@@ -61,10 +62,10 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
             const row = byId.get(id);
             const raw = row ? value(row, measure) : null;
             return {
-                color: id === selected ? '#111827' : '#FFFFFF',
+                color: id === selected ? '#182D39' : '#FCFCFA',
                 weight: id === selected ? 3 : 1,
                 fillColor: colour(raw, thresholds),
-                fillOpacity: .88,
+                fillOpacity: .92,
                 dashArray: raw === null ? '5 4' : undefined,
             };
         },
@@ -79,6 +80,15 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
                 ? formatDuration(raw, lang)
                 : raw === null ? '—' : `${formatNumber(raw, lang, 1)}%`;
             featureLayer.bindTooltip(`<strong>${name}</strong><br>${shown}`, { sticky: true });
+            featureLayer.on('mouseover', () => {
+                featureLayer.setStyle({
+                    color: '#182D39',
+                    weight: id === selected ? 3 : 1.8,
+                    fillOpacity: 1,
+                });
+                featureLayer.bringToFront();
+            });
+            featureLayer.on('mouseout', () => layer?.resetStyle(featureLayer));
             featureLayer.on('click', () => onSelect(id));
             featureLayer.on('keypress', event => {
                 if (event.originalEvent?.key === 'Enter' || event.originalEvent?.key === ' ')
@@ -91,7 +101,7 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
     const showFullExtent = () => {
         if (!bounds.isValid())
             return false;
-        map.fitBounds(bounds.pad(.04), { animate: false });
+        map.fitBounds(bounds.pad(.04), { animate: !reducedMotion, duration: .22 });
         return true;
     };
 
@@ -104,11 +114,12 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
         ...thresholds.slice(1).map((threshold, index) => `${formatNumber(thresholds[index], lang, 1)}–${formatNumber(threshold, lang, 1)}`),
         `> ${formatNumber(thresholds.at(-1), lang, 1)}`,
     ];
-    palette.slice(1).forEach((swatch, index) => {
+    const unit = measure === 'alarm_hours_average_school_location' ? (lang === 'uk' ? 'год' : 'hr') : '%';
+    palette.forEach((swatch, index) => {
         const item = document.createElement('span');
         const chip = document.createElement('i');
         chip.style.background = swatch;
-        item.append(chip, document.createTextNode(labels[index] ?? ''));
+        item.append(chip, document.createTextNode(`${labels[index] ?? ''} ${unit}`));
         legend.append(item);
     });
 
@@ -121,7 +132,7 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
                 showFullExtent();
                 return false;
             }
-            map.fitBounds(feature.getBounds().pad(.2), { animate: false });
+            map.fitBounds(feature.getBounds().pad(.2), { animate: !reducedMotion, duration: .22 });
             return true;
         },
         reset() {

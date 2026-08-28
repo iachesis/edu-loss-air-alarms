@@ -19,17 +19,18 @@
 
   <header class="site-header">
     <div class="header-inner">
-      <div>
-        <p class="eyebrow">UNICEF · МОН · ІОА</p>
+      <div class="masthead-rail">
+        <p class="eyebrow">UNICEF DELIVERABLE 2 <span aria-hidden="true">·</span> МОН <span aria-hidden="true">·</span> ІОА</p>
+        <div class="header-actions">
+          <div class="language-switch" role="group" data-t-aria-label="language">
+            <button type="button" data-lang="uk">УКР</button>
+            <button type="button" data-lang="en">ENG</button>
+          </div>
+        </div>
+      </div>
+      <div class="title-lockup">
         <h1 id="page-title"></h1>
         <p id="page-subtitle" class="subtitle"></p>
-      </div>
-      <div class="header-actions">
-        <span class="status-badge" data-t="releaseStatus"></span>
-        <div class="language-switch" role="group" data-t-aria-label="language">
-          <button type="button" data-lang="uk">УКР</button>
-          <button type="button" data-lang="en">ENG</button>
-        </div>
       </div>
     </div>
   </header>
@@ -41,15 +42,8 @@
     <div id="area-load-status" class="notice" role="status" hidden></div>
 
     <div id="dashboard" hidden>
-      <section class="panel filter-panel" aria-labelledby="choose-heading">
-        <div class="section-heading-row">
-          <div>
-            <p class="section-kicker" data-t="chooseView"></p>
-            <h2 id="choose-heading"><span data-t="territory"></span> · <span data-t="period"></span></h2>
-          </div>
-          <button id="reset-filters" type="button" class="button-secondary" data-t="reset"></button>
-        </div>
-
+      <section class="instrument-toolbar" aria-labelledby="choose-heading">
+        <h2 id="choose-heading" class="visually-hidden"><span data-t="territory"></span> · <span data-t="period"></span></h2>
         <div class="view-controls">
           <div class="territory-combobox">
             <label for="territory-search" data-t="territory"></label>
@@ -61,28 +55,31 @@
           <div class="period-controls">
             <label for="period-mode" data-t="period"></label>
             <select id="period-mode"></select>
-            <div id="period-detail" class="period-detail">
-              <label id="school-year-field">
-                <span data-t="schoolYear"></span>
-                <select id="school-year"></select>
-              </label>
-              <label id="month-field" hidden>
-                <span data-t="month"></span>
-                <select id="month"></select>
-              </label>
-              <div id="range-fields" class="range-fields" hidden>
-                <label>
-                  <span data-t="from"></span>
-                  <select id="range-start"></select>
-                </label>
-                <label>
-                  <span data-t="to"></span>
-                  <select id="range-end"></select>
-                </label>
-              </div>
-              <p id="all-period-note" class="control-note" hidden data-t="allAvailableNote"></p>
-            </div>
           </div>
+
+          <div id="period-detail" class="period-detail">
+            <label id="school-year-field">
+              <span data-t="schoolYear"></span>
+              <select id="school-year"></select>
+            </label>
+            <label id="month-field" hidden>
+              <span data-t="month"></span>
+              <select id="month"></select>
+            </label>
+            <div id="range-fields" class="range-fields" hidden>
+              <label>
+                <span data-t="from"></span>
+                <select id="range-start"></select>
+              </label>
+              <label>
+                <span data-t="to"></span>
+                <select id="range-end"></select>
+              </label>
+            </div>
+            <p id="all-period-note" class="control-note" hidden data-t="allAvailableNote"></p>
+          </div>
+
+          <button id="reset-filters" type="button" class="button-secondary toolbar-reset" data-t="reset"></button>
         </div>
 
         <div id="hromada-navigation" class="context-navigation" hidden>
@@ -90,72 +87,96 @@
         </div>
       </section>
 
-      <section class="summary-panel" aria-labelledby="summary-heading">
-        <p class="section-kicker" data-t="atGlance"></p>
-        <h2 id="summary-heading"><span id="summary-context"></span></h2>
-        <p id="summary-text" class="summary-text"></p>
-        <p id="aggregation-note" class="aggregation-note"></p>
-      </section>
+      <section class="hero-analysis" aria-labelledby="summary-heading places-heading">
+        <div class="hero-result" aria-labelledby="summary-heading">
+          <div class="result-heading">
+            <p class="section-kicker" data-t="atGlance"></p>
+            <h2 id="summary-heading"><span id="summary-context"></span></h2>
+          </div>
 
-      <section aria-labelledby="measures-heading">
-        <p class="section-kicker" data-t="keyMeasures"></p>
-        <h2 id="measures-heading" class="visually-hidden" data-t="keyMeasures"></h2>
-        <div class="cards-grid">
-          <article class="metric-card">
-            <div class="card-title-row">
-              <h3 data-t="alarmTime"></h3>
-              <button type="button" data-info="alarm" class="info-button" data-t-aria-label="indicatorInfo">i</button>
+          <section class="measures-composition" aria-labelledby="measures-heading">
+            <h3 id="measures-heading" class="visually-hidden" data-t="keyMeasures"></h3>
+            <div class="cards-grid">
+              <article class="metric-card metric-card-hours">
+                <div id="alarm-time-value" class="metric-value"></div>
+                <div class="card-title-row">
+                  <h3 data-t="alarmTime"></h3>
+                  <button type="button" data-info="alarm" class="info-button" data-t-aria-label="indicatorInfo">i</button>
+                </div>
+                <p id="alarm-time-context" class="metric-context"></p>
+              </article>
+
+              <article class="metric-card metric-card-share">
+                <div id="alarm-time-secondary" class="metric-value"></div>
+                <div class="card-title-row">
+                  <h3 data-t="alarmShare"></h3>
+                  <button type="button" data-info="alarm" class="info-button" data-t-aria-label="indicatorInfo">i</button>
+                </div>
+              </article>
+
+              <article class="metric-card metric-card-days">
+                <div id="affected-days-secondary" class="metric-value"></div>
+                <div class="card-title-row">
+                  <h3 data-t="affectedDays"></h3>
+                  <button type="button" data-info="days" class="info-button" data-t-aria-label="indicatorInfo">i</button>
+                </div>
+                <div id="affected-days-value" class="metric-denominator"></div>
+                <p id="affected-days-context" class="metric-context"></p>
+              </article>
             </div>
-            <div id="alarm-time-value" class="metric-value"></div>
-            <div id="alarm-time-secondary" class="metric-secondary"></div>
-            <p id="alarm-time-context" class="metric-context"></p>
-          </article>
 
-          <article class="metric-card">
-            <div class="card-title-row">
-              <h3 data-t="affectedDays"></h3>
-              <button type="button" data-info="days" class="info-button" data-t-aria-label="indicatorInfo">i</button>
-            </div>
-            <div id="affected-days-value" class="metric-value"></div>
-            <div id="affected-days-secondary" class="metric-secondary"></div>
-            <p id="affected-days-context" class="metric-context"></p>
-          </article>
+            <article class="episode-measure">
+              <div>
+                <span class="episode-label" data-t="episodes"></span>
+                <button type="button" data-info="episodes" class="info-button" data-t-aria-label="indicatorInfo">i</button>
+              </div>
+              <strong id="episodes-value"></strong>
+              <span id="episodes-secondary" class="metric-secondary"></span>
+              <p id="episodes-context" class="metric-context"></p>
+            </article>
+          </section>
 
-          <article class="metric-card">
-            <div class="card-title-row">
-              <h3 data-t="episodes"></h3>
-              <button type="button" data-info="episodes" class="info-button" data-t-aria-label="indicatorInfo">i</button>
-            </div>
-            <div id="episodes-value" class="metric-value"></div>
-            <div id="episodes-secondary" class="metric-secondary"></div>
-            <p id="episodes-context" class="metric-context"></p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel education-panel" aria-labelledby="education-heading">
-        <div class="section-heading-row">
-          <div>
-            <p class="section-kicker" data-t="educationContext"></p>
-            <h2 id="education-heading" data-t="educationContext"></h2>
+          <div class="insight-block">
+            <p id="summary-text" class="summary-text"></p>
+            <p id="aggregation-note" class="aggregation-note"></p>
           </div>
         </div>
-        <div id="education-summary" class="education-summary"></div>
-        <p id="education-multi-note" class="context-note" hidden></p>
-        <div id="education-years"></div>
-        <p id="education-empty" class="notice" hidden></p>
-        <details id="modality-details" class="modality-details">
-          <summary data-t="modalityDetails"></summary>
-          <p class="context-note" data-t="modalityChartIntro"></p>
-          <div id="modality-chart" class="chart modality-chart" role="img" data-t-aria-label="modalityChartLabel"></div>
-        </details>
-        <p id="education-note" class="context-note"></p>
+
+        <section class="hero-map" aria-labelledby="places-heading">
+          <div class="map-heading-row">
+            <div>
+              <p class="section-kicker" data-t="acrossPlaces"></p>
+              <h2 id="places-heading" data-t="map"></h2>
+            </div>
+            <div class="map-controls">
+              <label for="map-measure">
+                <span data-t="colourBy"></span>
+                <select id="map-measure">
+                  <option value="school_time_under_alarm_pct" data-t="alarmShare"></option>
+                  <option value="alarm_hours_average_school_location" data-t="hours"></option>
+                  <option value="affected_school_days_pct" data-t="daysShare"></option>
+                </select>
+              </label>
+              <div class="map-action-buttons">
+                <button id="fit-selected" type="button" class="button-secondary" data-t="fitSelected"></button>
+                <button id="reset-map" type="button" class="button-secondary" data-t="resetMap"></button>
+              </div>
+            </div>
+          </div>
+          <p id="map-error" class="notice" hidden></p>
+          <p id="map-action-status" class="map-action-status" role="status" aria-live="polite"></p>
+          <div class="map-stage">
+            <div id="map-container" class="map-container" role="region" data-t-aria-label="mapLabel"></div>
+            <div id="map-legend" class="map-legend"></div>
+          </div>
+          <p class="context-note map-alternative" data-t="mapAlternative"></p>
+        </section>
       </section>
 
-      <section class="panel" aria-labelledby="time-heading">
-        <div class="section-heading-row">
-          <div>
-            <p class="section-kicker" data-t="overTime"></p>
+      <section class="panel chapter time-chapter" aria-labelledby="time-heading">
+        <div class="section-heading-row chapter-heading-row">
+          <div class="chapter-heading">
+            <span class="section-index" aria-hidden="true">01</span>
             <h2 id="time-heading" data-t="overTime"></h2>
           </div>
           <label class="control-label" for="trend-measure">
@@ -202,53 +223,57 @@
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="places-heading">
-        <div class="section-heading-row">
-          <div>
-            <p class="section-kicker" data-t="acrossPlaces"></p>
-            <h2 id="places-heading" data-t="map"></h2>
-          </div>
-          <div class="map-controls">
-            <label for="map-measure">
-              <span data-t="colourBy"></span>
-              <select id="map-measure">
-                <option value="school_time_under_alarm_pct" data-t="alarmShare"></option>
-                <option value="alarm_hours_average_school_location" data-t="hours"></option>
-                <option value="affected_school_days_pct" data-t="daysShare"></option>
-              </select>
-            </label>
-            <button id="fit-selected" type="button" class="button-secondary" data-t="fitSelected"></button>
-            <button id="reset-map" type="button" class="button-secondary" data-t="resetMap"></button>
-          </div>
-        </div>
-        <p id="map-error" class="notice" hidden></p>
-        <p id="map-action-status" class="map-action-status" role="status" aria-live="polite"></p>
-        <div id="map-container" class="map-container" data-t-aria-label="mapLabel"></div>
-        <div id="map-legend" class="map-legend"></div>
-        <p class="context-note" data-t="mapAlternative"></p>
-      </section>
-
-      <section class="panel" aria-labelledby="comparison-heading">
-        <div class="section-heading-row">
-          <div>
-            <p class="section-kicker" data-t="compareAreas"></p>
-            <h2 id="comparison-heading" data-t="compareAreas"></h2>
+      <section class="panel chapter comparison-chapter" aria-labelledby="comparison-heading">
+        <div class="section-heading-row chapter-heading-row">
+          <div class="chapter-heading">
+            <span class="section-index" aria-hidden="true">02</span>
+            <div>
+              <p class="section-kicker" data-t="acrossPlaces"></p>
+              <h2 id="comparison-heading" data-t="compareAreas"></h2>
+            </div>
           </div>
           <button id="download-csv" type="button" class="button-primary" data-t="downloadCsv"></button>
         </div>
-        <label class="comparison-search" for="comparison-search">
-          <span data-t="filterAreas"></span>
-          <input id="comparison-search" type="search" data-t-placeholder="territoryHint">
-        </label>
-        <p id="comparison-result-count" class="result-count" aria-live="polite"></p>
-        <p id="csv-status" class="result-count" role="status" aria-live="polite"></p>
+        <div class="comparison-tools">
+          <label class="comparison-search" for="comparison-search">
+            <span data-t="filterAreas"></span>
+            <input id="comparison-search" type="search" data-t-placeholder="territoryHint">
+          </label>
+          <div class="comparison-statuses">
+            <p id="comparison-result-count" class="result-count" aria-live="polite"></p>
+            <p id="csv-status" class="result-count" role="status" aria-live="polite"></p>
+          </div>
+        </div>
         <div id="comparison-cards" class="comparison-cards"></div>
         <div id="comparison-table" class="table-wrap comparison-table"></div>
       </section>
 
-      <section class="panel notes-panel" aria-labelledby="interpret-heading">
-        <p class="section-kicker" data-t="interpret"></p>
-        <h2 id="interpret-heading" data-t="interpret"></h2>
+      <section class="panel chapter education-panel" aria-labelledby="education-heading">
+        <div class="chapter-heading">
+          <span class="section-index" aria-hidden="true">03</span>
+          <h2 id="education-heading" data-t="educationContext"></h2>
+        </div>
+        <div class="education-layout">
+          <div class="education-copy">
+            <div id="education-summary" class="education-summary"></div>
+            <p id="education-multi-note" class="context-note" hidden></p>
+            <div id="education-years"></div>
+            <p id="education-empty" class="notice" hidden></p>
+            <p id="education-note" class="context-note education-note"></p>
+          </div>
+          <details id="modality-details" class="modality-details">
+            <summary data-t="modalityDetails"></summary>
+            <p class="context-note" data-t="modalityChartIntro"></p>
+            <div id="modality-chart" class="chart modality-chart" role="img" data-t-aria-label="modalityChartLabel"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="panel chapter notes-panel" aria-labelledby="interpret-heading">
+        <div class="chapter-heading">
+          <span class="section-index" aria-hidden="true">04</span>
+          <h2 id="interpret-heading" data-t="interpret"></h2>
+        </div>
         <div class="notes-grid">
           <article>
             <h3 data-t="methodQuestion"></h3>
@@ -268,15 +293,23 @@
   </main>
 
   <footer class="site-footer">
-    <div class="release-line">
-      <span id="footer-status" data-t="releaseStatus"></span>
-      <strong id="footer-release"></strong>
-      <span id="footer-build"></span>
+    <div class="footer-inner">
+      <div class="footer-identity">
+        <span class="footer-mark">D2</span>
+        <div>
+          <strong>UNICEF Deliverable 2</strong>
+          <span id="footer-status" data-t="releaseStatus"></span>
+        </div>
+      </div>
+      <div class="release-line">
+        <strong id="footer-release"></strong>
+        <span id="footer-build"></span>
+      </div>
+      <nav data-t-aria-label="supportingPages">
+        <a data-page="methodology" data-t="methodology"></a>
+        <a data-page="data" data-t="dataRelease"></a>
+      </nav>
     </div>
-    <nav data-t-aria-label="supportingPages">
-      <a data-page="methodology" data-t="methodology"></a>
-      <a data-page="data" data-t="dataRelease"></a>
-    </nav>
   </footer>
 
   <dialog id="indicator-dialog">

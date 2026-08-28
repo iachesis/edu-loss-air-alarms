@@ -13,35 +13,45 @@
 </head>
 <body data-page="data" data-release-id="AAE-WEB-1.0.0">
   <a class="skip-link" href="#main-content" data-t="skipToContent"></a>
-  <header class="site-header">
+  <header class="site-header content-site-header">
     <div class="header-inner">
-      <div>
-        <p class="eyebrow">UNICEF · МОН · ІОА</p>
-        <h1 data-t="dataRelease"></h1>
-      </div>
-      <div class="header-actions">
-        <span class="status-badge" data-t="releaseStatus"></span>
-        <div class="language-switch" role="group" data-t-aria-label="language">
-          <button type="button" data-lang="uk">УКР</button>
-          <button type="button" data-lang="en">ENG</button>
+      <div class="masthead-rail">
+        <p class="eyebrow">UNICEF DELIVERABLE 2 <span aria-hidden="true">·</span> МОН <span aria-hidden="true">·</span> ІОА</p>
+        <div class="header-actions">
+          <div class="language-switch" role="group" data-t-aria-label="language">
+            <button type="button" data-lang="uk">УКР</button>
+            <button type="button" data-lang="en">ENG</button>
+          </div>
         </div>
+      </div>
+      <div class="title-lockup content-title-lockup">
+        <h1 data-t="dataRelease"></h1>
+        <p class="subtitle" data-t="appTitle"></p>
       </div>
     </div>
   </header>
-  <main id="main-content" class="page-shell">
-    <p><a id="back-dashboard" class="button-secondary" data-t="backDashboard"></a></p>
+  <main id="main-content" class="page-shell content-shell">
+    <p class="back-row"><a id="back-dashboard" class="back-link" data-t="backDashboard"></a></p>
     <div id="content"></div>
     <p id="content-error" class="fatal-error" role="alert" hidden></p>
   </main>
   <footer class="site-footer">
-    <div class="release-line">
-      <span data-t="releaseStatus"></span>
-      <strong id="footer-release"></strong>
-      <span id="footer-build"></span>
+    <div class="footer-inner">
+      <div class="footer-identity">
+        <span class="footer-mark">D2</span>
+        <div>
+          <strong>UNICEF Deliverable 2</strong>
+          <span data-t="releaseStatus"></span>
+        </div>
+      </div>
+      <div class="release-line">
+        <strong id="footer-release"></strong>
+        <span id="footer-build"></span>
+      </div>
+      <nav data-t-aria-label="supportingPages">
+        <a href="./methodology.html" data-support-page="methodology" data-t="methodology"></a>
+      </nav>
     </div>
-    <nav data-t-aria-label="supportingPages">
-      <a href="./methodology.html" data-support-page="methodology" data-t="methodology"></a>
-    </nav>
   </footer>
 </body>
 </html>

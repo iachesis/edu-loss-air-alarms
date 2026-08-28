@@ -10,6 +10,15 @@ import {
 } from './logic.js';
 
 const charts = new WeakMap();
+const INK = '#151719';
+const SECONDARY = '#5B6065';
+const HAIRLINE = '#D8D7D1';
+const PAPER = '#F6F5F1';
+const SURFACE = '#FCFCFA';
+const SIGNAL = '#AD4F38';
+const SIGNAL_DARK = '#843522';
+const INTERFACE_FONT = 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+const motionDuration = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 220;
 
 function instance(el) {
     if (!echarts)
@@ -46,16 +55,46 @@ function ariaDescription(kind, measureLabel, lang) {
     return `${kind}. Measure: ${measureLabel}.`;
 }
 
+function tooltipOptions() {
+    return {
+        confine: true,
+        position: ['2%', '2%'],
+        backgroundColor: 'rgba(252, 252, 250, .97)',
+        borderColor: '#B9BAB5',
+        borderWidth: 1,
+        padding: [8, 10],
+        textStyle: { color: INK, fontFamily: INTERFACE_FONT, fontSize: 12 },
+        extraCssText: 'border-radius:2px;box-shadow:0 8px 20px rgba(21,23,25,.12)',
+    };
+}
+
+function categoryAxis(data) {
+    return {
+        type: 'category',
+        data,
+        axisLine: { lineStyle: { color: '#B9BAB5' } },
+        axisTick: { show: false },
+        axisLabel: { color: SECONDARY, fontFamily: INTERFACE_FONT, fontSize: 11 },
+    };
+}
+
 function cartesianOptions(measure, measureLabel, lang) {
     return {
         aria: { enabled: true },
-        grid: { left: 78, right: 20, top: 50, bottom: 54, containLabel: true },
+        animationDuration: motionDuration,
+        animationDurationUpdate: motionDuration,
+        textStyle: { color: INK, fontFamily: INTERFACE_FONT },
+        grid: { left: 56, right: 18, top: 42, bottom: 48, containLabel: true },
         yAxis: {
             type: 'value',
             name: measureLabel,
             nameLocation: 'middle',
-            nameGap: 52,
-            axisLabel: { formatter: raw => axisValue(raw, measure, lang) },
+            nameGap: 48,
+            nameTextStyle: { color: SECONDARY, fontFamily: INTERFACE_FONT, fontSize: 11 },
+            axisLine: { show: false },
+            axisTick: { show: false },
+            axisLabel: { color: SECONDARY, fontFamily: INTERFACE_FONT, fontSize: 11, formatter: raw => axisValue(raw, measure, lang) },
+            splitLine: { lineStyle: { color: HAIRLINE, width: 1 } },
         },
     };
 }
@@ -70,7 +109,9 @@ export function monthlyChart(el, rows, measure, measureLabel, lang, onMonth) {
             description: ariaDescription(lang === 'uk' ? 'Щомісячна стовпчикова діаграма' : 'Monthly bar chart', measureLabel, lang),
         },
         tooltip: {
+            ...tooltipOptions(),
             trigger: 'axis',
+            axisPointer: { type: 'line', lineStyle: { color: SIGNAL, width: 1 } },
             formatter: params => {
                 const point = Array.isArray(params) ? params[0] : params;
                 const row = data[point?.dataIndex];
@@ -78,16 +119,16 @@ export function monthlyChart(el, rows, measure, measureLabel, lang, onMonth) {
             },
         },
         xAxis: {
-            type: 'category',
-            data: data.map(row => monthLabel(row.period_id, lang, true)),
-            axisLabel: { rotate: 30 },
+            ...categoryAxis(data.map(row => monthLabel(row.period_id, lang, true))),
+            axisLabel: { color: SECONDARY, fontFamily: INTERFACE_FONT, fontSize: 11, rotate: 30 },
         },
         series: [{
             name: measureLabel,
             type: 'bar',
             data: data.map(row => value(row, measure)),
-            itemStyle: { color: '#286B8D' },
-            emphasis: { focus: 'series' },
+            barMaxWidth: 20,
+            itemStyle: { color: SIGNAL, borderRadius: [1, 1, 0, 0] },
+            emphasis: { itemStyle: { color: SIGNAL_DARK } },
         }],
     });
     chart.on('click', point => {
@@ -108,22 +149,26 @@ export function schoolYearChart(el, rows, measure, measureLabel, lang) {
             description: ariaDescription(lang === 'uk' ? 'Лінійна діаграма за навчальними роками' : 'School-year line chart', measureLabel, lang),
         },
         tooltip: {
+            ...tooltipOptions(),
             trigger: 'axis',
+            axisPointer: { type: 'line', lineStyle: { color: SIGNAL, width: 1 } },
             formatter: params => {
                 const point = Array.isArray(params) ? params[0] : params;
                 const row = data[point?.dataIndex];
                 return row ? `<strong>${SCHOOL_YEAR_LABELS[row.school_year]}</strong><br>${measureLabel}: ${formatMeasure(value(row, measure), measure, lang)}` : '';
             },
         },
-        xAxis: { type: 'category', data: data.map(row => SCHOOL_YEAR_LABELS[row.school_year]) },
+        xAxis: categoryAxis(data.map(row => SCHOOL_YEAR_LABELS[row.school_year])),
         series: [{
             name: measureLabel,
             type: 'line',
             smooth: false,
-            symbolSize: 9,
+            symbol: 'circle',
+            symbolSize: 7,
             data: data.map(row => value(row, measure)),
-            lineStyle: { width: 3, color: '#286B8D' },
-            itemStyle: { color: '#286B8D' },
+            lineStyle: { width: 2, color: SIGNAL },
+            itemStyle: { color: SURFACE, borderColor: SIGNAL, borderWidth: 2 },
+            emphasis: { itemStyle: { color: SIGNAL, borderColor: SIGNAL_DARK } },
         }],
     });
     return chart;
@@ -142,16 +187,23 @@ export function heatmapChart(el, rows, measure, measureLabel, lang) {
     });
     const max = Math.max(1, ...data.map(point => Number(point[2] ?? 0)));
     chart.setOption({
+        animationDuration: motionDuration,
+        animationDurationUpdate: motionDuration,
+        textStyle: { color: INK, fontFamily: INTERFACE_FONT },
         aria: {
             enabled: true,
             description: ariaDescription(lang === 'uk' ? 'Теплова карта за місяцями й навчальними роками' : 'Heatmap by month and school year', measureLabel, lang),
         },
         tooltip: {
+            ...tooltipOptions(),
             formatter: point => `${SCHOOL_YEAR_LABELS[years[point.value[1]]]} · ${monthNames[point.value[0]]}<br>${measureLabel}: ${formatMeasure(point.value[2], measure, lang)}`,
         },
-        grid: { left: 72, right: 72, top: 24, bottom: 48, containLabel: true },
-        xAxis: { type: 'category', data: monthNames },
-        yAxis: { type: 'category', data: years.map(year => SCHOOL_YEAR_LABELS[year]) },
+        grid: { left: 58, right: 84, top: 24, bottom: 48, containLabel: true },
+        xAxis: categoryAxis(monthNames),
+        yAxis: {
+            ...categoryAxis(years.map(year => SCHOOL_YEAR_LABELS[year])),
+            axisLine: { show: false },
+        },
         visualMap: {
             min: 0,
             max,
@@ -160,12 +212,15 @@ export function heatmapChart(el, rows, measure, measureLabel, lang) {
             right: 0,
             top: 'middle',
             formatter: raw => axisValue(raw, measure, lang),
+            textStyle: { color: SECONDARY, fontFamily: INTERFACE_FONT, fontSize: 10 },
+            inRange: { color: ['#EEF0ED', '#E6DAD4', '#D8B9AB', '#C7826B', '#A74731'] },
         },
         series: [{
             name: measureLabel,
             type: 'heatmap',
             data,
             label: { show: false },
+            itemStyle: { borderColor: PAPER, borderWidth: 2 },
             emphasis: { itemStyle: { borderColor: '#102A3A', borderWidth: 2 } },
         }],
     });
@@ -182,20 +237,34 @@ export function modalityChart(el, rows, lang, labels) {
         [labels.other, rows.map(row => row.school_year === '2022_2023' ? null : Math.max(0, row.learners_total - row.learners_offline - row.learners_online - row.learners_mixed))],
     ];
     chart.setOption({
+        animationDuration: motionDuration,
+        animationDurationUpdate: motionDuration,
+        color: ['#203A47', '#9CA9AA', '#C7846B', '#D8D7D1'],
+        textStyle: { color: INK, fontFamily: INTERFACE_FONT },
         aria: {
             enabled: true,
             description: lang === 'uk' ? 'Складена стовпчикова діаграма кількості учнів за формами навчання.' : 'Stacked bar chart of learner counts by education modality.',
         },
         tooltip: {
+            ...tooltipOptions(),
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
             valueFormatter: raw => formatNumber(raw, lang),
         },
-        legend: { bottom: 0, type: 'scroll' },
-        grid: { left: 82, right: 18, top: 24, bottom: 66, containLabel: true },
-        xAxis: { type: 'value', axisLabel: { formatter: raw => formatNumber(raw, lang) } },
-        yAxis: { type: 'category', data: categories },
-        series: series.map(([name, values]) => ({ name, type: 'bar', stack: 'total', data: values })),
+        legend: { bottom: 0, type: 'scroll', itemWidth: 12, itemHeight: 8, textStyle: { color: SECONDARY, fontFamily: INTERFACE_FONT, fontSize: 11 } },
+        grid: { left: 68, right: 16, top: 18, bottom: 62, containLabel: true },
+        xAxis: {
+            type: 'value',
+            axisLine: { show: false },
+            axisTick: { show: false },
+            axisLabel: { color: SECONDARY, fontSize: 10, formatter: raw => formatNumber(raw, lang) },
+            splitLine: { lineStyle: { color: HAIRLINE } },
+        },
+        yAxis: {
+            ...categoryAxis(categories),
+            axisLine: { show: false },
+        },
+        series: series.map(([name, values]) => ({ name, type: 'bar', stack: 'total', barMaxWidth: 34, data: values })),
     });
     return chart;
 }

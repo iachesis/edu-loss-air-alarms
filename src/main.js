@@ -126,7 +126,14 @@ function renderSearchResults(query = '', preserveInput = false) { const box = $(
     strong.textContent = itemName(x, state.lang);
     small.textContent = x.level === 'hromada' ? `${itemParent(x, state.lang)} · ${x.katottg}` : x.katottg;
     b.append(strong, small);
-    b.addEventListener('click', async () => { box.hidden = true; await selectArea(x.id); });
+    const choose = async () => { box.hidden = true; await selectArea(x.id); };
+    b.addEventListener('click', choose);
+    b.addEventListener('keydown', async event => {
+        if (event.key !== 'Enter' && event.key !== ' ')
+            return;
+        event.preventDefault();
+        await choose();
+    });
     li.append(b);
     box.append(li);
 } }
@@ -149,6 +156,24 @@ function setupTerritoryCombobox() { const input = $('territory-search'), box = $
 } }); document.addEventListener('click', e => { if (!e.target.closest('.territory-combobox'))
     box.hidden = true; }); }
 function periodHeading() { return `${nameOf(state.areaId)} · ${periodLabel(state, state.lang)}`; }
+function insightPeriodClause() {
+    const bounds = periodBounds(state);
+    const start = monthLabel(bounds.start, state.lang);
+    const end = monthLabel(bounds.end, state.lang);
+    if (state.periodMode === 'school_year')
+        return state.lang === 'uk'
+            ? `У ${SCHOOL_YEAR_LABELS[state.schoolYear]} навчальному році`
+            : `In the ${SCHOOL_YEAR_LABELS[state.schoolYear]} school year`;
+    if (state.periodMode === 'month')
+        return state.lang === 'uk' ? `У вибраному місяці (${start})` : `In the selected month (${start})`;
+    if (state.periodMode === 'all_available')
+        return state.lang === 'uk'
+            ? `За весь доступний період (${start} — ${end})`
+            : `Across the full available period (${start}–${end})`;
+    return state.lang === 'uk'
+        ? `За вибраний період (${start} — ${end})`
+        : `Across the selected period (${start}–${end})`;
+}
 function renderHromadaNavigation() {
     const navigation = $('hromada-navigation');
     const button = $('back-to-oblast');
@@ -163,8 +188,12 @@ function renderHromadaNavigation() {
 }
 function renderSummary(row) {
     $('summary-context').textContent = periodHeading();
+    const periodClause = insightPeriodClause();
+    const area = nameOf(row.area_id);
     if (isAnalyticallyUnavailable(row)) {
-        $('summary-text').textContent = `${nameOf(row.area_id)}: ${tr('analyticalUnavailable')}`;
+        $('summary-text').textContent = state.lang === 'uk'
+            ? `${periodClause} аналітичний результат на території «${area}» недоступний; нуль не підставлено.`
+            : `${periodClause}, the analytical result for ${area} is unavailable; zero has not been substituted.`;
         $('aggregation-note').textContent = tr('unavailable');
         return;
     }
@@ -176,13 +205,13 @@ function renderSummary(row) {
     const denominator = formatNumber(row.available_school_days_average_school_location, state.lang, digits);
     if (state.lang === 'uk') {
         $('summary-text').textContent = aggregate
-            ? `${nameOf(row.area_id)}: тривоги перекривали припущений навчальний час протягом ${hours} у середньому для одного активного місця розташування закладу освіти (${pct}%). У середньому вони зачепили ${days} із ${denominator} доступних навчальних днів.`
-            : `${nameOf(row.area_id)}: тривоги перекривали припущений навчальний час протягом ${hours} (${pct}%). Вони зачепили ${days} із ${denominator} доступних навчальних днів.`;
+            ? `${periodClause} зафіксовані повітряні тривоги перекривали припущений навчальний час у середньому протягом ${hours} на одне активне місце розташування закладу освіти на території «${area}», що становить ${pct}% доступного припущеного навчального часу. Вони зачепили в середньому ${days} із ${denominator} доступних навчальних днів.`
+            : `${periodClause} зафіксовані повітряні тривоги на території «${area}» перекривали припущений навчальний час протягом ${hours}, що становить ${pct}% доступного припущеного навчального часу. Вони зачепили ${days} із ${denominator} доступних навчальних днів.`;
     }
     else {
         $('summary-text').textContent = aggregate
-            ? `${nameOf(row.area_id)}: an average of ${hours} per active school location overlapped assumed school time (${pct}%). Alarms affected an average of ${days} of ${denominator} available school days.`
-            : `${nameOf(row.area_id)}: ${hours} overlapped assumed school time (${pct}%). Alarms affected ${days} of ${denominator} available school days.`;
+            ? `${periodClause}, recorded air alarms overlapped with an average of ${hours} of assumed school time per active school location in ${area}, equivalent to ${pct}% of available assumed school time. They affected an average of ${days} of ${denominator} available school days.`
+            : `${periodClause}, recorded air alarms in ${area} overlapped with ${hours} of assumed school time, equivalent to ${pct}% of available assumed school time. They affected ${days} of ${denominator} available school days.`;
     }
     $('aggregation-note').textContent = aggregate ? tr('aggregateMetricContext') : tr('directResult');
 }
