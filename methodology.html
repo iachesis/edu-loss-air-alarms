@@ -8,6 +8,15 @@
   <link rel="icon" href="data:,">
   <title>Methodology — How Air Alarms Disrupt the School Day in Ukraine</title>
   <link rel="stylesheet" href="./src/styles.css">
+  <style>
+    .organization-eyebrow { text-transform: none; }
+    .organization-eyebrow [data-org-lang] { display: none; }
+    .masthead-rail:has([data-lang="uk"][aria-pressed="true"]) .organization-eyebrow [data-org-lang="uk"],
+    .masthead-rail:has([data-lang="en"][aria-pressed="true"]) .organization-eyebrow [data-org-lang="en"] { display: inline; }
+    .organization-eyebrow a { color: inherit; text-decoration: none; }
+    .organization-eyebrow a:hover,
+    .organization-eyebrow a:focus-visible { color: var(--ink); text-decoration: underline; text-decoration-color: var(--signal); text-underline-offset: 3px; }
+  </style>
   <script src="./vendor/i18next.min.js"></script>
   <script type="module" src="./src/content-page.js"></script>
 </head>
@@ -16,11 +25,11 @@
   <header class="site-header content-site-header">
     <div class="header-inner">
       <div class="masthead-rail">
-        <p class="eyebrow">UNICEF DELIVERABLE 2 <span aria-hidden="true">·</span> МОН <span aria-hidden="true">·</span> ІОА</p>
+        <p class="eyebrow organization-eyebrow"><b data-org-lang="uk" style="font-weight:inherit"><a href="https://www.unicef.org/ukraine/" target="_blank" rel="noopener noreferrer">UNICEF Україна</a><span aria-hidden="true">·</span><a href="https://mon.gov.ua/" target="_blank" rel="noopener noreferrer">МОН</a><span aria-hidden="true">·</span><a href="https://iea.gov.ua/" target="_blank" rel="noopener noreferrer">ІОА</a></b><b data-org-lang="en" style="font-weight:inherit"><a href="https://www.unicef.org/ukraine/en" target="_blank" rel="noopener noreferrer">UNICEF Ukraine</a><span aria-hidden="true">·</span><a href="https://mon.gov.ua/en" target="_blank" rel="noopener noreferrer">MoES</a><span aria-hidden="true">·</span><a href="https://iea.gov.ua/en/" target="_blank" rel="noopener noreferrer">IEA</a></b></p>
         <div class="header-actions">
           <div class="language-switch" role="group" data-t-aria-label="language">
-            <button type="button" data-lang="uk">УКР</button>
-            <button type="button" data-lang="en">ENG</button>
+            <button type="button" data-lang="uk" aria-pressed="true">УКР</button>
+            <button type="button" data-lang="en" aria-pressed="false">ENG</button>
           </div>
         </div>
       </div>
