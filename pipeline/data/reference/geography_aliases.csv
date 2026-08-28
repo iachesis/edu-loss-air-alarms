@@ -1,0 +1,6 @@
+field,source_value,canonical_value,reason
+raion,Володимир-Волинський район,Володимирський район,historical name
+raion,Самарівський район,Новомосковський район,source/reference name difference
+hromada,Гостомелська територіальна громада,Гостомельська територіальна громада,source spelling correction
+record,level=hromada; hromada=Звягельський район,level=raion; raion=Звягельський район,administrative level correction
+hromada_pattern,м. <city> та <hromada> територіальна громада,<hromada> територіальна громада,composite label normalization

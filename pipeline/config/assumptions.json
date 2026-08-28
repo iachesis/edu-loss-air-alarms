@@ -1,0 +1,33 @@
+{
+  "version": "0.1",
+  "timezone": "Europe/Kyiv",
+  "calendar": {
+    "school_years_file": "data/assumptions/school_year_windows.csv",
+    "vacations_file": "data/assumptions/assumed_vacation_periods.csv",
+    "school_weekdays": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "public_holiday_mode": "weekday_and_vacation_calendar"
+  },
+  "school_operating_window": {
+    "start": "08:00:00",
+    "end": "15:00:00"
+  },
+  "alarm_intervals": {
+    "merge_overlapping": true,
+    "merge_touching": true,
+    "merge_positive_gap_seconds": 0,
+    "long_interval_review_hours": 24
+  },
+  "education": {
+    "included_school_rule": "unique school_id with valid hromada link and children_total > 0",
+    "multi_hromada_weight": "included_school_count"
+  },
+  "coverage": {
+    "denominator_mode": "intersection_of_school_calendar_and_alarm_source_coverage"
+  }
+}

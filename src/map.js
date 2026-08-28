@@ -4,6 +4,7 @@ import { affectedDaysPct, formatDuration, formatNumber, isAnalyticallyUnavailabl
 
 let map;
 let layer;
+let fullExtentControl;
 
 const palette = ['#EEF0ED', '#E1D5CF', '#D2AA9A', '#BE745A', '#993E29'];
 const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
@@ -34,7 +35,7 @@ function areaId(feature) {
     return String(feature?.properties?.area_id ?? feature?.properties?.id ?? '');
 }
 
-export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected, onSelect) {
+export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected, onSelect, onFullExtent) {
     if (!L)
         throw new Error('Map library unavailable');
 
@@ -47,7 +48,9 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
             attributionControl: false,
             zoomControl: true,
             minZoom: 4,
-            maxZoom: 10,
+            maxZoom: 14,
+            zoomSnap: .25,
+            zoomDelta: .5,
             keyboard: true,
             preferCanvas: false,
         });
@@ -79,7 +82,10 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
             const shown = measure === 'alarm_hours_average_school_location'
                 ? formatDuration(raw, lang)
                 : raw === null ? '—' : `${formatNumber(raw, lang, 1)}%`;
-            featureLayer.bindTooltip(`<strong>${name}</strong><br>${shown}`, { sticky: true });
+            const status = raw !== null ? '' : row?.coverage_status === 'not_covered'
+                ? (lang === 'uk' ? 'Не охоплено джерелом' : 'Not covered by source')
+                : (lang === 'uk' ? 'Недоступно' : 'Unavailable');
+            featureLayer.bindTooltip(`<strong>${name}</strong><br>${status || shown}`, { sticky: true });
             featureLayer.on('mouseover', () => {
                 featureLayer.setStyle({
                     color: '#182D39',
@@ -101,9 +107,39 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
     const showFullExtent = () => {
         if (!bounds.isValid())
             return false;
-        map.fitBounds(bounds.pad(.04), { animate: !reducedMotion, duration: .22 });
+        map.fitBounds(bounds.pad(.025), { animate: !reducedMotion, duration: .22 });
         return true;
     };
+
+    if (fullExtentControl)
+        fullExtentControl.remove();
+    fullExtentControl = L.control({ position: 'bottomright' });
+    fullExtentControl.onAdd = () => {
+        const container = L.DomUtil.create('div', 'leaflet-bar aae-full-extent-control');
+        const button = L.DomUtil.create('button', 'aae-full-extent-button', container);
+        const label = lang === 'uk' ? 'Показати всю карту' : 'Show full map';
+        button.type = 'button';
+        button.title = label;
+        button.setAttribute('aria-label', label);
+        button.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="M4.5 9.8 12 3.9l7.5 5.9v9.1h-5.1v-5.3H9.6v5.3H4.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+        L.DomEvent.disableClickPropagation(container);
+        L.DomEvent.disableScrollPropagation(container);
+        L.DomEvent.on(button, 'click', event => {
+            L.DomEvent.preventDefault(event);
+            if (showFullExtent())
+                onFullExtent?.();
+        });
+        // Leaflet intercepts native keyboard activation in this control container.
+        // Prevent the intercepted default and converge on the single click path.
+        L.DomEvent.on(button, 'keydown', event => {
+            if (event.key !== 'Enter' && event.key !== ' ')
+                return;
+            L.DomEvent.preventDefault(event);
+            button.click();
+        });
+        return container;
+    };
+    fullExtentControl.addTo(map);
 
     showFullExtent();
     setTimeout(() => map?.invalidateSize(), 0);
@@ -132,7 +168,7 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
                 showFullExtent();
                 return false;
             }
-            map.fitBounds(feature.getBounds().pad(.2), { animate: !reducedMotion, duration: .22 });
+            map.fitBounds(feature.getBounds().pad(.065), { animate: !reducedMotion, duration: .22 });
             return true;
         },
         reset() {

@@ -1,0 +1,3496 @@
+{
+  "schema_version": 1,
+  "baseline": "AAE-FULL-9c94bc374ab5e7cf29",
+  "candidate": "AAE-FULL-88db64d06afa99610f",
+  "status": "PASS",
+  "canonical_table_count": 6,
+  "analytical_payload_count": 56,
+  "actual_analytical_numeric_value_change_count": 0,
+  "prohibited_field_difference_count": 0,
+  "missing_or_added_key_count": 0,
+  "authorized_difference_count": 150480,
+  "canonical_tables": {
+    "hromada_monthly.csv": {
+      "baseline_row_count": 70920,
+      "candidate_row_count": 70920,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days",
+          "count": 13600,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours",
+          "count": 13600,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds",
+          "count": 13600,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes",
+          "count": 13600,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 13600,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 68000,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year.csv": {
+      "baseline_row_count": 7092,
+      "candidate_row_count": 7092,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days",
+          "count": 1360,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours",
+          "count": 1360,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds",
+          "count": 1360,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes",
+          "count": 1360,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": "0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 1360,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 6800,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "oblast_monthly.csv": {
+      "baseline_row_count": 1040,
+      "candidate_row_count": 1040,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days_average_school_location",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours_average_school_location",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds_average_school_location",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes_average_school_location",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 400,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "oblast_school_year.csv": {
+      "baseline_row_count": 104,
+      "candidate_row_count": 104,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days_average_school_location",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours_average_school_location",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds_average_school_location",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes_average_school_location",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": "0.0",
+              "candidate": ""
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 40,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "national_monthly.csv": {
+      "baseline_row_count": 40,
+      "candidate_row_count": 40,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "national_school_year.csv": {
+      "baseline_row_count": 4,
+      "candidate_row_count": 4,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    }
+  },
+  "analytical_payloads": {
+    "hromada_monthly_by_oblast/UA01.json": {
+      "baseline_row_count": 12120,
+      "candidate_row_count": 12120,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days",
+          "count": 12120,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours",
+          "count": 12120,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds",
+          "count": 12120,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes",
+          "count": 12120,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 12120,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020010000048857"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020030000085835"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020050000056842"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020070000057731"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01020090000085519"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 60600,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA05.json": {
+      "baseline_row_count": 2520,
+      "candidate_row_count": 2520,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA07.json": {
+      "baseline_row_count": 2160,
+      "candidate_row_count": 2160,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA12.json": {
+      "baseline_row_count": 3440,
+      "candidate_row_count": 3440,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA14.json": {
+      "baseline_row_count": 2640,
+      "candidate_row_count": 2640,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA18.json": {
+      "baseline_row_count": 2640,
+      "candidate_row_count": 2640,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA21.json": {
+      "baseline_row_count": 2560,
+      "candidate_row_count": 2560,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA23.json": {
+      "baseline_row_count": 2680,
+      "candidate_row_count": 2680,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA26.json": {
+      "baseline_row_count": 2480,
+      "candidate_row_count": 2480,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA32.json": {
+      "baseline_row_count": 2760,
+      "candidate_row_count": 2760,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA35.json": {
+      "baseline_row_count": 1960,
+      "candidate_row_count": 1960,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA44.json": {
+      "baseline_row_count": 1480,
+      "candidate_row_count": 1480,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days",
+          "count": 1480,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020010000067642"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020030000055937"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020050000061272"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040010000091230"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040030000034083"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours",
+          "count": 1480,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020010000067642"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020030000055937"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020050000061272"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040010000091230"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040030000034083"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds",
+          "count": 1480,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020010000067642"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020030000055937"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020050000061272"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040010000091230"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040030000034083"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes",
+          "count": 1480,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020010000067642"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020030000055937"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020050000061272"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040010000091230"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040030000034083"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 1480,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020010000067642"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020030000055937"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44020050000061272"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040010000091230"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44040030000034083"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 7400,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA46.json": {
+      "baseline_row_count": 2920,
+      "candidate_row_count": 2920,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA48.json": {
+      "baseline_row_count": 2080,
+      "candidate_row_count": 2080,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA51.json": {
+      "baseline_row_count": 3640,
+      "candidate_row_count": 3640,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA53.json": {
+      "baseline_row_count": 2400,
+      "candidate_row_count": 2400,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA56.json": {
+      "baseline_row_count": 2560,
+      "candidate_row_count": 2560,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA59.json": {
+      "baseline_row_count": 2040,
+      "candidate_row_count": 2040,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA61.json": {
+      "baseline_row_count": 2200,
+      "candidate_row_count": 2200,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA63.json": {
+      "baseline_row_count": 2240,
+      "candidate_row_count": 2240,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA65.json": {
+      "baseline_row_count": 1960,
+      "candidate_row_count": 1960,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA68.json": {
+      "baseline_row_count": 2400,
+      "candidate_row_count": 2400,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA71.json": {
+      "baseline_row_count": 2640,
+      "candidate_row_count": 2640,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA73.json": {
+      "baseline_row_count": 2080,
+      "candidate_row_count": 2080,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA74.json": {
+      "baseline_row_count": 2280,
+      "candidate_row_count": 2280,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_monthly_by_oblast/UA80.json": {
+      "baseline_row_count": 40,
+      "candidate_row_count": 40,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA01.json": {
+      "baseline_row_count": 1212,
+      "candidate_row_count": 1212,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days",
+          "count": 1212,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours",
+          "count": 1212,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds",
+          "count": 1212,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes",
+          "count": 1212,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 1212,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020010000048857"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020030000085835"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020050000056842"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020070000057731"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01020090000085519"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 6060,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA05.json": {
+      "baseline_row_count": 252,
+      "candidate_row_count": 252,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA07.json": {
+      "baseline_row_count": 216,
+      "candidate_row_count": 216,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA12.json": {
+      "baseline_row_count": 344,
+      "candidate_row_count": 344,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA14.json": {
+      "baseline_row_count": 264,
+      "candidate_row_count": 264,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA18.json": {
+      "baseline_row_count": 264,
+      "candidate_row_count": 264,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA21.json": {
+      "baseline_row_count": 256,
+      "candidate_row_count": 256,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA23.json": {
+      "baseline_row_count": 268,
+      "candidate_row_count": 268,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA26.json": {
+      "baseline_row_count": 248,
+      "candidate_row_count": 248,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA32.json": {
+      "baseline_row_count": 276,
+      "candidate_row_count": 276,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA35.json": {
+      "baseline_row_count": 196,
+      "candidate_row_count": 196,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA44.json": {
+      "baseline_row_count": 148,
+      "candidate_row_count": 148,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days",
+          "count": 148,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020010000067642"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020030000055937"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020050000061272"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040010000091230"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040030000034083"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours",
+          "count": 148,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020010000067642"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020030000055937"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020050000061272"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040010000091230"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040030000034083"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds",
+          "count": 148,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020010000067642"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020030000055937"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020050000061272"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040010000091230"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040030000034083"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes",
+          "count": 148,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020010000067642"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020030000055937"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020050000061272"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040010000091230"
+              ],
+              "baseline": 0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040030000034083"
+              ],
+              "baseline": 0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 148,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020010000067642"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020030000055937"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44020050000061272"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040010000091230"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44040030000034083"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 740,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA46.json": {
+      "baseline_row_count": 292,
+      "candidate_row_count": 292,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA48.json": {
+      "baseline_row_count": 208,
+      "candidate_row_count": 208,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA51.json": {
+      "baseline_row_count": 364,
+      "candidate_row_count": 364,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA53.json": {
+      "baseline_row_count": 240,
+      "candidate_row_count": 240,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA56.json": {
+      "baseline_row_count": 256,
+      "candidate_row_count": 256,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA59.json": {
+      "baseline_row_count": 204,
+      "candidate_row_count": 204,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA61.json": {
+      "baseline_row_count": 220,
+      "candidate_row_count": 220,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA63.json": {
+      "baseline_row_count": 224,
+      "candidate_row_count": 224,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA65.json": {
+      "baseline_row_count": 196,
+      "candidate_row_count": 196,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA68.json": {
+      "baseline_row_count": 240,
+      "candidate_row_count": 240,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA71.json": {
+      "baseline_row_count": 264,
+      "candidate_row_count": 264,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA73.json": {
+      "baseline_row_count": 208,
+      "candidate_row_count": 208,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA74.json": {
+      "baseline_row_count": 228,
+      "candidate_row_count": 228,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "hromada_school_year_by_oblast/UA80.json": {
+      "baseline_row_count": 4,
+      "candidate_row_count": 4,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "national_monthly.json": {
+      "baseline_row_count": 40,
+      "candidate_row_count": 40,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "national_school_year.json": {
+      "baseline_row_count": 4,
+      "candidate_row_count": 4,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [],
+      "authorized_difference_count": 0,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "oblast_monthly.json": {
+      "baseline_row_count": 1040,
+      "candidate_row_count": 1040,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days_average_school_location",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours_average_school_location",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds_average_school_location",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes_average_school_location",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 80,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-09",
+                "UA44"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-10",
+                "UA44"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "month",
+                "2022-11",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 400,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    },
+    "oblast_school_year.json": {
+      "baseline_row_count": 104,
+      "candidate_row_count": 104,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "field_differences": [
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "affected_school_days_average_school_location",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_hours_average_school_location",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "alarm_seconds_average_school_location",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_missingness",
+          "field": "school_time_alarm_episodes_average_school_location",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": 0.0,
+              "candidate": null
+            }
+          ]
+        },
+        {
+          "category": "authorized_not_covered_status",
+          "field": "coverage_status",
+          "count": 8,
+          "samples": [
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2022_2023",
+                "school_year",
+                "2022_2023",
+                "UA44"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2023_2024",
+                "school_year",
+                "2023_2024",
+                "UA44"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            },
+            {
+              "key": [
+                "2024_2025",
+                "school_year",
+                "2024_2025",
+                "UA01"
+              ],
+              "baseline": "unavailable",
+              "candidate": "not_covered"
+            }
+          ]
+        }
+      ],
+      "authorized_difference_count": 40,
+      "prohibited_difference_count": 0,
+      "actual_numeric_value_change_count": 0
+    }
+  }
+}

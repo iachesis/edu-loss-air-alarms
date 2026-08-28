@@ -3,8 +3,29 @@
   "type": "object",
   "required": [
     "website_release_id",
+    "website_release_status",
     "analytical_build_id",
+    "analytical_build_status",
     "analytical_source_sha256",
+    "analytical_source_upstream_commit_sha",
+    "analytical_source_git_blob_sha1",
+    "source_url",
+    "configured_source_url",
+    "source_provenance_mode",
+    "source_retrieval_started_at_utc",
+    "source_retrieval_completed_at_utc",
+    "source_http_content_length_declared",
+    "source_actual_bytes_received",
+    "source_expected_resolved_byte_size",
+    "source_coverage_start_utc",
+    "source_coverage_end_utc",
+    "methodology_version",
+    "indicator_dictionary_version",
+    "input_data_contract_version",
+    "processing_package_version",
+    "local_execution_package_version",
+    "assumptions_version",
+    "analytical_project_fingerprint",
     "available_school_years",
     "files"
   ],
@@ -13,11 +34,64 @@
       "type": "string"
     },
     "analytical_build_id": {
-      "const": "AAE-FULL-9c94bc374ab5e7cf29"
+      "const": "AAE-FULL-88db64d06afa99610f"
     },
     "analytical_source_sha256": {
       "type": "string",
       "pattern": "^[a-f0-9]{64}$"
+    },
+    "analytical_source_upstream_commit_sha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "analytical_source_git_blob_sha1": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "source_provenance_mode": {
+      "enum": [
+        "live_resolved_source",
+        "explicit_pinned_local_source",
+        "resumed_immutable_source"
+      ]
+    },
+    "source_retrieval_started_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_retrieval_completed_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_http_content_length_declared": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_actual_bytes_received": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_expected_resolved_byte_size": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_coverage_start_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_coverage_end_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "methodology_version": {
+      "const": "0.2"
+    },
+    "indicator_dictionary_version": {
+      "const": "0.3"
+    },
+    "analytical_project_fingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
     },
     "available_school_years": {
       "type": "array",

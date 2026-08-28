@@ -43,7 +43,12 @@
       "maximum": 100
     },
     "coverage_status": {
-      "type": "string"
+      "enum": [
+        "complete",
+        "partial",
+        "not_covered",
+        "unavailable"
+      ]
     },
     "school_count": {
       "type": "number",

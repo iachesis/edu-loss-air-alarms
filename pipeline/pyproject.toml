@@ -1,0 +1,9 @@
+[project]
+name = "air-alarms-education"
+version = "0.2.2"
+description = "Audited static-dashboard payload pipeline for school-time air-alarm exposure in Ukraine"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.uv]
+package = false

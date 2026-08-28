@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "published_window_definition": {
+    "school_years": "active governed school-year rows",
+    "weekdays": "governed Monday-Friday rule",
+    "vacations": "governed configured vacations",
+    "operating_window": "08:00-15:00 Europe/Kyiv"
+  },
+  "baseline": {
+    "label": "6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004",
+    "size_bytes": 39345075,
+    "sha256": "6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004",
+    "git_blob_sha1": "9007ff4decf40fb015cee84469971753f11fcad8",
+    "input_row_count": 285895
+  },
+  "candidate": {
+    "label": "108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445",
+    "size_bytes": 40954353,
+    "sha256": "108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445",
+    "git_blob_sha1": "c7b84747df0c434cf33d9e8d241c7554ca894168",
+    "input_row_count": 296882
+  },
+  "added": {
+    "record_count": 10987,
+    "distinct_record_count": 10987,
+    "valid_interval_count": 10987,
+    "invalid_interval_count": 0,
+    "declared_level_counts": {
+      "hromada": 591,
+      "oblast": 89,
+      "raion": 10307
+    },
+    "coverage_start_utc": "2026-07-24T06:05:48+00:00",
+    "coverage_end_utc": "2026-08-28T10:06:00+00:00",
+    "intersects_published_assumed_school_time_count": 0
+  },
+  "removed": {
+    "record_count": 0,
+    "distinct_record_count": 0,
+    "valid_interval_count": 0,
+    "invalid_interval_count": 0,
+    "declared_level_counts": {},
+    "coverage_start_utc": null,
+    "coverage_end_utc": null,
+    "intersects_published_assumed_school_time_count": 0
+  }
+}

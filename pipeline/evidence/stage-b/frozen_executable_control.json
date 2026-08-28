@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "control_id": "AAE-FULL-9c94bc374ab5e7cf29",
+  "status": "PASS",
+  "reproduced_build_id": "AAE-FULL-9c94bc374ab5e7cf29",
+  "canonical_table_count": 6,
+  "canonical_tables_byte_identical": 6,
+  "analytical_payload_count": 56,
+  "analytical_payloads_byte_identical": 56,
+  "canonical_tables": [
+    {
+      "path": "hromada_monthly.csv",
+      "reference_sha256": "4e39233e327f859a19a94fab3dd4d8d84834745947ef476272c122fa65dbba2f",
+      "reproduction_sha256": "4e39233e327f859a19a94fab3dd4d8d84834745947ef476272c122fa65dbba2f",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year.csv",
+      "reference_sha256": "46514380961139ba80dfdace85e41c286e84d834bc545b0b289044d565d099cd",
+      "reproduction_sha256": "46514380961139ba80dfdace85e41c286e84d834bc545b0b289044d565d099cd",
+      "byte_identical": true
+    },
+    {
+      "path": "oblast_monthly.csv",
+      "reference_sha256": "59436aadbacaebd2b409404d3f6953a615b44cd6401eec93de44a960f44a8efe",
+      "reproduction_sha256": "59436aadbacaebd2b409404d3f6953a615b44cd6401eec93de44a960f44a8efe",
+      "byte_identical": true
+    },
+    {
+      "path": "oblast_school_year.csv",
+      "reference_sha256": "fe31406a73937e7a66f5cd11623ccdc866d137b9ea2229f1420f01d23f39fc59",
+      "reproduction_sha256": "fe31406a73937e7a66f5cd11623ccdc866d137b9ea2229f1420f01d23f39fc59",
+      "byte_identical": true
+    },
+    {
+      "path": "national_monthly.csv",
+      "reference_sha256": "cf6625ce51ba7402d58b19f7b9a7dfb51ba6fbd2df76fb08c6ffac21af78d494",
+      "reproduction_sha256": "cf6625ce51ba7402d58b19f7b9a7dfb51ba6fbd2df76fb08c6ffac21af78d494",
+      "byte_identical": true
+    },
+    {
+      "path": "national_school_year.csv",
+      "reference_sha256": "930251fc0b9c79738e504a1c8e44f3f282b55b0ea540702d80175cee960e3248",
+      "reproduction_sha256": "930251fc0b9c79738e504a1c8e44f3f282b55b0ea540702d80175cee960e3248",
+      "byte_identical": true
+    }
+  ],
+  "analytical_payloads": [
+    {
+      "path": "hromada_monthly_by_oblast/UA01.json",
+      "reference_sha256": "d5c656801042466887889830df042c7b02c711c2c59d37adf6ee7c902c2d679f",
+      "reproduction_sha256": "d5c656801042466887889830df042c7b02c711c2c59d37adf6ee7c902c2d679f",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA05.json",
+      "reference_sha256": "c259f974f3921789ee01a6b0f839887e0a975021b18109d0b707bd62171fa12a",
+      "reproduction_sha256": "c259f974f3921789ee01a6b0f839887e0a975021b18109d0b707bd62171fa12a",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA07.json",
+      "reference_sha256": "eb5869c7e1297fc7081fb8b37575f05d04f9706a647bef4737ffddb2d2c527b5",
+      "reproduction_sha256": "eb5869c7e1297fc7081fb8b37575f05d04f9706a647bef4737ffddb2d2c527b5",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA12.json",
+      "reference_sha256": "7e60f7bb542a3fa8bf9fc3f07d10c7f18539a7a048b23cfa5f1207760e7a2f52",
+      "reproduction_sha256": "7e60f7bb542a3fa8bf9fc3f07d10c7f18539a7a048b23cfa5f1207760e7a2f52",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA14.json",
+      "reference_sha256": "3eb66c315ac6f86a3efcfec5fb840e79c7e2ecf387e6fbc7383b9b9427ee4569",
+      "reproduction_sha256": "3eb66c315ac6f86a3efcfec5fb840e79c7e2ecf387e6fbc7383b9b9427ee4569",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA18.json",
+      "reference_sha256": "01ffd2d33672c5b05b7e57fba88321d4f45eb7763248421485bdb41f7d1da91b",
+      "reproduction_sha256": "01ffd2d33672c5b05b7e57fba88321d4f45eb7763248421485bdb41f7d1da91b",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA21.json",
+      "reference_sha256": "c52b96996dc32ae915629aac88769076f1717d5164515d58c4c857f1bf19b947",
+      "reproduction_sha256": "c52b96996dc32ae915629aac88769076f1717d5164515d58c4c857f1bf19b947",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA23.json",
+      "reference_sha256": "2d64d6e3d47df05aaf20e47df148ca8a649ffa8ab16733d2c9bc88a950ba2dc1",
+      "reproduction_sha256": "2d64d6e3d47df05aaf20e47df148ca8a649ffa8ab16733d2c9bc88a950ba2dc1",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA26.json",
+      "reference_sha256": "ad8694df805c566adee3749cd78195464444544c2f1647df1b2133473e44d842",
+      "reproduction_sha256": "ad8694df805c566adee3749cd78195464444544c2f1647df1b2133473e44d842",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA32.json",
+      "reference_sha256": "0df9b7fc515e4e164309fda4441d9f592220e3f77101464ddcfc2218c997ccda",
+      "reproduction_sha256": "0df9b7fc515e4e164309fda4441d9f592220e3f77101464ddcfc2218c997ccda",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA35.json",
+      "reference_sha256": "480efe600fae5a1bfd6dbb5b9da7ba776367dc22e5b3088ec2cccd1fa2e4bddf",
+      "reproduction_sha256": "480efe600fae5a1bfd6dbb5b9da7ba776367dc22e5b3088ec2cccd1fa2e4bddf",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA44.json",
+      "reference_sha256": "f13fe5f8926db96f6fe0e64163c07fffb346e433855cbc5ada8c91b9c0accffd",
+      "reproduction_sha256": "f13fe5f8926db96f6fe0e64163c07fffb346e433855cbc5ada8c91b9c0accffd",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA46.json",
+      "reference_sha256": "c525a819a59c54b62f54f1449d36b15c147487efb2060adb7f9ee65b5723c822",
+      "reproduction_sha256": "c525a819a59c54b62f54f1449d36b15c147487efb2060adb7f9ee65b5723c822",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA48.json",
+      "reference_sha256": "85251ee93eec365cde2d94b76c60da9bf09c1172e33b4f6f92e6a835598d743c",
+      "reproduction_sha256": "85251ee93eec365cde2d94b76c60da9bf09c1172e33b4f6f92e6a835598d743c",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA51.json",
+      "reference_sha256": "b8b25addf1965293191b8acb928cbf4923aef269f8d3b18675a41ea3ba6bd6a6",
+      "reproduction_sha256": "b8b25addf1965293191b8acb928cbf4923aef269f8d3b18675a41ea3ba6bd6a6",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA53.json",
+      "reference_sha256": "79eecc6a0e8e9cb184c317bcaf6a35a051c37f1edd30e0db8ebedb030c64b1af",
+      "reproduction_sha256": "79eecc6a0e8e9cb184c317bcaf6a35a051c37f1edd30e0db8ebedb030c64b1af",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA56.json",
+      "reference_sha256": "1361b8463935ab25d346c838d9e3e1c1df09de6cb9b32dfd668d5efc4f884675",
+      "reproduction_sha256": "1361b8463935ab25d346c838d9e3e1c1df09de6cb9b32dfd668d5efc4f884675",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA59.json",
+      "reference_sha256": "f985eee27260c5cc512b6a0f5b909b2a5a016bf3d1065fb6bc1fe727837005bd",
+      "reproduction_sha256": "f985eee27260c5cc512b6a0f5b909b2a5a016bf3d1065fb6bc1fe727837005bd",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA61.json",
+      "reference_sha256": "5a72626e22e6b1ea6dd84dd207c0ac6295d140979af0b03af836c0d9450c8551",
+      "reproduction_sha256": "5a72626e22e6b1ea6dd84dd207c0ac6295d140979af0b03af836c0d9450c8551",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA63.json",
+      "reference_sha256": "b3a62084a2037747f7f078ef4f4d9089b8469fff799e927bffe60a80dc109e93",
+      "reproduction_sha256": "b3a62084a2037747f7f078ef4f4d9089b8469fff799e927bffe60a80dc109e93",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA65.json",
+      "reference_sha256": "6c071e1892606ebbf7ee261d69807bd1c85453782225603e852757e465fb8e57",
+      "reproduction_sha256": "6c071e1892606ebbf7ee261d69807bd1c85453782225603e852757e465fb8e57",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA68.json",
+      "reference_sha256": "0e7b14c281c077066b948a6216ef5753ac91478f83e0820eaafcd62d27339fc7",
+      "reproduction_sha256": "0e7b14c281c077066b948a6216ef5753ac91478f83e0820eaafcd62d27339fc7",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA71.json",
+      "reference_sha256": "d50cff2cb2aad4732b4531af9f48c9ff4646566b258e376eefded15b0b0002f1",
+      "reproduction_sha256": "d50cff2cb2aad4732b4531af9f48c9ff4646566b258e376eefded15b0b0002f1",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA73.json",
+      "reference_sha256": "16b2e108feee8b28fc2a9158fd890acd9e157f7555307bc9be44dafef73bc19e",
+      "reproduction_sha256": "16b2e108feee8b28fc2a9158fd890acd9e157f7555307bc9be44dafef73bc19e",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA74.json",
+      "reference_sha256": "457be8220f0f7cf8e2248047bc477adc8929c4493bcb18fc3bc01744d0b245d6",
+      "reproduction_sha256": "457be8220f0f7cf8e2248047bc477adc8929c4493bcb18fc3bc01744d0b245d6",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_monthly_by_oblast/UA80.json",
+      "reference_sha256": "e4e826155a13d99088a03ff3fec67469b7d406d02171e33ca74888494ea7a493",
+      "reproduction_sha256": "e4e826155a13d99088a03ff3fec67469b7d406d02171e33ca74888494ea7a493",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA01.json",
+      "reference_sha256": "bb640272882b5767b6bbf8177f608cdcf2f71b3f1c89183771ba9208d91f4b51",
+      "reproduction_sha256": "bb640272882b5767b6bbf8177f608cdcf2f71b3f1c89183771ba9208d91f4b51",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA05.json",
+      "reference_sha256": "c28b45cedf1cbc7d8e9aec71702f97af30660c218055a7e644d22f4d025ee88b",
+      "reproduction_sha256": "c28b45cedf1cbc7d8e9aec71702f97af30660c218055a7e644d22f4d025ee88b",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA07.json",
+      "reference_sha256": "1377dfc0600b87e1f32943fce6d340da6e17514222f8dbcf28b8c62a48fdd850",
+      "reproduction_sha256": "1377dfc0600b87e1f32943fce6d340da6e17514222f8dbcf28b8c62a48fdd850",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA12.json",
+      "reference_sha256": "133a54df0854c1e29ef7105e4685b520f26d785262f8dd04616746100d947ea0",
+      "reproduction_sha256": "133a54df0854c1e29ef7105e4685b520f26d785262f8dd04616746100d947ea0",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA14.json",
+      "reference_sha256": "22c43298837811323dab2a533356bc6819d18e80e45ffa68ba2074c49d3c3f5e",
+      "reproduction_sha256": "22c43298837811323dab2a533356bc6819d18e80e45ffa68ba2074c49d3c3f5e",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA18.json",
+      "reference_sha256": "15ad1347f4d0342f21ea37c04015c2e719c94c5ccda96dd15ad77dabd877a082",
+      "reproduction_sha256": "15ad1347f4d0342f21ea37c04015c2e719c94c5ccda96dd15ad77dabd877a082",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA21.json",
+      "reference_sha256": "b9820b744b7ea061fadfa5da8adf2f4d5ad65ab5a704e8f03c4bd72dca1173e2",
+      "reproduction_sha256": "b9820b744b7ea061fadfa5da8adf2f4d5ad65ab5a704e8f03c4bd72dca1173e2",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA23.json",
+      "reference_sha256": "23218796098e695e033e1e2e0eb6b98c4bcd005bf944fb00c9930f3e29de398f",
+      "reproduction_sha256": "23218796098e695e033e1e2e0eb6b98c4bcd005bf944fb00c9930f3e29de398f",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA26.json",
+      "reference_sha256": "3b76c906949d656af7a6e9f43a74d0cda23754b3ca65b67fa7dbfe3da6187faf",
+      "reproduction_sha256": "3b76c906949d656af7a6e9f43a74d0cda23754b3ca65b67fa7dbfe3da6187faf",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA32.json",
+      "reference_sha256": "7c28a8f24e7c507f69c30694984c20ce85bb42f569b8fd41822299691f8796f1",
+      "reproduction_sha256": "7c28a8f24e7c507f69c30694984c20ce85bb42f569b8fd41822299691f8796f1",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA35.json",
+      "reference_sha256": "9badb920a912181436413efaf1ced458235d25e0f581c7e399c681543c27696e",
+      "reproduction_sha256": "9badb920a912181436413efaf1ced458235d25e0f581c7e399c681543c27696e",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA44.json",
+      "reference_sha256": "dbb8d5b10653e590d31e77588137193391d748034cb6012ac738b78887baf039",
+      "reproduction_sha256": "dbb8d5b10653e590d31e77588137193391d748034cb6012ac738b78887baf039",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA46.json",
+      "reference_sha256": "55cd221ddb38d0e2418c383fd92955310a7e80083c2e33b07ba189f39d3bf13c",
+      "reproduction_sha256": "55cd221ddb38d0e2418c383fd92955310a7e80083c2e33b07ba189f39d3bf13c",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA48.json",
+      "reference_sha256": "8207a4f98fe9fd53fd809e96d8299fe78fb5ec8e04dc9b0c76d6067bdfe1222e",
+      "reproduction_sha256": "8207a4f98fe9fd53fd809e96d8299fe78fb5ec8e04dc9b0c76d6067bdfe1222e",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA51.json",
+      "reference_sha256": "a9c93a4419b410541c273a58efe110253b358faa8e7bd9e0c7a9e330337a7dd2",
+      "reproduction_sha256": "a9c93a4419b410541c273a58efe110253b358faa8e7bd9e0c7a9e330337a7dd2",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA53.json",
+      "reference_sha256": "4e274538be23aefd9fe9b17d52f3a2d2ea8d41cb4aa285f5f95e40b7e9656c55",
+      "reproduction_sha256": "4e274538be23aefd9fe9b17d52f3a2d2ea8d41cb4aa285f5f95e40b7e9656c55",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA56.json",
+      "reference_sha256": "d3b7ab9216df43561ad02cd5a2d5d19157b5860bfb7ffe5e30532ad6323b4952",
+      "reproduction_sha256": "d3b7ab9216df43561ad02cd5a2d5d19157b5860bfb7ffe5e30532ad6323b4952",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA59.json",
+      "reference_sha256": "41c97776fb47ca2dcfda8f4cd80b7ff81a88b021139db8a87f77be0ba6abe978",
+      "reproduction_sha256": "41c97776fb47ca2dcfda8f4cd80b7ff81a88b021139db8a87f77be0ba6abe978",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA61.json",
+      "reference_sha256": "c05008a6164e240c5076b1021665c497aeed56b3cd67517d8d72ec3d259f3958",
+      "reproduction_sha256": "c05008a6164e240c5076b1021665c497aeed56b3cd67517d8d72ec3d259f3958",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA63.json",
+      "reference_sha256": "a041886cf4ebcc7afee813eeb192b7a6c35761ac536abc6c1e0af4548c79f37a",
+      "reproduction_sha256": "a041886cf4ebcc7afee813eeb192b7a6c35761ac536abc6c1e0af4548c79f37a",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA65.json",
+      "reference_sha256": "9d8277f6cadf26cb11ccf1f6e17958cf0cba9acfce63c7e22500729aadea9615",
+      "reproduction_sha256": "9d8277f6cadf26cb11ccf1f6e17958cf0cba9acfce63c7e22500729aadea9615",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA68.json",
+      "reference_sha256": "cb225960f54ed2af39e950690a0d2829bd49ed466f1efc71a9c9e4e24bdee075",
+      "reproduction_sha256": "cb225960f54ed2af39e950690a0d2829bd49ed466f1efc71a9c9e4e24bdee075",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA71.json",
+      "reference_sha256": "9383af042b551d47df86c2d099fc3e2ac6dae7a1609fec16947ff94777e66676",
+      "reproduction_sha256": "9383af042b551d47df86c2d099fc3e2ac6dae7a1609fec16947ff94777e66676",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA73.json",
+      "reference_sha256": "e3cc533f510ffaa0198c5a11ce0ed95bca2042f91efbdf0b3fd92638ef67d613",
+      "reproduction_sha256": "e3cc533f510ffaa0198c5a11ce0ed95bca2042f91efbdf0b3fd92638ef67d613",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA74.json",
+      "reference_sha256": "e4e130bf3f6d2ca6a5145089f8e56f7a2481ef46aa3e11dc437331e38d6c59c2",
+      "reproduction_sha256": "e4e130bf3f6d2ca6a5145089f8e56f7a2481ef46aa3e11dc437331e38d6c59c2",
+      "byte_identical": true
+    },
+    {
+      "path": "hromada_school_year_by_oblast/UA80.json",
+      "reference_sha256": "2f4030a6bc3b1bc09843f9d54cd61ac6279458195c0f1d3a7c9e8fb1ad3eaf7c",
+      "reproduction_sha256": "2f4030a6bc3b1bc09843f9d54cd61ac6279458195c0f1d3a7c9e8fb1ad3eaf7c",
+      "byte_identical": true
+    },
+    {
+      "path": "national_monthly.json",
+      "reference_sha256": "77e2aad90a6995b4412448794863c12de6100ae08f9335f2a90bd8e5d6257db5",
+      "reproduction_sha256": "77e2aad90a6995b4412448794863c12de6100ae08f9335f2a90bd8e5d6257db5",
+      "byte_identical": true
+    },
+    {
+      "path": "national_school_year.json",
+      "reference_sha256": "5b22f6e09cc9a8e532362a8b0560b6bd3cf80e5f651fa877a5601e946645a846",
+      "reproduction_sha256": "5b22f6e09cc9a8e532362a8b0560b6bd3cf80e5f651fa877a5601e946645a846",
+      "byte_identical": true
+    },
+    {
+      "path": "oblast_monthly.json",
+      "reference_sha256": "da380ecaf27aadc95d964d6d417dcc81196c96e9d3601abebe3dbe1834c29e48",
+      "reproduction_sha256": "da380ecaf27aadc95d964d6d417dcc81196c96e9d3601abebe3dbe1834c29e48",
+      "byte_identical": true
+    },
+    {
+      "path": "oblast_school_year.json",
+      "reference_sha256": "51e4ac41ae1e2bcf86dae673839bd0c51d88e69b3970797fbd8cfbfaa82c60dc",
+      "reproduction_sha256": "51e4ac41ae1e2bcf86dae673839bd0c51d88e69b3970797fbd8cfbfaa82c60dc",
+      "byte_identical": true
+    }
+  ]
+}

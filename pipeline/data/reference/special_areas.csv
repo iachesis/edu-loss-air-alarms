@@ -1,0 +1,2 @@
+source_area_id,source_area_name,canonical_hromada_id,canonical_area_name,oblast_id,dashboard_geo_level,adm3_id,note
+UA80000000000093317,м. Київ,UA80000000000479391,м. Київ,UA80,hromada,8000000,Education snapshots use an alternate Kyiv city identifier; this crosswalk links it to the canonical Kyiv hromada and geometry.

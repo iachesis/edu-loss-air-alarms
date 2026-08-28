@@ -80,6 +80,7 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 summary:focus-visible,
+.has-availability-reason:focus-visible,
 .leaflet-interactive:focus-visible {
     outline: 3px solid var(--focus);
     outline-offset: 3px;
@@ -165,6 +166,14 @@ summary:focus-visible,
     line-height: .91;
     text-wrap: balance;
     text-transform: uppercase;
+}
+
+.publication-home-link,
+.publication-home-link:hover,
+.publication-home-link:active {
+    color: inherit;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 .subtitle {
@@ -471,6 +480,47 @@ summary:focus-visible,
     white-space: nowrap;
 }
 
+.has-availability-reason {
+    position: relative;
+    cursor: help;
+}
+
+.has-availability-reason::after {
+    position: absolute;
+    bottom: calc(100% + .5rem);
+    left: 0;
+    z-index: 1200;
+    width: max-content;
+    max-width: min(250px, calc(100vw - 2rem));
+    padding: .45rem .55rem;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 2px;
+    background: var(--surface);
+    box-shadow: 0 8px 20px rgba(21, 23, 25, .12);
+    color: var(--ink);
+    content: attr(data-availability-reason);
+    font-family: var(--font-interface);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.35;
+    opacity: 0;
+    pointer-events: none;
+    text-transform: none;
+    white-space: normal;
+}
+
+.has-availability-reason:hover::after,
+.has-availability-reason:focus-visible::after {
+    opacity: 1;
+}
+
+.metric-card-days .has-availability-reason::after,
+.episode-measure .has-availability-reason::after {
+    right: 0;
+    left: auto;
+}
+
 .metric-card-hours .metric-value {
     font-size: clamp(4rem, 6.5vw, 6.35rem);
 }
@@ -562,11 +612,14 @@ summary:focus-visible,
 }
 
 .episode-measure strong {
+    position: relative;
+    display: inline-block;
     font-family: var(--font-editorial);
     font-size: 1.9rem;
     font-variant-numeric: tabular-nums;
     font-weight: 500;
     line-height: 1;
+    white-space: nowrap;
 }
 
 .episode-measure .metric-secondary,
@@ -623,8 +676,8 @@ summary:focus-visible,
 }
 
 .map-controls label {
-    width: min(240px, 24vw);
-    min-width: 190px;
+    width: min(380px, 32vw);
+    min-width: 270px;
 }
 
 .map-action-buttons {
@@ -708,6 +761,33 @@ summary:focus-visible,
     color: var(--midnight) !important;
 }
 
+.aae-full-extent-control {
+    background: var(--surface);
+}
+
+.aae-full-extent-button {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    min-height: 34px;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    background: var(--surface);
+    color: var(--midnight);
+}
+
+.aae-full-extent-button:hover {
+    background: var(--cool-pale);
+}
+
+.aae-full-extent-button:focus-visible {
+    position: relative;
+    z-index: 2;
+    outline: 3px solid var(--focus);
+    outline-offset: -3px;
+}
+
 .leaflet-tooltip {
     padding: .48rem .6rem !important;
     border: 1px solid var(--hairline-strong) !important;
@@ -760,8 +840,8 @@ summary:focus-visible,
 }
 
 .control-label {
-    width: min(290px, 32vw);
-    min-width: 230px;
+    width: min(440px, 42vw);
+    min-width: 300px;
 }
 
 .segmented {
@@ -814,12 +894,10 @@ details summary {
     font-weight: 680;
 }
 
-.modality-details,
 .data-details {
     margin-top: 1.1rem;
 }
 
-.modality-details[open] > summary,
 .data-details[open] > summary {
     margin-bottom: .75rem;
 }
@@ -833,6 +911,33 @@ details summary {
     font-size: .7rem;
     letter-spacing: .04em;
     text-transform: uppercase;
+}
+
+.data-details summary {
+    gap: .55rem;
+    padding: .2rem .15rem;
+    border-bottom: 1px solid var(--hairline-strong);
+    list-style: none;
+}
+
+.data-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.data-details summary::after {
+    color: var(--signal);
+    content: "▾";
+    font-size: .9rem;
+    line-height: 1;
+}
+
+.data-details[open] summary::after {
+    content: "▴";
+}
+
+.data-details summary:hover {
+    border-bottom-color: var(--signal);
+    color: var(--ink);
 }
 
 .comparison-tools {
@@ -871,6 +976,10 @@ details summary {
     min-width: 780px;
     border-collapse: collapse;
     font-variant-numeric: tabular-nums;
+}
+
+.comparison-table table {
+    min-width: 700px;
 }
 
 .chart-table table {
@@ -933,6 +1042,86 @@ details summary {
     color: var(--signal-dark);
 }
 
+.territory-cell-main {
+    display: flex;
+    gap: .35rem .55rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.35rem;
+    padding: .08rem .35rem;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 999px;
+    color: var(--secondary);
+    font-family: var(--font-mono);
+    font-size: .58rem;
+    font-style: normal;
+    font-weight: 650;
+    letter-spacing: .02em;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.status-not_covered,
+.status-unavailable {
+    border-color: rgba(157, 62, 43, .55);
+    color: var(--signal-dark);
+}
+
+.comparison-technical {
+    margin-top: .15rem;
+    color: var(--secondary);
+}
+
+.comparison-technical > summary {
+    display: inline-flex;
+    min-height: 28px;
+    align-items: center;
+    border-bottom: 1px dotted var(--hairline-strong);
+    color: var(--secondary);
+    font-family: var(--font-mono);
+    font-size: .61rem;
+    font-weight: 650;
+    letter-spacing: .035em;
+}
+
+.comparison-technical > summary:hover {
+    border-bottom-color: var(--signal);
+    color: var(--ink);
+}
+
+.comparison-technical dl {
+    display: grid;
+    gap: .25rem;
+    margin: .25rem 0 0;
+    padding: .45rem .55rem;
+    border-left: 2px solid var(--hairline);
+}
+
+.comparison-technical dl div {
+    display: grid;
+    grid-template-columns: minmax(115px, auto) 1fr;
+    gap: .4rem;
+}
+
+.comparison-technical dt {
+    color: var(--secondary);
+    font-family: var(--font-mono);
+    font-size: .58rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.comparison-technical dd {
+    margin: 0;
+    font-size: .68rem;
+    font-weight: 600;
+}
+
 .selected-measure {
     background: rgba(234, 213, 203, .46);
     color: var(--ink) !important;
@@ -986,11 +1175,12 @@ details summary {
 
 .education-summary strong {
     font-family: var(--font-editorial);
-    font-size: clamp(2rem, 3.5vw, 3.35rem);
-    font-variant-numeric: tabular-nums;
+    font-size: clamp(1.55rem, 2vw, 2.55rem);
+    font-variant-numeric: lining-nums tabular-nums;
     font-weight: 500;
-    letter-spacing: -.04em;
+    letter-spacing: -.055em;
     line-height: 1;
+    white-space: nowrap;
 }
 
 .education-summary small {
@@ -1011,6 +1201,12 @@ details summary {
     font-size: .82rem;
 }
 
+.education-year-row span,
+.comparison-card dd,
+.table-wrap td {
+    font-variant-numeric: tabular-nums;
+}
+
 .education-year-row small {
     grid-column: 2 / -1;
     color: var(--secondary);
@@ -1023,10 +1219,17 @@ details summary {
     margin-top: 1.2rem;
 }
 
-.modality-details {
+.modality-panel {
     margin-top: 0;
     padding-top: .85rem;
     border-top: 1px solid var(--hairline-strong);
+}
+
+.modality-panel h3 {
+    margin: 0 0 .35rem;
+    font-family: var(--font-editorial);
+    font-size: 1.25rem;
+    font-weight: 500;
 }
 
 .notes-grid {
@@ -1069,45 +1272,40 @@ details summary {
 
 .footer-inner {
     display: grid;
-    grid-template-columns: minmax(250px, 1.1fr) minmax(260px, 1fr) auto;
-    gap: 1.5rem 2.5rem;
+    grid-template-columns: auto minmax(280px, 1fr) auto;
+    gap: .75rem 2rem;
     align-items: center;
     padding: 2rem 0 2.25rem;
 }
 
-.footer-identity {
+.footer-credit {
     display: flex;
-    align-items: center;
-    gap: .8rem;
-}
-
-.footer-mark {
-    display: inline-grid;
-    width: 42px;
-    height: 42px;
-    place-items: center;
-    border: 1px solid rgba(252, 252, 250, .32);
-    color: #e3a58f;
-    font-size: .75rem;
-}
-
-.footer-identity div {
-    display: grid;
-    gap: .08rem;
-}
-
-.footer-identity strong {
-    font-family: var(--font-editorial);
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-.footer-identity span:last-child {
+    gap: .35rem;
+    align-items: baseline;
     color: #bfc8cb;
-    font-size: .7rem;
+    font-size: .76rem;
+    white-space: nowrap;
+}
+
+.footer-credit a {
+    font-weight: 700;
+}
+
+.footer-organizations > span {
+    display: flex;
+    gap: .35rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-organizations > span > span {
+    color: #76909a;
 }
 
 .release-line {
+    grid-column: 1 / -1;
+    padding-top: .65rem;
+    border-top: 1px solid rgba(252, 252, 250, .14);
     color: #bfc8cb;
     font-size: .66rem;
     line-height: 1.5;
@@ -1399,8 +1597,11 @@ dialog code {
     }
 
     .site-footer nav {
+        grid-column: auto;
+    }
+
+    .release-line {
         grid-column: 1 / -1;
-        justify-content: flex-start;
     }
 }
 
@@ -1482,7 +1683,7 @@ dialog code {
 
     .map-action-buttons {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr;
     }
 
     .map-action-buttons button {
@@ -1549,7 +1750,7 @@ dialog code {
         gap: .2rem .75rem;
     }
 
-    .comparison-card summary span {
+    .comparison-card summary > .comparison-card-share {
         font-family: var(--font-editorial);
         font-size: 1.25rem;
         font-variant-numeric: tabular-nums;
@@ -1562,7 +1763,13 @@ dialog code {
         font-size: .65rem;
     }
 
-    .comparison-card dl {
+    .comparison-card summary > .status-badge {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+
+    .comparison-card-metrics,
+    .comparison-card-technical dl {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0;
@@ -1570,7 +1777,8 @@ dialog code {
         border-left: 1px solid var(--hairline);
     }
 
-    .comparison-card dl div {
+    .comparison-card-metrics div,
+    .comparison-card-technical dl div {
         min-width: 0;
         padding: .55rem;
         border-right: 1px solid var(--hairline);
@@ -1588,6 +1796,19 @@ dialog code {
         margin: .15rem 0 0;
         font-size: .78rem;
         font-weight: 680;
+    }
+
+    .comparison-card-technical {
+        margin-top: .65rem;
+    }
+
+    .comparison-card-technical h4 {
+        margin: 0 0 .35rem;
+        color: var(--secondary);
+        font-family: var(--font-mono);
+        font-size: .64rem;
+        letter-spacing: .04em;
+        text-transform: uppercase;
     }
 
     .comparison-select {
@@ -1617,6 +1838,11 @@ dialog code {
     }
 
     .site-footer nav {
+        grid-column: auto;
+        justify-content: flex-start;
+    }
+
+    .release-line {
         grid-column: auto;
     }
 
@@ -1684,10 +1910,6 @@ dialog code {
         font-size: clamp(3.6rem, 19vw, 5.2rem);
     }
 
-    .map-action-buttons {
-        grid-template-columns: 1fr;
-    }
-
     .map-container {
         height: 370px;
     }
@@ -1747,6 +1969,10 @@ dialog code {
 
     .education-summary small {
         grid-column: auto;
+    }
+
+    .education-summary strong {
+        font-size: clamp(2rem, 10vw, 3rem);
     }
 
     .education-year-row {

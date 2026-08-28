@@ -1,14 +1,14 @@
 {
-  "website_release_id": "AAE-WEB-1.0.0",
-  "website_release_status": "PRODUCTION_RELEASE",
+  "website_release_id": "AAE-WEB-1.1.0",
+  "website_release_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
   "website_release_date": "2026-08-28",
-  "analytical_build_id": "AAE-FULL-9c94bc374ab5e7cf29",
-  "analytical_build_status": "FROZEN_APPROVED",
-  "analytical_source_sha256": "6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004",
-  "source_url": "https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/main/datasets/official_data_uk.csv",
-  "source_retrieved_at_utc": null,
+  "analytical_build_id": "AAE-FULL-88db64d06afa99610f",
+  "analytical_build_status": "PASS_WITH_REVIEW_FLAGS",
+  "analytical_source_sha256": "108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445",
+  "source_url": "https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/f3bbc50ab34a8100018f2d95f45c6ba053b0c77a/datasets/official_data_uk.csv",
+  "source_retrieved_at_utc": "2026-08-28T19:38:57+00:00",
   "source_coverage_start_utc": "2022-03-15T16:10:34+00:00",
-  "source_coverage_end_utc": "2026-07-30T02:20:14+00:00",
+  "source_coverage_end_utc": "2026-08-28T10:06:00+00:00",
   "methodology_version": "0.2",
   "indicator_dictionary_version": "0.3",
   "input_data_contract_version": "0.1",
@@ -207,13 +207,13 @@
     },
     {
       "path": "geography_lookup.json",
-      "size_bytes": 4089290,
-      "sha256": "7479747f4c92466a33ff51399c79a0e24855d46d2b097f028763414bd2a6b0cf"
+      "size_bytes": 4116200,
+      "sha256": "f99e8738c35a4a227978a17b3dd981271612c104128c6e3d2afc4475b125fdfe"
     },
     {
       "path": "hromada_monthly_UA01.json",
-      "size_bytes": 7502282,
-      "sha256": "d5c656801042466887889830df042c7b02c711c2c59d37adf6ee7c902c2d679f"
+      "size_bytes": 7623482,
+      "sha256": "b8ec7ccb1cd2f6568f14f186251145bc1ab414f110a92cc78a18511a3851fe36"
     },
     {
       "path": "hromada_monthly_UA05.json",
@@ -267,8 +267,8 @@
     },
     {
       "path": "hromada_monthly_UA44.json",
-      "size_bytes": 920452,
-      "sha256": "f13fe5f8926db96f6fe0e64163c07fffb346e433855cbc5ada8c91b9c0accffd"
+      "size_bytes": 935252,
+      "sha256": "226c308eae5dcef291be0ea723d4cdad9819ab22b6760eb9af85558e534d92af"
     },
     {
       "path": "hromada_monthly_UA46.json",
@@ -342,8 +342,8 @@
     },
     {
       "path": "hromada_school_year_UA01.json",
-      "size_bytes": 762350,
-      "sha256": "bb640272882b5767b6bbf8177f608cdcf2f71b3f1c89183771ba9208d91f4b51"
+      "size_bytes": 774470,
+      "sha256": "e07b61645a957e0bd62434a545a2157dac5ad344a283cd308c95d97d949a2c71"
     },
     {
       "path": "hromada_school_year_UA05.json",
@@ -397,8 +397,8 @@
     },
     {
       "path": "hromada_school_year_UA44.json",
-      "size_bytes": 93527,
-      "sha256": "dbb8d5b10653e590d31e77588137193391d748034cb6012ac738b78887baf039"
+      "size_bytes": 95007,
+      "sha256": "b15bccf3d01903a4b8271af6cbf949d4100c19b8023e250fdc7969c2619d1f73"
     },
     {
       "path": "hromada_school_year_UA46.json",
@@ -482,8 +482,8 @@
     },
     {
       "path": "modality_rules.json",
-      "size_bytes": 2248,
-      "sha256": "1888a35a6d10f8503f2a10f774066b40eb9ac1961c0ce485edb775d4a09ff768"
+      "size_bytes": 2448,
+      "sha256": "53534046615b86aa2df876d41688de35153811b18ae21cbccf04dcd2c5c59463"
     },
     {
       "path": "national_monthly.json",
@@ -497,26 +497,31 @@
     },
     {
       "path": "oblast_monthly.json",
-      "size_bytes": 883494,
-      "sha256": "da380ecaf27aadc95d964d6d417dcc81196c96e9d3601abebe3dbe1834c29e48"
+      "size_bytes": 883814,
+      "sha256": "70fe6098c947cb78b8e8de15fbc0eeab9b40f85cc98fdb576e51e5acad5265e8"
     },
     {
       "path": "oblast_school_year.json",
-      "size_bytes": 90107,
-      "sha256": "51e4ac41ae1e2bcf86dae673839bd0c51d88e69b3970797fbd8cfbfaa82c60dc"
+      "size_bytes": 90139,
+      "sha256": "a7e4fb0603d7014b317379c57b10862df95f7295805ca9fce4c06d98174f5d26"
     },
     {
       "path": "schemas/payload-row.schema.json",
-      "size_bytes": 1195,
-      "sha256": "7e09aeafe8c2cf68c7e58f9ec3436849e5b93dba734c70f8824691a0702b7ef8"
+      "size_bytes": 1280,
+      "sha256": "45e7d5a6475d2777047b1e72fb00d835e6a1ab844656b1c2fcb0aacce35e856e"
     },
     {
       "path": "schemas/release.schema.json",
-      "size_bytes": 657,
-      "sha256": "012770c9948f07ffc07e05cf67198dd9ae86ce509c2a2427d5282e4b5f38855b"
+      "size_bytes": 2664,
+      "sha256": "295835942bc0e72b175448cd80f388bbd8fe487ed7b5b0c6bdfdcdf751c959bf"
+    },
+    {
+      "path": "stage_b_validation.json",
+      "size_bytes": 3902,
+      "sha256": "59be198651270cffc102e86766e947d683478ef0a796713d88600d6387b7b49b"
     }
   ],
-  "source_retrieval_timestamp_status": "NOT_RECORDED_IN_FROZEN_BUILD",
+  "source_retrieval_timestamp_status": "RECORDED_AND_VERIFIED",
   "product_specification_version": "0.3",
   "dashboard_tor_version": "0.3",
   "architecture": {
@@ -527,19 +532,20 @@
     "payload_validation": "JSON Schema Draft 2020-12 through Python jsonschema 4.26.0",
     "build": "Static HTML, CSS and JavaScript site; no build step, Node.js or npm required"
   },
-  "publication_status": "FINAL_PUBLIC_RELEASE",
-  "package_version": "1.0.0",
+  "publication_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
+  "package_version": "1.1.0",
   "node_required": false,
   "runtime_external_network_required": false,
   "delivery": {
     "unicef_deliverable": 2,
-    "product_status": "FINAL_PUBLIC_RELEASE",
-    "analytical_payload_values_changed": false
+    "product_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
+    "analytical_numeric_values_changed_vs_frozen": false,
+    "not_covered_semantics_corrected": true
   },
   "release_marker": {
     "visible_element": "#footer-release",
     "machine_readable_source": "data/release.json:website_release_id",
-    "value": "AAE-WEB-1.0.0"
+    "value": "AAE-WEB-1.1.0"
   },
   "geography_catalogue": {
     "version": "0.4",
@@ -548,5 +554,46 @@
     "oblast_records": 26,
     "hromada_records": 1773,
     "transliteration_rule": "UA_NATIONAL_2010_DETERMINISTIC_V1"
-  }
+  },
+  "analytical_source_git_blob_sha1": "c7b84747df0c434cf33d9e8d241c7554ca894168",
+  "analytical_source_upstream_commit_sha": "f3bbc50ab34a8100018f2d95f45c6ba053b0c77a",
+  "configured_source_url": "https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/main/datasets/official_data_uk.csv",
+  "source_repository": {
+    "owner": "Vadimkin",
+    "name": "ukrainian-air-raid-sirens-dataset",
+    "path": "datasets/official_data_uk.csv",
+    "branch": "main"
+  },
+  "source_retrieval_started_at_utc": "2026-08-28T19:38:42+00:00",
+  "source_retrieval_completed_at_utc": "2026-08-28T19:38:57+00:00",
+  "source_http_content_length_declared": 40954353,
+  "source_actual_bytes_received": 40954353,
+  "source_expected_resolved_byte_size": 40954353,
+  "source_provenance_mode": "live_resolved_source",
+  "source_counts": {
+    "input_rows": 296882,
+    "valid_unique_rows": 183035,
+    "invalid_rows": 2,
+    "exact_duplicate_rows": 113845,
+    "declared_levels": {
+      "hromada": 20706,
+      "oblast": 65285,
+      "raion": 97044
+    },
+    "mapping_routes": {
+      "controlled_level_correction": 66,
+      "hromada_exact_parent": 20640,
+      "oblast_allocation": 65285,
+      "raion_allocation": 97044
+    },
+    "detailed_mapping_failures": 0
+  },
+  "source_differential_vs_frozen": {
+    "added_records": 10987,
+    "removed_records": 0,
+    "added_records_intersecting_published_assumed_school_time": 0
+  },
+  "processing_package_version": "0.1",
+  "local_execution_package_version": "0.1",
+  "analytical_project_fingerprint": "54d0ce63afe1c2c3cb718ebd17bc594e"
 }

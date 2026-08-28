@@ -1,6 +1,6 @@
 # How Air Alarms Disrupt the School Day in Ukraine
 
-Public analytical dashboard for UNICEF Deliverable 2: **Model for quantification of disruption of educational activities due to air alarms and dashboard**.
+Public analytical dashboard for understanding how recorded air alarms overlap with assumed school time in Ukraine.
 
 The dashboard estimates overlap between recorded air-alarm intervals and an assumed school operating window. It supports public communication, comparative analysis, and policy or donor discussion across Ukraine, oblasts, and hromadas.
 
@@ -10,13 +10,14 @@ The product provides a consistent way to compare how recorded air alarms interse
 
 The dashboard is an analytical model, not a monitoring system for individual schools or learners. Its results describe estimated overlap under a common set of assumptions.
 
-## Three core measures
+## Four core indicators
 
-1. **School time under alarm** — the duration of recorded alarm intervals that overlaps the assumed school operating window, together with its share of available assumed school time.
-2. **School days affected** — the number and share of available assumed school days with at least one positive alarm overlap.
-3. **School-time alarm episodes** — distinct processed alarm episodes with positive overlap during assumed school time.
+1. **Air-alarm time during assumed school hours** — the duration of positive overlap between recorded air-alarm intervals and assumed school operating time during the selected period.
+2. **Share of assumed school time under air alarm** — positive-overlap seconds divided by available assumed school seconds.
+3. **Assumed school days with air alarms during assumed school hours** — the number of assumed school days on which at least one recorded air alarm has positive overlap with assumed school time; the displayed percentage is the **share of available assumed school days with air alarms during assumed school hours**.
+4. **Air-alarm episodes overlapping assumed school time** — distinct processed alarm episodes with positive overlap during the selected period.
 
-For oblast and national views, absolute values such as hours, affected days, and episodes are averages per active school location. A value such as `87.8` affected days is therefore an average across active school locations, not a fractional calendar day experienced by one institution. Hromada values remain direct geographic results under the frozen analytical contract.
+For oblast and national views, absolute values such as hours, affected days, and episodes are averages per active school location over the selected period. A value such as `135.2` episodes for Ukraine in 2025/26 therefore means an average of 135.2 distinct processed episodes per active school location over that school year; it does not mean episodes per day. Hromada values remain direct territorial results under the governed analytical contract.
 
 ## Education context
 
@@ -68,11 +69,11 @@ The dashboard does **not** directly measure:
 - sleep disruption;
 - individual learner exposure.
 
-It is not a causal estimate, a school-level administrative record, or an automatic prioritisation score. A covered zero, partial coverage, analytical unavailability, and unavailable geometry are distinct states; unavailable analytical values are not replaced with zero.
+It is not a causal estimate, a school-level administrative record, or an automatic prioritisation score. A covered zero, partial coverage, `not_covered`, generic analytical unavailability, and unavailable geometry are distinct states. `UA01` and `UA44` are marked `not_covered` because the controlled source configuration identifies their permanent siren regimes as outside source coverage; their analytical values remain null rather than becoming zero.
 
 ## Architecture
 
-This repository is the deployable static site. It has no application backend, runtime database, package-install step, tracking, cookies, or runtime dependency on third-party network services.
+This repository contains the deployable static site and the public-safe maintenance source for its analytical pipeline. The site has no application backend, runtime database, package-install step, tracking, cookies, or runtime dependency on third-party network services.
 
 The browser stack is vendored in the repository:
 
@@ -103,8 +104,14 @@ data/geography_lookup.json Geography catalogue and search metadata
 data/geography/            Oblast and hromada GeoJSON
 data/*_monthly.json        Monthly analytical payloads
 data/*_school_year.json    School-year analytical payloads
+pipeline/                  Public-safe pipeline, tests, controlled configuration and evidence
+pipeline/config/           Governed versions, source contract and controlled-input manifest
+pipeline/evidence/stage-b/ Machine-readable Stage-B regression and integration evidence
+pipeline/tests/            Synthetic regression tests; no controlled education rows
 vendor/                    Vendored browser libraries
 ```
+
+The pipeline deliberately excludes the raw alarm CSV, school-level education rows, build directories, caches, and internal review archives. A maintainer supplies the controlled education bundle outside the repository; [`pipeline/config/controlled_inputs.json`](pipeline/config/controlled_inputs.json) defines the required filenames, roles, snapshot dates, byte sizes, and SHA-256 identities. The runner fails when an input is absent or hash-mismatched. See [`pipeline/README.md`](pipeline/README.md) for the verified acquisition, preflight, clean-build, resume, differential, and review procedures.
 
 ## Local serving
 
@@ -120,16 +127,21 @@ Opening the HTML directly with a `file://` URL is not supported because the appl
 
 ## Provenance
 
-- Website release ID: `AAE-WEB-1.0.0`
-- Analytical build ID: `AAE-FULL-9c94bc374ab5e7cf29`
-- Analytical build status: `FROZEN_APPROVED`
-- Alarm source: [Ukrainian Air Raid Sirens Dataset — official data](https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/main/datasets/official_data_uk.csv)
-- Frozen source SHA-256: `6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004`
-- Frozen source coverage: 15 March 2022 through 30 July 2026 UTC
+- Website release ID: `AAE-WEB-1.1.0` (candidate pending independent acceptance)
+- Analytical build ID: `AAE-FULL-88db64d06afa99610f`
+- Analytical build status: `PASS_WITH_REVIEW_FLAGS` with 26/26 reconciliation checks and no hard failures
+- Immutable alarm source: [Ukrainian Air Raid Sirens Dataset — official data at the resolved commit](https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/f3bbc50ab34a8100018f2d95f45c6ba053b0c77a/datasets/official_data_uk.csv)
+- Resolved upstream commit: `f3bbc50ab34a8100018f2d95f45c6ba053b0c77a`
+- Verified Git blob SHA-1: `c7b84747df0c434cf33d9e8d241c7554ca894168`
+- Verified source SHA-256: `108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445`
+- Source retrieval: started `2026-08-28T19:38:42Z`, completed `2026-08-28T19:38:57Z`
+- Source coverage: 15 March 2022 through 28 August 2026 UTC
+- Governed methodology / indicator dictionary: `0.2` / `0.3`
 - Machine-readable release metadata: [`data/release.json`](data/release.json)
 - Static payload manifest: [`data/payload_manifest.json`](data/payload_manifest.json)
+- Stage-B validation record: [`data/stage_b_validation.json`](data/stage_b_validation.json)
 
-The source retrieval timestamp was not recorded in the frozen analytical build; that provenance gap remains explicit in the release metadata. Website copy, interaction, and release-metadata changes do not create a new analytical build, and this release does not regenerate analytical data.
+All 56 analytical payloads were regenerated through the repaired pipeline. A field-level differential against frozen build `AAE-FULL-9c94bc374ab5e7cf29` found no changes to actual analytical numeric values and no added or missing analytical keys. The intended differences are complete source provenance, governed document versions, the new build identity, and `not_covered`/null semantics for controlled areas. Source coverage through July and August does not make those months instructional months: published metrics remain bounded by the governed school calendar and September–June school-year windows.
 
 ## Intended use
 

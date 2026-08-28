@@ -1,4 +1,4 @@
-import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, buildComparisonCsv, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
+import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, availabilityReasonKey, buildComparisonCsv, cleanDashboardUrl, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
 import { initI18n, setLanguage, tr } from './i18n.js';
 import { createGeographyFuse, createSearchItems, itemLabel, itemName, itemParent, searchGeography } from './search.js';
 import { renderLeafletMap } from './map.js';
@@ -69,17 +69,27 @@ function rowForState(id = state.areaId) { if (state.periodMode === 'school_year'
 function value(r, key) { return isAnalyticallyUnavailable(r) ? null : key === 'affected_school_days_pct' ? affectedDaysPct(r) : r[key]; }
 function periodRowsForComparison(forOblast) { const ids = forOblast ? Object.entries(data.lookup.hromadas).filter(([, x]) => x.oblast_id === forOblast).map(([id]) => id) : Object.keys(data.lookup.oblasts); return ids.map(id => rowForState(id)).filter((r) => Boolean(r)); }
 function periodContext() { const b = periodBounds(state); return educationContexts([...monthlyRows(), ...yearRows()], b.start, b.end); }
-function statusText(x) { return x === 'complete' ? tr('complete') : x === 'partial' ? tr('partial') : tr('unavailable'); }
+function statusText(x) { return x === 'complete' ? tr('complete') : x === 'partial' ? tr('partial') : x === 'not_covered' ? tr('notCovered') : tr('unavailable'); }
+function updateDataDisclosures() {
+    document.querySelectorAll('.data-details').forEach(details => {
+        const summary = details.querySelector('.data-disclosure-summary');
+        if (summary)
+            summary.textContent = tr(details.open ? 'hideDataTable' : 'showDataTable');
+    });
+}
 function applyStaticTranslations() {
     document.querySelectorAll('[data-t]').forEach(el => { el.textContent = tr(el.dataset.t); });
     document.querySelectorAll('[data-t-placeholder]').forEach(el => { el.placeholder = tr(el.dataset.tPlaceholder); });
     document.querySelectorAll('[data-t-aria-label]').forEach(el => { el.setAttribute('aria-label', tr(el.dataset.tAriaLabel)); });
     document.title = tr('appTitle');
     $('page-title').textContent = tr('appTitle');
+    $('page-title').href = cleanDashboardUrl(state.lang);
     $('page-subtitle').textContent = tr('subtitle');
     document.querySelectorAll('[data-lang]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.lang === state.lang)));
+    document.querySelectorAll('[data-footer-org-lang]').forEach(group => { group.hidden = group.dataset.footerOrgLang !== state.lang; });
     const params = `?lang=${state.lang}`;
     document.querySelectorAll('[data-page]').forEach(anchor => { anchor.href = `./${anchor.dataset.page}.html${params}`; });
+    updateDataDisclosures();
 }
 function option(value, label) { const o = document.createElement('option'); o.value = value; o.textContent = label; return o; }
 function populatePeriodControls() {
@@ -191,10 +201,15 @@ function renderSummary(row) {
     const periodClause = insightPeriodClause();
     const area = nameOf(row.area_id);
     if (isAnalyticallyUnavailable(row)) {
-        $('summary-text').textContent = state.lang === 'uk'
-            ? `${periodClause} аналітичний результат на території «${area}» недоступний; нуль не підставлено.`
-            : `${periodClause}, the analytical result for ${area} is unavailable; zero has not been substituted.`;
-        $('aggregation-note').textContent = tr('unavailable');
+        const notCovered = row.coverage_status === 'not_covered';
+        $('summary-text').textContent = notCovered
+            ? state.lang === 'uk'
+                ? `${periodClause} територія «${area}» не охоплена джерелом тривог за цією методологією; нуль не підставлено.`
+                : `${periodClause}, ${area} is not covered by the alarm source under this methodology; zero has not been substituted.`
+            : state.lang === 'uk'
+                ? `${periodClause} аналітичний результат на території «${area}» недоступний; нуль не підставлено.`
+                : `${periodClause}, the analytical result for ${area} is unavailable; zero has not been substituted.`;
+        $('aggregation-note').textContent = tr(notCovered ? 'notCovered' : 'unavailable');
         return;
     }
     const aggregate = row.area_level !== 'hromada';
@@ -215,24 +230,42 @@ function renderSummary(row) {
     }
     $('aggregation-note').textContent = aggregate ? tr('aggregateMetricContext') : tr('directResult');
 }
+function setHeadlineMetric(element, text, label, reason = null) {
+    element.textContent = text;
+    element.classList.toggle('has-availability-reason', Boolean(reason));
+    element.removeAttribute('title');
+    if (reason) {
+        element.dataset.availabilityReason = reason;
+        element.tabIndex = 0;
+        element.setAttribute('aria-label', `${label}: ${reason}`);
+    }
+    else {
+        delete element.dataset.availabilityReason;
+        element.removeAttribute('tabindex');
+        element.removeAttribute('aria-label');
+    }
+}
 function renderCards(row) {
     const unavailable = isAnalyticallyUnavailable(row);
+    const reasonKey = availabilityReasonKey(row);
+    const unavailableText = reasonKey ? tr(reasonKey) : null;
     const aggregate = row.area_level !== 'hromada';
     const digits = aggregate ? 1 : 0;
     const context = aggregate ? tr('averageLocation') : tr('directResult');
-    $('alarm-time-value').textContent = formatDuration(unavailable ? null : row.alarm_hours_average_school_location, state.lang);
-    $('alarm-time-secondary').textContent = unavailable ? tr('unavailable') : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`;
+    setHeadlineMetric($('alarm-time-value'), formatDuration(unavailable ? null : row.alarm_hours_average_school_location, state.lang), tr('alarmTime'), unavailableText);
+    setHeadlineMetric($('alarm-time-secondary'), unavailable ? '—' : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`, tr('alarmShare'), unavailableText);
     $('alarm-time-context').textContent = unavailable ? '' : context;
     $('affected-days-value').textContent = unavailable ? '—' : `${formatNumber(row.affected_school_days_average_school_location, state.lang, digits)} / ${formatNumber(row.available_school_days_average_school_location, state.lang, digits)}`;
-    $('affected-days-secondary').textContent = unavailable ? tr('unavailable') : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`;
+    setHeadlineMetric($('affected-days-secondary'), unavailable ? '—' : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`, tr('affectedDays'), unavailableText);
     $('affected-days-context').textContent = unavailable ? '' : context;
     const episodes = unavailable ? null : row.school_time_alarm_episodes_average_school_location;
-    $('episodes-value').textContent = episodes === null ? '—' : formatNumber(episodes, state.lang, digits);
-    $('episodes-secondary').textContent = unavailable ? tr('unavailable') : episodes === null ? tr('noEpisodesRange') : '';
-    $('episodes-context').textContent = unavailable || episodes === null ? '' : context;
+    const episodeReason = unavailable ? unavailableText : episodes === null ? tr('noEpisodesRange') : null;
+    setHeadlineMetric($('episodes-value'), episodes === null ? '—' : formatNumber(episodes, state.lang, digits), tr('episodes'), episodeReason);
+    $('episodes-secondary').textContent = unavailable ? '' : episodes === null ? tr('noEpisodesRange') : '';
+    $('episodes-context').textContent = unavailable || episodes === null ? '' : tr(aggregate ? 'episodesAggregateContext' : 'episodesHromadaContext');
 }
 function drawModalityChart() {
-    if (!$('modality-details').open || !lastModalityRows.length)
+    if (!lastModalityRows.length)
         return;
     modalityChart($('modality-chart'), lastModalityRows, state.lang, {
         offline: tr('offline'),
@@ -247,7 +280,7 @@ function renderEducation() {
     const summary = $('education-summary');
     const yearRowsElement = $('education-years');
     const empty = $('education-empty');
-    const modalityDetails = $('modality-details');
+    const modalityPanel = $('modality-panel');
     summary.replaceChildren();
     yearRowsElement.replaceChildren();
     lastModalityRows = contexts.map(context => context.row);
@@ -255,12 +288,12 @@ function renderEducation() {
         $('education-multi-note').hidden = true;
         empty.hidden = false;
         empty.textContent = tr('educationUnavailable');
-        modalityDetails.hidden = true;
+        modalityPanel.hidden = true;
         $('education-note').textContent = tr('contextCaveat');
         return;
     }
     empty.hidden = true;
-    modalityDetails.hidden = false;
+    modalityPanel.hidden = false;
     const dateFormatter = new Intl.DateTimeFormat(state.lang === 'uk' ? 'uk-UA' : 'en-GB', { dateStyle: 'long', timeZone: 'UTC' });
     if (!multi) {
         const context = contexts[0];
@@ -370,24 +403,49 @@ async function renderMapAndTable() { const scope = mapScopeForArea(state.areaId,
     renderComparison();
     mapActions = null;
     $('fit-selected').disabled = true;
-    $('reset-map').disabled = true;
     $('map-error').hidden = false;
     $('map-error').textContent = tr('loadAreaFailed');
     return;
 } const rows = periodRowsForComparison(atHromada ? oblastId : undefined), geo = atHromada ? data.hromadaGeo[oblastId] : data.oblastGeo, selected = data.lookup.hromadas[state.areaId] ? state.areaId : ''; currentRows = rows; renderComparison(); const geometryUnavailable = data.lookup.hromadas[state.areaId]?.geometry_status !== undefined && data.lookup.hromadas[state.areaId]?.geometry_status !== 'available'; $('map-error').hidden = !geometryUnavailable; if (geometryUnavailable)
     $('map-error').textContent = tr('geometryUnavailable'); try {
-    mapActions = renderLeafletMap($('map-container'), $('map-legend'), geo, rows, state.mapMeasure, state.lang, selected, id => { selectArea(id); });
+    mapActions = renderLeafletMap($('map-container'), $('map-legend'), geo, rows, state.mapMeasure, state.lang, selected, id => { selectArea(id); }, () => { $('map-action-status').textContent = tr('mapResetSuccess'); });
     $('fit-selected').disabled = false;
-    $('reset-map').disabled = false;
 }
 catch (e) {
     console.error(e);
     mapActions = null;
     $('fit-selected').disabled = true;
-    $('reset-map').disabled = true;
     $('map-error').hidden = false;
     $('map-error').textContent = tr('mapUnavailable');
 } }
+function comparisonStatusBadge(status) {
+    if (status === 'complete')
+        return null;
+    const badge = document.createElement('span');
+    badge.className = `status-badge status-${status}`;
+    badge.textContent = statusText(status);
+    return badge;
+}
+function appendDefinition(list, label, shown) {
+    const item = document.createElement('div');
+    const term = document.createElement('dt');
+    const valueElement = document.createElement('dd');
+    term.textContent = label;
+    valueElement.textContent = shown;
+    item.append(term, valueElement);
+    list.append(item);
+}
+function comparisonTechnicalDetails(row) {
+    const details = document.createElement('details');
+    details.className = 'comparison-technical';
+    const summary = document.createElement('summary');
+    summary.textContent = tr('details');
+    const list = document.createElement('dl');
+    appendDefinition(list, tr('precision'), sourcePrecisionText(row.source_precision_label));
+    appendDefinition(list, tr('coverage'), statusText(row.coverage_status));
+    details.append(summary, list);
+    return details;
+}
 function renderComparison() {
     const query = $('comparison-search').value.trim();
     let rows = currentRows;
@@ -396,6 +454,8 @@ function renderComparison() {
         rows = rows.filter(row => matchingIds.has(row.area_id));
     }
     rows = [...rows].sort((a, b) => {
+        if (sortKey === 'area_name')
+            return nameOf(a.area_id).localeCompare(nameOf(b.area_id), state.lang === 'uk' ? 'uk' : 'en') * sortDirection;
         const first = value(a, sortKey);
         const second = value(b, sortKey);
         if (first === null && second === null)
@@ -417,30 +477,23 @@ function renderComparison() {
     const head = document.createElement('thead');
     const headRow = document.createElement('tr');
     const columns = [
-        [null, 'area'],
+        ['area_name', 'area'],
         ['school_time_under_alarm_pct', 'share'],
         ['alarm_hours_average_school_location', 'hours'],
         ['affected_school_days_pct', 'days'],
-        [null, 'precision'],
-        [null, 'coverage'],
     ];
     for (const [key, translation] of columns) {
         const heading = document.createElement('th');
         heading.scope = 'col';
-        if (!key) {
-            heading.textContent = tr(translation);
-        }
-        else {
-            const button = document.createElement('button');
-            const active = sortKey === key;
-            const arrow = active ? (sortDirection === -1 ? ' ↓' : ' ↑') : '';
-            button.type = 'button';
-            button.dataset.sort = key;
-            button.textContent = `${tr(translation)}${arrow}`;
-            button.title = active ? tr(sortDirection === -1 ? 'sortDescending' : 'sortAscending') : '';
-            heading.setAttribute('aria-sort', active ? (sortDirection === -1 ? 'descending' : 'ascending') : 'none');
-            heading.append(button);
-        }
+        const button = document.createElement('button');
+        const active = sortKey === key;
+        const arrow = active ? (sortDirection === -1 ? ' ↓' : ' ↑') : '';
+        button.type = 'button';
+        button.dataset.sort = key;
+        button.textContent = `${tr(translation)}${arrow}`;
+        button.title = active ? tr(sortDirection === -1 ? 'sortDescending' : 'sortAscending') : '';
+        heading.setAttribute('aria-sort', active ? (sortDirection === -1 ? 'descending' : 'ascending') : 'none');
+        heading.append(button);
         headRow.append(heading);
     }
     head.append(headRow);
@@ -461,49 +514,77 @@ function renderComparison() {
 
     for (const row of rows) {
         const unavailable = isAnalyticallyUnavailable(row);
-        const display = [
-            nameOf(row.area_id),
-            unavailable ? '—' : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`,
-            formatDuration(unavailable ? null : row.alarm_hours_average_school_location, state.lang),
-            unavailable ? '—' : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`,
-            sourcePrecisionText(row.source_precision_label),
-            statusText(row.coverage_status),
-        ];
+        const display = {
+            area: nameOf(row.area_id),
+            share: unavailable ? '—' : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`,
+            hours: formatDuration(unavailable ? null : row.alarm_hours_average_school_location, state.lang),
+            days: unavailable ? '—' : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`,
+            precision: sourcePrecisionText(row.source_precision_label),
+            coverage: statusText(row.coverage_status),
+        };
         const tableRow = document.createElement('tr');
         if (row.area_id === state.areaId)
             tableRow.className = 'current-row';
-        display.forEach((text, index) => {
-            const cell = document.createElement(index ? 'td' : 'th');
-            if (!index) {
-                cell.scope = 'row';
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.textContent = text;
-                button.setAttribute('aria-label', `${tr('selectArea')}: ${text}`);
-                if (row.area_id === state.areaId)
-                    button.setAttribute('aria-current', 'true');
-                button.addEventListener('click', () => { selectArea(row.area_id); });
-                cell.append(button);
-            }
-            else {
-                cell.textContent = text;
-            }
+        const rowHeading = document.createElement('th');
+        rowHeading.scope = 'row';
+        const areaLine = document.createElement('div');
+        areaLine.className = 'territory-cell-main';
+        const areaButton = document.createElement('button');
+        areaButton.type = 'button';
+        areaButton.textContent = display.area;
+        areaButton.setAttribute('aria-label', `${tr('selectArea')}: ${display.area}`);
+        if (row.area_id === state.areaId)
+            areaButton.setAttribute('aria-current', 'true');
+        areaButton.addEventListener('click', () => { selectArea(row.area_id); });
+        areaLine.append(areaButton);
+        const badge = comparisonStatusBadge(row.coverage_status);
+        if (badge)
+            areaLine.append(badge);
+        rowHeading.append(areaLine, comparisonTechnicalDetails(row));
+        tableRow.append(rowHeading);
+        for (const shown of [display.share, display.hours, display.days]) {
+            const cell = document.createElement('td');
+            cell.textContent = shown;
             tableRow.append(cell);
-        });
+        }
         body.append(tableRow);
 
         const card = document.createElement('details');
         card.className = 'comparison-card';
         if (row.area_id === state.areaId)
             card.classList.add('current-card');
-        card.innerHTML = `<summary><strong>${display[0]}</strong><span>${display[1]}</span><small>${display[2]} · ${display[3]}</small></summary><dl><div><dt>${tr('episodes')}</dt><dd>${unavailable || row.school_time_alarm_episodes_average_school_location === null ? '—' : formatNumber(row.school_time_alarm_episodes_average_school_location, state.lang, 1)}</dd></div><div><dt>${tr('schools')}</dt><dd>${formatNumber(row.school_count, state.lang)}</dd></div><div><dt>${tr('learners')}</dt><dd>${formatNumber(row.learners_total, state.lang)}</dd></div><div><dt>${tr('precision')}</dt><dd>${display[4]}</dd></div><div><dt>${tr('coverage')}</dt><dd>${display[5]}</dd></div></dl>`;
+        const cardSummary = document.createElement('summary');
+        const cardArea = document.createElement('strong');
+        cardArea.textContent = display.area;
+        const cardShare = document.createElement('span');
+        cardShare.className = 'comparison-card-share';
+        cardShare.textContent = display.share;
+        const cardSecondary = document.createElement('small');
+        cardSecondary.textContent = `${display.hours} · ${display.days}`;
+        cardSummary.append(cardArea, cardShare, cardSecondary);
+        const cardBadge = comparisonStatusBadge(row.coverage_status);
+        if (cardBadge)
+            cardSummary.append(cardBadge);
+        const metrics = document.createElement('dl');
+        metrics.className = 'comparison-card-metrics';
+        appendDefinition(metrics, tr('episodes'), unavailable || row.school_time_alarm_episodes_average_school_location === null ? '—' : formatNumber(row.school_time_alarm_episodes_average_school_location, state.lang, row.area_level === 'hromada' ? 0 : 1));
+        appendDefinition(metrics, tr('schools'), formatNumber(row.school_count, state.lang));
+        appendDefinition(metrics, tr('learners'), formatNumber(row.learners_total, state.lang));
+        const technical = document.createElement('section');
+        technical.className = 'comparison-card-technical';
+        const technicalHeading = document.createElement('h4');
+        technicalHeading.textContent = tr('technicalDetails');
+        const technicalList = document.createElement('dl');
+        appendDefinition(technicalList, tr('precision'), display.precision);
+        appendDefinition(technicalList, tr('coverage'), display.coverage);
+        technical.append(technicalHeading, technicalList);
         const selectButton = document.createElement('button');
         selectButton.type = 'button';
         selectButton.className = 'button-secondary comparison-select';
         selectButton.textContent = row.area_id === state.areaId ? tr('currentArea') : tr('selectArea');
         selectButton.disabled = row.area_id === state.areaId;
         selectButton.addEventListener('click', () => { selectArea(row.area_id); });
-        card.append(selectButton);
+        card.append(cardSummary, metrics, technical, selectButton);
         mobile.append(card);
     }
 
@@ -515,14 +596,27 @@ function renderComparison() {
             sortDirection *= -1;
         else {
             sortKey = key;
-            sortDirection = -1;
+            sortDirection = key === 'area_name' ? 1 : -1;
         }
         renderComparison();
     }));
 }
-function renderInterpretation(row) { $('precision-text').textContent = `${sourcePrecisionText(row.source_precision_label)}; ${statusText(row.coverage_status)}.`; }
-function downloadCsv() { const csv = buildComparisonCsv(currentRows, id => nameOf(id), data.release.analytical_build_id); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); $('csv-status').textContent = tr('csvPrepared', { count: currentRows.length }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
-function updateControls() { populatePeriodControls(); $('map-measure').value = state.mapMeasure; $('trend-measure').value = state.trendMeasure; const current = searchItems.find(x => x.id === state.areaId); $('territory-search').value = itemName(current, state.lang); }
+function renderInterpretation(row) {
+    const details = [sourcePrecisionText(row.source_precision_label)];
+    if (row.coverage_status !== 'complete')
+        details.push(statusText(row.coverage_status));
+    $('precision-text').textContent = `${details.join('; ')}.`;
+}
+function downloadCsv() { const csv = buildComparisonCsv(currentRows, id => nameOf(id), data.release.analytical_build_id, statusText); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); $('csv-status').textContent = tr('csvPrepared', { count: currentRows.length }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
+function updateControls() {
+    populatePeriodControls();
+    $('map-measure').value = state.mapMeasure;
+    $('map-measure').title = tr(TREND_MEASURE_TRANSLATIONS[state.mapMeasure]);
+    $('trend-measure').value = state.trendMeasure;
+    $('trend-measure').title = tr(TREND_MEASURE_TRANSLATIONS[state.trendMeasure]);
+    const current = searchItems.find(x => x.id === state.areaId);
+    $('territory-search').value = itemName(current, state.lang);
+}
 async function render() {
     applyStaticTranslations();
     updateControls();
@@ -557,6 +651,7 @@ async function render() {
 function dialog(kind) {
     const content = {
         alarm: { title: tr('alarmTime'), meaning: tr('alarmMeaning'), formula: tr('alarmFormula'), assumption: tr('alarmAssumption'), not: tr('alarmNot') },
+        share: { title: tr('alarmShare'), meaning: tr('shareMeaning'), formula: tr('shareFormula'), assumption: tr('shareAssumption'), not: tr('shareNot') },
         days: { title: tr('affectedDays'), meaning: tr('daysMeaning'), formula: tr('daysFormula'), assumption: tr('daysAssumption'), not: tr('daysNot') },
         episodes: { title: tr('episodes'), meaning: tr('episodesMeaning'), formula: tr('episodesFormula'), assumption: tr('episodesAssumption'), not: tr('episodesNot') },
     };
@@ -600,16 +695,9 @@ function bind() {
             return;
         $('map-action-status').textContent = mapActions.fitSelected() ? tr('mapFitSuccess') : tr('mapFitUnavailable');
     });
-    $('reset-map').addEventListener('click', () => {
-        if (!mapActions)
-            return;
-        mapActions.reset();
-        $('map-action-status').textContent = tr('mapResetSuccess');
-    });
     $('back-to-oblast').addEventListener('click', () => { const oblastId = parentOblast(state.areaId); if (oblastId)
         selectArea(oblastId); });
-    $('modality-details').addEventListener('toggle', () => { if ($('modality-details').open)
-        setTimeout(drawModalityChart, 0); });
+    document.querySelectorAll('.data-details').forEach(details => details.addEventListener('toggle', updateDataDisclosures));
     $('reset-filters').addEventListener('click', () => {
         const lang = state.lang;
         state = defaultState(data.release.available_school_years);
