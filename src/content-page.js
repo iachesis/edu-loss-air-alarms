@@ -46,7 +46,7 @@ function methodologyBlocks() {
             title: 'Що вимірює цей дашборд',
             paragraphs: [
                 'Дашборд вимірює перетин зафіксованих інтервалів повітряних тривог із розрахунковим навчальним часом для вибраної території та періоду.',
-                'Це оцінка часу навчального дня, що припадає на повітряні тривоги. Вона не показує фактично перервані або скасовані уроки.',
+                'Він не показує, які уроки фактично були перервані або скасовані.',
             ],
         },
         {
@@ -113,6 +113,9 @@ function methodologyBlocks() {
         },
         {
             title: 'Як розраховано значення для територій',
+            paragraphs: [
+                'Для зважування активним місцем розташування закладу освіти вважається включений запис закладу у вибраному освітньому зрізі, який має валідний зв’язок із громадою та принаймні одного учня. Кожен включений заклад має однакову вагу; кількість учнів як вага не використовується.',
+            ],
             subsections: [
                 { title: 'Громада', paragraphs: ['Значення розраховано для громади в цілому; це не середнє значення на один заклад.'] },
                 {
@@ -155,7 +158,7 @@ function methodologyBlocks() {
             title: 'What this dashboard measures',
             paragraphs: [
                 'The dashboard measures overlap between recorded air-alarm intervals and modelled school hours for the selected territory and period.',
-                'It estimates how much of the modelled school day coincides with air alarms. It does not observe lessons that were interrupted or cancelled.',
+                'It does not show which lessons were actually interrupted or cancelled.',
             ],
         },
         {
@@ -222,6 +225,9 @@ function methodologyBlocks() {
         },
         {
             title: 'How territory-level results are calculated',
+            paragraphs: [
+                'For weighting, an active school location is an included school record in the selected education snapshot with a valid hromada link and at least one learner. Each included school contributes one unit of weight; learner counts are not used as weights.',
+            ],
             subsections: [
                 { title: 'Hromada', paragraphs: ['The value is calculated for the hromada as a whole; it is not an average per school.'] },
                 {
@@ -272,11 +278,9 @@ function dataBlocks() {
             {
                 title: 'Реліз у цифрах',
                 definitions: [
-                    ['Реліз сайту', release.website_release_id],
-                    ['Аналітична збірка', release.analytical_build_id],
-                    ['Статус', 'Кандидат на реліз; окрема перевірка коректності даних ще триває'],
+                    ['Статус', 'Кандидат на реліз'],
                     ['Навчальні роки', '2022/23–2025/26'],
-                    ['Дані про тривоги охоплюють період до', coverageEnd],
+                    ['Дані про повітряні тривоги до', coverageEnd],
                 ],
             },
             {
@@ -291,15 +295,14 @@ function dataBlocks() {
                 title: 'Освітні дані',
                 paragraphs: [
                     'Кількість закладів і учнів походить із вибраних зрізів даних на рівні закладів освіти. Ці дані використано лише для формування агрегованого освітнього контексту.',
-                    'У наборі вхідних даних можуть бути альтернативні зрізи, але вони не використовуються для опублікованого контексту. Рядки окремих закладів через сайт не публікуються.',
                 ],
                 table: { headers: ['Навчальний рік', 'Використаний зріз'], rows: SNAPSHOTS.map(([year, date]) => [year, formatDate(date)]) },
             },
             {
-                title: 'Географічне охоплення',
+                title: 'Території та доступність на карті',
                 paragraphs: [
-                    `Дані охоплюють Україну, 26 територій обласного рівня та ${formatInteger(scope.hromada_payload_coverage.controlled_hromadas)} громади. Геометрія на карті доступна для ${formatInteger(scope.hromada_geometry_coverage.features_available)} громад; для ${formatInteger(scope.hromada_geometry_coverage.source_geometry_gaps)} громад її немає.`,
-                    'Відсутність геометрії впливає лише на відображення на карті. Значення для громади може залишатися доступним у таблиці.',
+                    `Дашборд охоплює Україну, 26 територій обласного рівня та ${formatInteger(scope.hromada_payload_coverage.controlled_hromadas)} громади. Межі на карті доступні для ${formatInteger(scope.hromada_geometry_coverage.features_available)} громад; для ${formatInteger(scope.hromada_geometry_coverage.source_geometry_gaps)} громад у використаному картографічному джерелі немає геометрії.`,
+                    'Відсутність геометрії впливає лише на карту. Аналітичне значення для громади може залишатися доступним у таблиці.',
                 ],
             },
             {
@@ -339,11 +342,9 @@ function dataBlocks() {
         {
             title: 'Release at a glance',
             definitions: [
-                ['Website release', release.website_release_id],
-                ['Analytical build', release.analytical_build_id],
-                ['Status', 'Release candidate; a separate data-correctness audit is still pending'],
+                ['Status', 'Release candidate'],
                 ['School years included', '2022/23–2025/26'],
-                ['Alarm-source coverage through', coverageEnd],
+                ['Air-alarm data through', coverageEnd],
             ],
         },
         {
@@ -358,15 +359,14 @@ function dataBlocks() {
             title: 'Education data',
             paragraphs: [
                 'School and learner counts come from selected school-level education snapshots used only to create aggregated education context.',
-                'Alternate snapshots may exist in the input set, but they are not used for the published context. Raw school-level rows are not published through the site.',
             ],
             table: { headers: ['School year', 'Snapshot used'], rows: SNAPSHOTS.map(([year, date]) => [year, formatDate(date)]) },
         },
         {
-            title: 'Geographic coverage',
+            title: 'Territories and map availability',
             paragraphs: [
-                `Coverage includes Ukraine, 26 oblast-level territories and ${formatInteger(scope.hromada_payload_coverage.controlled_hromadas)} hromadas. Map geometry is available for ${formatInteger(scope.hromada_geometry_coverage.features_available)} hromadas, with ${formatInteger(scope.hromada_geometry_coverage.source_geometry_gaps)} geometry gaps.`,
-                'Missing geometry affects mapping only. A value for the hromada may still be available in the table.',
+                `The dashboard includes Ukraine, 26 oblast-level territories and ${formatInteger(scope.hromada_payload_coverage.controlled_hromadas)} hromadas. Map boundaries are available for ${formatInteger(scope.hromada_geometry_coverage.features_available)} hromadas; ${formatInteger(scope.hromada_geometry_coverage.source_geometry_gaps)} hromadas do not have map geometry in the source used by the site.`,
+                'Missing map geometry affects the map only. An analytical value for the hromada may still be available in the table.',
             ],
         },
         {

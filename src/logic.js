@@ -14,6 +14,15 @@ export function affectedDaysPct(row) { return row.available_school_days_average_
 export function isAnalyticallyUnavailable(row) { return row.coverage_status === 'unavailable' || row.coverage_status === 'not_covered' || row.available_school_seconds_average_school_location <= 0; }
 export function availabilityReasonKey(row) { if (!isAnalyticallyUnavailable(row))
     return null; return row.coverage_status === 'not_covered' ? 'notCovered' : 'unavailable'; }
+export function coverageDescriptionKey(row) {
+    if (row.coverage_status === 'partial')
+        return row.area_id === 'UA' ? 'coveragePartialUkraineDescription' : 'coveragePartialDescription';
+    if (row.coverage_status === 'not_covered')
+        return 'coverageNotCoveredDescription';
+    if (row.coverage_status === 'unavailable')
+        return 'coverageUnavailableDescription';
+    return null;
+}
 export function clampedTooltipPosition(point, rect, viewSize, contentSize, gap = 12) {
     const [viewWidth, viewHeight] = viewSize;
     const [contentWidth, contentHeight] = contentSize;

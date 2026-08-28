@@ -112,11 +112,11 @@ node --test tests/*.test.mjs
 ## Release information
 
 - Website release ID: `AAE-WEB-1.1.0`
-- Website status: release candidate pending a separate data-correctness audit
+- Website status: release candidate
 - Analytical build ID: `AAE-FULL-88db64d06afa99610f`
 - Air-alarm source: [Ukrainian Air Raid Sirens Dataset — file used for this release](https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/f3bbc50ab34a8100018f2d95f45c6ba053b0c77a/datasets/official_data_uk.csv)
 - Source coverage: 15 March 2022 through 28 August 2026 UTC
 - Machine-readable release metadata: [`data/release.json`](data/release.json)
 - Static payload manifest: [`data/payload_manifest.json`](data/payload_manifest.json)
 
-The analytical values and formulas remain subject to the separate data-correctness audit. The public [`methodology.html`](methodology.html) page explains interpretation; [`data.html`](data.html) documents sources, snapshot dates, coverage and technical release details.
+The public [`methodology.html`](methodology.html) page explains interpretation; [`data.html`](data.html) documents sources, snapshot dates, map availability and technical release details.

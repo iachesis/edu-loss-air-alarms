@@ -4,7 +4,7 @@ import test from 'node:test';
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
 const logicSource = readFileSync(new URL('../src/logic.js', import.meta.url), 'utf8');
-const { aggregateRange, aggregateSourcePrecision, availabilityReasonKey, buildComparisonCsv, cleanDashboardUrl, clampedTooltipPosition, isAnalyticallyUnavailable } = await import(`data:text/javascript;base64,${Buffer.from(logicSource).toString('base64')}`);
+const { aggregateRange, aggregateSourcePrecision, availabilityReasonKey, buildComparisonCsv, cleanDashboardUrl, clampedTooltipPosition, coverageDescriptionKey, isAnalyticallyUnavailable } = await import(`data:text/javascript;base64,${Buffer.from(logicSource).toString('base64')}`);
 const nationalRows = readJson('../data/national_monthly.json');
 const oblastRows = readJson('../data/oblast_monthly.json');
 const release = readJson('../data/release.json');
@@ -144,6 +144,12 @@ test('not-covered and generic unavailable headline reasons remain distinct', () 
     assert.equal(availabilityReasonKey(component('2024-09', 'not_covered')), 'notCovered');
     assert.equal(availabilityReasonKey(component('2024-09', 'unavailable')), 'unavailable');
     assert.equal(availabilityReasonKey(component('2024-09', 'complete', 10000)), null);
+});
+
+test('national partial coverage has a specific explanation while other partial rows stay generic', () => {
+    assert.equal(coverageDescriptionKey({ area_id: 'UA', coverage_status: 'partial' }), 'coveragePartialUkraineDescription');
+    assert.equal(coverageDescriptionKey({ area_id: 'UA32', coverage_status: 'partial' }), 'coveragePartialDescription');
+    assert.equal(coverageDescriptionKey({ area_id: 'UA32080070000050759', coverage_status: 'partial' }), 'coveragePartialDescription');
 });
 
 test('chart tooltip position follows the datum and remains inside the viewport', () => {

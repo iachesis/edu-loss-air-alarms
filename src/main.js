@@ -1,4 +1,4 @@
-import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, availabilityReasonKey, buildComparisonCsv, cleanDashboardUrl, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
+import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, availabilityReasonKey, buildComparisonCsv, cleanDashboardUrl, coverageDescriptionKey, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
 import { initI18n, setLanguage, tr } from './i18n.js';
 import { createGeographyFuse, createSearchItems, itemLabel, itemName, itemParent, searchGeography } from './search.js';
 import { renderLeafletMap } from './map.js';
@@ -610,18 +610,13 @@ function renderInterpretation(row) {
         mixed: 'sourceDescriptionMixed',
         'not applicable': 'sourcePrecisionNotApplicable',
     };
-    const coverageKeys = {
-        partial: 'coveragePartialDescription',
-        not_covered: 'coverageNotCoveredDescription',
-        unavailable: 'coverageUnavailableDescription',
-    };
     const details = [];
     const sourceKey = sourceKeys[row.source_precision_label];
     if (sourceKey) {
         const sourceText = tr(sourceKey);
         details.push(/[.!?…]$/.test(sourceText) ? sourceText : `${sourceText}.`);
     }
-    const coverageKey = coverageKeys[row.coverage_status];
+    const coverageKey = coverageDescriptionKey(row);
     if (coverageKey)
         details.push(tr(coverageKey));
     $('precision-text').textContent = details.join(' ');

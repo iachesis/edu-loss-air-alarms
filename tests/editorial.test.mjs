@@ -48,8 +48,7 @@ test('complete coverage remains visually quiet while exceptional statuses stay v
     const badge = main.match(/function comparisonStatusBadge\(status\) \{[\s\S]*?\n\}/)?.[0] ?? '';
     const interpretation = main.match(/function renderInterpretation\(row\) \{[\s\S]*?\n\}/)?.[0] ?? '';
     assert.match(badge, /status === 'complete'[\s\S]*?return null/);
-    assert.match(interpretation, /partial: 'coveragePartialDescription'/);
-    assert.match(interpretation, /not_covered: 'coverageNotCoveredDescription'/);
+    assert.match(interpretation, /coverageDescriptionKey\(row\)/);
     assert.doesNotMatch(interpretation, /complete:/);
 });
 
@@ -77,9 +76,93 @@ test('methodology defines nine sections and four indicators separately in both l
 test('data page includes all selected education snapshot dates and seven reader sections', () => {
     for (const date of ['2023-01-01', '2024-04-20', '2025-03-20', '2026-03-09'])
         assert.match(content, new RegExp(date));
-    for (const heading of ['Release at a glance', 'Air-alarm data', 'Education data', 'Geographic coverage', 'Missing-data semantics', 'Downloads', 'Technical release details'])
+    for (const heading of ['Release at a glance', 'Air-alarm data', 'Education data', 'Territories and map availability', 'Missing-data semantics', 'Downloads', 'Technical release details'])
         assert.match(content, new RegExp(heading));
+    assert.match(content, /Території та доступність на карті/);
     assert.match(content, /className = 'technical-release-details'/);
+});
+
+test('data page distinguishes included territories from alarm-source coverage', () => {
+    assert.doesNotMatch(content, /Coverage includes/);
+    assert.doesNotMatch(content, /title: 'Geographic coverage'/);
+    assert.doesNotMatch(content, /title: 'Географічне охоплення'/);
+    assert.match(content, /The dashboard includes Ukraine, 26 oblast-level territories/);
+    assert.match(content, /Map boundaries are available/);
+    assert.match(content, /Missing map geometry affects the map only/);
+    assert.match(content, /Дашборд охоплює Україну, 26 територій обласного рівня/);
+    assert.match(content, /Межі на карті доступні/);
+    assert.match(content, /Відсутність геометрії впливає лише на карту/);
+});
+
+test('methodology defines active school location and rejects learner-count weighting in both languages', () => {
+    assert.match(content, /For weighting, an active school location is an included school record in the selected education snapshot with a valid hromada link and at least one learner\./);
+    assert.match(content, /Each included school contributes one unit of weight; learner counts are not used as weights\./);
+    assert.match(content, /Для зважування активним місцем розташування закладу освіти вважається включений запис закладу у вибраному освітньому зрізі, який має валідний зв’язок із громадою та принаймні одного учня\./);
+    assert.match(content, /Кожен включений заклад має однакову вагу; кількість учнів як вага не використовується\./);
+});
+
+test('Ukraine partial coverage copy names Crimea and Luhansk while generic partial copy remains available', () => {
+    assert.equal(resources.en.translation.coveragePartialUkraineDescription, 'Coverage is partial because the alarm source is not treated as comparable for the Autonomous Republic of Crimea and Luhansk Oblast under this methodology.');
+    assert.equal(resources.uk.translation.coveragePartialUkraineDescription, 'Охоплення часткове, оскільки в межах цієї методології джерело тривог не вважається порівнюваним для Автономної Республіки Крим та Луганської області.');
+    assert.equal(resources.en.translation.coveragePartialDescription, 'Coverage is partial because some modelled school time or territories fall outside comparable source coverage.');
+    assert.equal(resources.uk.translation.coveragePartialDescription, 'Охоплення часткове, оскільки для частини розрахункового навчального часу або територій немає порівнюваного покриття джерелом.');
+});
+
+test('release at a glance contains reader facts while identifiers remain in technical details', () => {
+    const englishOpening = content.slice(content.indexOf("title: 'Release at a glance'"), content.indexOf("title: 'Air-alarm data'"));
+    const ukrainianOpening = content.slice(content.indexOf("title: 'Реліз у цифрах'"), content.indexOf("title: 'Дані про повітряні тривоги'"));
+    for (const opening of [englishOpening, ukrainianOpening]) {
+        assert.doesNotMatch(opening, /release\.website_release_id/);
+        assert.doesNotMatch(opening, /release\.analytical_build_id/);
+    }
+    assert.match(englishOpening, /\['Status', 'Release candidate'\]/);
+    assert.match(englishOpening, /\['School years included', '2022\/23–2025\/26'\]/);
+    assert.match(englishOpening, /\['Air-alarm data through', coverageEnd\]/);
+    assert.match(ukrainianOpening, /\['Статус', 'Кандидат на реліз'\]/);
+    assert.match(ukrainianOpening, /\['Навчальні роки', '2022\/23–2025\/26'\]/);
+    assert.match(ukrainianOpening, /\['Дані про повітряні тривоги до', coverageEnd\]/);
+    const ukrainianTechnical = content.slice(content.indexOf("title: 'Технічна інформація про реліз'"), content.indexOf("title: 'Release at a glance'"));
+    const englishTechnical = content.slice(content.indexOf("title: 'Technical release details'"), content.indexOf('function appendParagraphs'));
+    for (const technical of [ukrainianTechnical, englishTechnical]) {
+        assert.match(technical, /details:\s*\{/);
+        assert.match(technical, /release\.website_release_id/);
+        assert.match(technical, /release\.analytical_build_id/);
+    }
+});
+
+test('public reader copy omits audit workflow and alternate-snapshot hedges', () => {
+    for (const source of [content, readme]) {
+        assert.doesNotMatch(source, /data-correctness audit/i);
+        assert.doesNotMatch(source, /перевірка коректності даних/i);
+    }
+    assert.doesNotMatch(content, /Alternate snapshots may exist/i);
+    assert.doesNotMatch(content, /альтернативні зрізи/i);
+});
+
+test('final chart and map control strings replace operational wording in both languages', () => {
+    const expected = [
+        'Chart view', 'Вигляд графіка',
+        'Zoom to selected area', 'Наблизити вибрану територію',
+        'Showing the selected area.', 'Показано вибрану територію.',
+        'Showing the full map.', 'Показано всю карту.',
+    ];
+    for (const value of expected)
+        assert.match(resourcesSource, new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    const old = [
+        'Time-chart view', 'Режим часової візуалізації',
+        'Fit selected area', 'Показати вибрану територію',
+        'The map is fitted to the selected area.', 'The full available map is shown.',
+        'Карту наближено до вибраної території.', 'Показано всю доступну карту.',
+    ];
+    for (const value of old)
+        assert.doesNotMatch(resourcesSource, new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+});
+
+test('methodology opening states the direct non-observation limitation once', () => {
+    assert.match(content, /It does not show which lessons were actually interrupted or cancelled\./);
+    assert.match(content, /Він не показує, які уроки фактично були перервані або скасовані\./);
+    assert.doesNotMatch(content, /It estimates how much of the modelled school day coincides/);
+    assert.doesNotMatch(content, /Це оцінка часу навчального дня, що припадає/);
 });
 
 test('source hashes are confined to collapsed technical release details', () => {
