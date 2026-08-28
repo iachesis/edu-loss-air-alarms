@@ -4,9 +4,11 @@ import test from 'node:test';
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
 const logicSource = readFileSync(new URL('../src/logic.js', import.meta.url), 'utf8');
-const { aggregateRange, aggregateSourcePrecision, buildComparisonCsv } = await import(`data:text/javascript;base64,${Buffer.from(logicSource).toString('base64')}`);
+const { aggregateRange, aggregateSourcePrecision, buildComparisonCsv, isAnalyticallyUnavailable } = await import(`data:text/javascript;base64,${Buffer.from(logicSource).toString('base64')}`);
 const nationalRows = readJson('../data/national_monthly.json');
 const oblastRows = readJson('../data/oblast_monthly.json');
+const release = readJson('../data/release.json');
+const geography = readJson('../data/geography_lookup.json');
 const hromadaRows = readJson('../data/hromada_monthly_UA32.json').map(row => ({
     ...row,
     area_id: row.hromada_id,
@@ -91,10 +93,73 @@ test('real homogeneous and mixed all-available ranges aggregate source precision
 
 test('not-applicable and unavailable component rows retain missingness semantics', () => {
     const notApplicable = oblastRows.filter(row => row.area_id === 'UA05' && row.period_id === '2023-10');
-    const unavailable = oblastRows.filter(row => row.coverage_status === 'unavailable').slice(0, 2);
+    const unavailable = [0, 1].map(index => ({
+        ...notApplicable[0],
+        period_id: `2023-${11 + index}`,
+        coverage_status: 'unavailable',
+        available_school_seconds_average_school_location: 0,
+    }));
     const applicable = oblastRows.find(row => row.area_id === 'UA05' && row.period_id === '2022-09');
     assert.equal(aggregateSourcePrecision(notApplicable), 'not applicable');
     assert.equal(unavailable.length, 2);
     assert.equal(aggregateSourcePrecision(unavailable), null);
     assert.equal(aggregateSourcePrecision([...unavailable, applicable]), 'oblast allocation');
+});
+
+function component(periodId, coverageStatus, availableSeconds = 0) {
+    return {
+        ...nationalRows.find(row => row.period_id === periodId),
+        period_id: periodId,
+        coverage_status: coverageStatus,
+        alarm_seconds_average_school_location: availableSeconds > 0 ? 3600 : null,
+        alarm_hours_average_school_location: availableSeconds > 0 ? 1 : null,
+        available_school_seconds_average_school_location: availableSeconds,
+        expected_school_seconds_average_school_location: 10000,
+        school_time_under_alarm_pct: availableSeconds > 0 ? 3600 / availableSeconds * 100 : null,
+        affected_school_days_average_school_location: availableSeconds > 0 ? 1 : null,
+        available_school_days_average_school_location: availableSeconds > 0 ? 2 : 0,
+        expected_school_days_average_school_location: 2,
+        school_time_alarm_episodes_average_school_location: availableSeconds > 0 ? 1 : null,
+    };
+}
+
+test('not-covered rows remain analytically non-numeric without becoming generic unavailable', () => {
+    const row = component('2024-09', 'not_covered');
+    assert.equal(isAnalyticallyUnavailable(row), true);
+    const derived = aggregateRange([row, component('2024-10', 'not_covered')], '2024-09', '2024-10');
+    assert.equal(derived.coverage_status, 'not_covered');
+    assert.equal(derived.alarm_seconds_average_school_location, null);
+    assert.equal(derived.alarm_hours_average_school_location, null);
+    assert.equal(derived.school_time_under_alarm_pct, null);
+    assert.equal(derived.affected_school_days_average_school_location, null);
+    assert.equal(derived.source_precision_label, 'not applicable');
+});
+
+test('CSV uses the supplied display label instead of exposing the raw not-covered key', () => {
+    const row = component('2024-09', 'not_covered');
+    const csv = buildComparisonCsv([row], id => id, 'AAE-FULL-test', status => status === 'not_covered' ? 'Not covered by source' : status);
+    assert.match(csv, /Not covered by source/);
+    assert.doesNotMatch(csv, /not_covered/);
+});
+
+test('range coverage distinguishes complete, mixed partial and analytical failure', () => {
+    const complete = component('2024-09', 'complete', 10000);
+    assert.equal(aggregateRange([complete], '2024-09', '2024-09').coverage_status, 'complete');
+    assert.equal(aggregateRange([complete, component('2024-10', 'not_covered')], '2024-09', '2024-10').coverage_status, 'partial');
+    assert.equal(aggregateRange([component('2024-09', 'unavailable')], '2024-09', '2024-09').coverage_status, 'unavailable');
+    assert.equal(aggregateRange([complete, component('2024-10', 'unavailable')], '2024-09', '2024-10').coverage_status, 'unavailable');
+});
+
+test('geography catalogue is bound to the candidate build and preserves not-covered identity', () => {
+    assert.equal(geography.analytical_build_id, release.analytical_build_id);
+    for (const oblastId of ['UA01', 'UA44']) {
+        assert.equal(geography.oblasts[oblastId].analytical_data_available, false);
+        assert.equal(geography.oblasts[oblastId].analytical_availability_status, 'not_covered');
+        const hromadas = Object.values(geography.hromadas).filter(row => row.parent_oblast_id === oblastId);
+        assert.ok(hromadas.length > 0);
+        assert.ok(hromadas.every(row => row.analytical_data_available === false));
+        assert.ok(hromadas.every(row => row.analytical_availability_status === 'not_covered'));
+    }
+    assert.equal(geography.oblasts.UA32.analytical_availability_status, 'available');
+    assert.match(geography.oblasts.UA32.provenance.analytical, new RegExp(release.analytical_build_id));
 });

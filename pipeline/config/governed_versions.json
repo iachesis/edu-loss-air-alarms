@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "authority": "Stage-4 amended documents verified during Issue #4 Stage A",
+  "documents": {
+    "methodology": {"document_id": "AAE-METH-001", "authoritative_filename": "04_METHODOLOGY_AND_ASSUMPTIONS.md", "version": "0.2", "authoritative_sha256": "d85b2d77fa0db336431b580a073c76f8ac3223ad3a04bae0d10048ed7332eed4"},
+    "indicator_dictionary": {"document_id": "AAE-IND-001", "authoritative_filename": "02_INDICATOR_DICTIONARY.md", "version": "0.3", "authoritative_sha256": "9b034f870d0f3685a40d9bb5ff98287ca7ce9441b7a858a2d256c1fddddb7ee8"},
+    "input_data_contract": {"document_id": "AAE-DATA-001", "authoritative_filename": "03_INPUT_DATA_CONTRACT.md", "version": "0.1", "authoritative_sha256": "4538d35804384677686b3c470fad54aa97c413ea6ffb3fcbbe5c14e9bf890901"},
+    "processing_package": {"document_id": "AAE-TECH-001", "authoritative_filename": "05_PROCESSING_PACKAGE.md", "version": "0.1", "authoritative_sha256": "0f075526b2949bbe1fd9b16fa5cf267bb8f43ced45f23078558be6498e0b01be"},
+    "local_execution_package": {"document_id": "AAE-IMPL-002", "authoritative_filename": "06_LOCAL_EXECUTION_PACKAGE.md", "version": "0.1", "authoritative_sha256": "90c33dc29aa2282e782ca992d47f8cc3406124ebb8947d2e493c16e7b1b8ffb8"}
+  },
+  "assumptions": {"authoritative_filename": "config/assumptions.json", "version": "0.1", "authoritative_sha256": "9e7f2ae1fe5a075b8cd7d76beb824c882e51687c46d301724bd2654f1c84f970"}
+}

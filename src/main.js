@@ -69,7 +69,7 @@ function rowForState(id = state.areaId) { if (state.periodMode === 'school_year'
 function value(r, key) { return isAnalyticallyUnavailable(r) ? null : key === 'affected_school_days_pct' ? affectedDaysPct(r) : r[key]; }
 function periodRowsForComparison(forOblast) { const ids = forOblast ? Object.entries(data.lookup.hromadas).filter(([, x]) => x.oblast_id === forOblast).map(([id]) => id) : Object.keys(data.lookup.oblasts); return ids.map(id => rowForState(id)).filter((r) => Boolean(r)); }
 function periodContext() { const b = periodBounds(state); return educationContexts([...monthlyRows(), ...yearRows()], b.start, b.end); }
-function statusText(x) { return x === 'complete' ? tr('complete') : x === 'partial' ? tr('partial') : tr('unavailable'); }
+function statusText(x) { return x === 'complete' ? tr('complete') : x === 'partial' ? tr('partial') : x === 'not_covered' ? tr('notCovered') : tr('unavailable'); }
 function applyStaticTranslations() {
     document.querySelectorAll('[data-t]').forEach(el => { el.textContent = tr(el.dataset.t); });
     document.querySelectorAll('[data-t-placeholder]').forEach(el => { el.placeholder = tr(el.dataset.tPlaceholder); });
@@ -191,10 +191,15 @@ function renderSummary(row) {
     const periodClause = insightPeriodClause();
     const area = nameOf(row.area_id);
     if (isAnalyticallyUnavailable(row)) {
-        $('summary-text').textContent = state.lang === 'uk'
-            ? `${periodClause} аналітичний результат на території «${area}» недоступний; нуль не підставлено.`
-            : `${periodClause}, the analytical result for ${area} is unavailable; zero has not been substituted.`;
-        $('aggregation-note').textContent = tr('unavailable');
+        const notCovered = row.coverage_status === 'not_covered';
+        $('summary-text').textContent = notCovered
+            ? state.lang === 'uk'
+                ? `${periodClause} територія «${area}» не охоплена джерелом тривог за цією методологією; нуль не підставлено.`
+                : `${periodClause}, ${area} is not covered by the alarm source under this methodology; zero has not been substituted.`
+            : state.lang === 'uk'
+                ? `${periodClause} аналітичний результат на території «${area}» недоступний; нуль не підставлено.`
+                : `${periodClause}, the analytical result for ${area} is unavailable; zero has not been substituted.`;
+        $('aggregation-note').textContent = tr(notCovered ? 'notCovered' : 'unavailable');
         return;
     }
     const aggregate = row.area_level !== 'hromada';
@@ -217,18 +222,19 @@ function renderSummary(row) {
 }
 function renderCards(row) {
     const unavailable = isAnalyticallyUnavailable(row);
+    const unavailableText = tr(row.coverage_status === 'not_covered' ? 'notCovered' : 'unavailable');
     const aggregate = row.area_level !== 'hromada';
     const digits = aggregate ? 1 : 0;
     const context = aggregate ? tr('averageLocation') : tr('directResult');
     $('alarm-time-value').textContent = formatDuration(unavailable ? null : row.alarm_hours_average_school_location, state.lang);
-    $('alarm-time-secondary').textContent = unavailable ? tr('unavailable') : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`;
+    $('alarm-time-secondary').textContent = unavailable ? unavailableText : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`;
     $('alarm-time-context').textContent = unavailable ? '' : context;
     $('affected-days-value').textContent = unavailable ? '—' : `${formatNumber(row.affected_school_days_average_school_location, state.lang, digits)} / ${formatNumber(row.available_school_days_average_school_location, state.lang, digits)}`;
-    $('affected-days-secondary').textContent = unavailable ? tr('unavailable') : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`;
+    $('affected-days-secondary').textContent = unavailable ? unavailableText : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`;
     $('affected-days-context').textContent = unavailable ? '' : context;
     const episodes = unavailable ? null : row.school_time_alarm_episodes_average_school_location;
     $('episodes-value').textContent = episodes === null ? '—' : formatNumber(episodes, state.lang, digits);
-    $('episodes-secondary').textContent = unavailable ? tr('unavailable') : episodes === null ? tr('noEpisodesRange') : '';
+    $('episodes-secondary').textContent = unavailable ? unavailableText : episodes === null ? tr('noEpisodesRange') : '';
     $('episodes-context').textContent = unavailable || episodes === null ? '' : context;
 }
 function drawModalityChart() {
@@ -521,7 +527,7 @@ function renderComparison() {
     }));
 }
 function renderInterpretation(row) { $('precision-text').textContent = `${sourcePrecisionText(row.source_precision_label)}; ${statusText(row.coverage_status)}.`; }
-function downloadCsv() { const csv = buildComparisonCsv(currentRows, id => nameOf(id), data.release.analytical_build_id); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); $('csv-status').textContent = tr('csvPrepared', { count: currentRows.length }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
+function downloadCsv() { const csv = buildComparisonCsv(currentRows, id => nameOf(id), data.release.analytical_build_id, statusText); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); $('csv-status').textContent = tr('csvPrepared', { count: currentRows.length }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
 function updateControls() { populatePeriodControls(); $('map-measure').value = state.mapMeasure; $('trend-measure').value = state.trendMeasure; const current = searchItems.find(x => x.id === state.areaId); $('territory-search').value = itemName(current, state.lang); }
 async function render() {
     applyStaticTranslations();

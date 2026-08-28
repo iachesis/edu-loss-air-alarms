@@ -1,0 +1,5 @@
+school_year,start_date,end_date,label,is_active,notes
+2022_2023,2022-09-01,2023-06-30,Official school year window,1,
+2023_2024,2023-09-01,2024-06-28,Official school year window,1,
+2024_2025,2024-09-02,2025-06-30,Official school year window,1,
+2025_2026,2025-09-01,2026-06-30,Analytical school year window,1,Education context uses the 2026-03-09 snapshot

@@ -1,0 +1,52 @@
+{
+  "air_alarm_source": {
+    "repository_owner": "Vadimkin",
+    "repository_name": "ukrainian-air-raid-sirens-dataset",
+    "repository": "https://github.com/Vadimkin/ukrainian-air-raid-sirens-dataset",
+    "branch": "main",
+    "path": "datasets/official_data_uk.csv",
+    "configured_source_url": "https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/main/datasets/official_data_uk.csv",
+    "raw_url": "https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/main/datasets/official_data_uk.csv",
+    "language": "uk",
+    "timestamp_timezone": "UTC",
+    "columns": [
+      "oblast",
+      "raion",
+      "hromada",
+      "level",
+      "started_at",
+      "finished_at",
+      "source"
+    ],
+    "allowed_source_values": ["official"],
+    "retrieval_mode": "resolve_github_object_then_download_immutable"
+  },
+  "education_snapshots": [
+    {"snapshot_date": "2023-01-01", "path": "data/education/edu_2023-01-01.csv", "school_year": "2022_2023", "role": "selected"},
+    {"snapshot_date": "2023-09-14", "path": "data/education/edu_2023-09-14.csv", "school_year": "2023_2024", "role": "alternate"},
+    {"snapshot_date": "2024-04-20", "path": "data/education/edu_2024-04-20.csv", "school_year": "2023_2024", "role": "selected"},
+    {"snapshot_date": "2024-11-01", "path": "data/education/edu_2024-11-01.csv", "school_year": "2024_2025", "role": "alternate"},
+    {"snapshot_date": "2025-03-20", "path": "data/education/edu_2025-03-20.csv", "school_year": "2024_2025", "role": "selected"},
+    {"snapshot_date": "2026-03-09", "path": "data/education/edu_2026-03-09.csv", "school_year": "2025_2026", "role": "selected"}
+  ],
+  "controlled_inputs_manifest": "config/controlled_inputs.json",
+  "governed_versions_file": "config/governed_versions.json",
+  "reference_files": {
+    "oblasts": "data/reference/oblasts.csv",
+    "raions": "data/reference/raions.csv",
+    "hromadas": "data/reference/hromadas.csv",
+    "special_areas": "data/reference/special_areas.csv",
+    "oblast_geo_crosswalk": "data/reference/oblast_geo_crosswalk.csv",
+    "aliases": "data/reference/geography_aliases.csv"
+  },
+  "assumption_files": {
+    "school_years": "data/assumptions/school_year_windows.csv",
+    "vacations": "data/assumptions/assumed_vacation_periods.csv"
+  },
+  "coverage_exceptions": {
+    "not_covered_oblast_ids": ["UA01", "UA44"],
+    "reason": "The official source does not list the permanent siren regimes reported for Crimea and Luhansk.",
+    "canonical_status": "not_covered",
+    "display_status": "not covered"
+  }
+}

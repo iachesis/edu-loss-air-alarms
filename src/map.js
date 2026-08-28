@@ -79,7 +79,10 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
             const shown = measure === 'alarm_hours_average_school_location'
                 ? formatDuration(raw, lang)
                 : raw === null ? '—' : `${formatNumber(raw, lang, 1)}%`;
-            featureLayer.bindTooltip(`<strong>${name}</strong><br>${shown}`, { sticky: true });
+            const status = raw !== null ? '' : row?.coverage_status === 'not_covered'
+                ? (lang === 'uk' ? 'Не охоплено джерелом' : 'Not covered by source')
+                : (lang === 'uk' ? 'Недоступно' : 'Unavailable');
+            featureLayer.bindTooltip(`<strong>${name}</strong><br>${status || shown}`, { sticky: true });
             featureLayer.on('mouseover', () => {
                 featureLayer.setStyle({
                     color: '#182D39',

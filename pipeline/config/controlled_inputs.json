@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "input_class": "controlled_school_level_education_snapshots",
+  "publication_policy": "manifest_only_no_row_content",
+  "files": [
+    {"expected_filename": "edu_2023-01-01.csv", "snapshot_date": "2023-01-01", "byte_size": 444193, "sha256": "ff45fb1826a71dc4c2aecef0103b89e5303c4994eb6132dfb02a27357a7ef266", "role": "selected snapshot for 2022_2023"},
+    {"expected_filename": "edu_2023-09-14.csv", "snapshot_date": "2023-09-14", "byte_size": 514684, "sha256": "1225a698c5282c5d1765d10096ce2f5a41ab19ab0e7b54d5b3b2b1442cdc4d5a", "role": "alternate snapshot for 2023_2024"},
+    {"expected_filename": "edu_2024-04-20.csv", "snapshot_date": "2024-04-20", "byte_size": 517186, "sha256": "c00c2f3a242c850206ae8882e258f886a99ef68a01edcbb73bc62290cc69ff35", "role": "selected snapshot for 2023_2024"},
+    {"expected_filename": "edu_2024-11-01.csv", "snapshot_date": "2024-11-01", "byte_size": 515776, "sha256": "cc08234535ac1e651b39897cedb81be2ba150ae6caabeffae51c5f316b1de6c8", "role": "alternate snapshot for 2024_2025"},
+    {"expected_filename": "edu_2025-03-20.csv", "snapshot_date": "2025-03-20", "byte_size": 515687, "sha256": "11cdb8589dc3aa4b11089a79a5876768caa4632d924f091478e179debfb496ee", "role": "selected snapshot for 2024_2025"},
+    {"expected_filename": "edu_2026-03-09.csv", "snapshot_date": "2026-03-09", "byte_size": 487472, "sha256": "627232727967d0147e97106227ce92522acb87da76b00a85916d894f165cc0d7", "role": "selected snapshot for 2025_2026"}
+  ]
+}

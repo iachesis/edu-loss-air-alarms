@@ -17,6 +17,14 @@ function formatSourceDate(value) {
     }).format(new Date(value));
 }
 
+function formatSourceTimestamp(value) {
+    return new Intl.DateTimeFormat(lang === 'uk' ? 'uk-UA' : 'en-GB', {
+        dateStyle: 'long',
+        timeStyle: 'medium',
+        timeZone: 'UTC',
+    }).format(new Date(value));
+}
+
 function methodologyBlocks() {
     if (lang === 'uk') {
         return [
@@ -27,9 +35,9 @@ function methodologyBlocks() {
             { heading: 'indicators', body: 'Три показники: (1) час тривог у межах навчального дня; (2) навчальні дні з хоча б одним додатним перетином; (3) окремі оброблені епізоди тривог із додатним перетином. Частки обчислюються від доступного припущеного навчального часу або доступних навчальних днів.' },
             { heading: 'weighting', body: 'Показники громад розраховано безпосередньо. Для областей та України абсолютні значення є середніми на одне активне місце розташування закладу освіти, зваженими за кількістю активних закладів у громадах. Тому, наприклад, 87,8 дня є середнім значенням, а не частиною календарного дня одного закладу. Частки обчислюються з відповідних зважених чисельників і знаменників, а не як середнє відсотків.' },
             { heading: 'education', body: 'Кількість закладів і учнів описує освітню мережу та не є спостереженням за присутністю під час тривог. Для 2022/23 очну форму розраховано як загальну кількість учнів мінус дистанційна форма; у наступні роки очну, дистанційну та змішану форми наведено окремо, а інші форми є розрахунковим залишком.' },
-            { heading: 'missingness', body: 'Нуль означає, що за наявного потрібного охоплення кваліфікованого перетину не було. Часткове охоплення позначається окремо. Недоступні або неохоплені результати залишаються недоступними й не замінюються нулем. Для довільного багатомісячного діапазону підсумок епізодів не обчислюється, щоб не рахувати двічі епізод на межі місяців.' },
+            { heading: 'missingness', body: 'Нуль означає, що за наявного потрібного охоплення кваліфікованого перетину не було. Статус «не охоплено джерелом» для UA01 та UA44 означає іншу причину відсутності числа, ніж загальна аналітична недоступність; обидва стани не замінюються нулем. Часткове охоплення позначається окремо. Для довільного багатомісячного діапазону підсумок епізодів не обчислюється, щоб не рахувати двічі епізод на межі місяців.' },
             { heading: 'limitations', body: 'Дашборд не вимірює навчальні втрати, фактично скасовані уроки, відвідування, фактичний час в укриттях, реальні розклади, порушення виконання домашніх завдань, порушення сну чи індивідуальний вплив на учнів. Це не причинна оцінка й не автоматичний інструмент пріоритизації.' },
-            { heading: 'releaseInfo', body: `Реліз сайту: ${release.website_release_id}. Аналітична побудова: ${release.analytical_build_id}. Аналітичні значення збережено з замороженої схваленої побудови.` },
+            { heading: 'releaseInfo', body: `Реліз сайту: ${release.website_release_id}. Нова аналітична побудова: ${release.analytical_build_id}. Порівняння із замороженим контролем не виявило змін фактичних числових показників; виправлено семантику неохоплених територій та походження.` },
         ];
     }
     return [
@@ -40,31 +48,32 @@ function methodologyBlocks() {
         { heading: 'indicators', body: 'The three measures are: (1) alarm time within the school day; (2) school days with any positive overlap; and (3) distinct processed alarm episodes with positive overlap. Shares use available assumed school time or available school days as the denominator.' },
         { heading: 'weighting', body: 'Hromada results are calculated directly. Oblast and national absolute values are averages per active school location, weighted by active schools in hromadas. A value such as 87.8 days is therefore an average, not a fraction of a calendar day experienced by one institution. Shares use the corresponding weighted numerators and denominators; percentages are not averaged.' },
         { heading: 'education', body: 'School and learner figures describe the education network and are not observed presence during alarms. For 2022/23, in-person learners are derived as total minus remote learners. Later years report in-person, remote and mixed modalities separately; other modalities are a derived residual.' },
-        { heading: 'missingness', body: 'Zero means the required coverage was present and no qualifying overlap occurred. Partial coverage is labelled separately. Unavailable or uncovered results remain unavailable and are not replaced with zero. A distinct episode total is not produced for an arbitrary multi-month range because one episode may cross a month boundary.' },
+        { heading: 'missingness', body: 'Zero means the required coverage was present and no qualifying overlap occurred. “Not covered by source” for UA01 and UA44 is a distinct reason for non-numeric results from generic analytical unavailability; neither state is replaced with zero. Partial coverage is labelled separately. A distinct episode total is not produced for an arbitrary multi-month range because one episode may cross a month boundary.' },
         { heading: 'limitations', body: 'The dashboard does not measure learning loss, lessons actually cancelled, attendance, actual shelter time, real school timetables, homework disruption, sleep disruption or individual learner exposure. It is not a causal estimate or an automatic prioritisation tool.' },
-        { heading: 'releaseInfo', body: `Website release: ${release.website_release_id}. Analytical build: ${release.analytical_build_id}. Analytical values are retained from the frozen approved build.` },
+        { heading: 'releaseInfo', body: `Website release: ${release.website_release_id}. New analytical build: ${release.analytical_build_id}. Comparison with the frozen control found no change in actual numeric measures; provenance and controlled not-covered semantics were corrected.` },
     ];
 }
 
 function dataBlocks() {
     const start = formatSourceDate(release.source_coverage_start_utc);
     const end = formatSourceDate(release.source_coverage_end_utc);
+    const retrieved = formatSourceTimestamp(release.source_retrieval_completed_at_utc);
     if (lang === 'uk') {
         return [
-            { heading: 'releaseInfo', body: `Фінальний реліз сайту: ${release.website_release_id}. Статус: фінальний публічний реліз. Аналітична побудова: ${release.analytical_build_id} (${release.analytical_build_status}). Аналітичні значення в цьому релізі не змінено.` },
-            { heading: 'sources', body: `Зафіксоване джерело тривог охоплює період від ${start} до ${end} UTC. SHA-256: ${release.analytical_source_sha256}. Час отримання первинного файлу не був записаний у замороженій побудові; цей пропуск збережено явно.`, link: release.source_url, linkLabel: 'Відкрити зафіксоване джерело тривог' },
+            { heading: 'releaseInfo', body: `Кандидат фінального релізу сайту: ${release.website_release_id}. Аналітична побудова: ${release.analytical_build_id} (${release.analytical_build_status}). Фактичні числові показники порівняно із замороженим контролем без відхилень.` },
+            { heading: 'sources', body: `Незмінний GitHub-об’єкт ${release.analytical_source_upstream_commit_sha} охоплює період від ${start} до ${end} UTC; отримано та перевірено ${retrieved} UTC. Git blob: ${release.analytical_source_git_blob_sha1}. SHA-256: ${release.analytical_source_sha256}. Охоплення джерела у липні та серпні не означає, що ці місяці додано до навчальних показників: вони й надалі обмежені керованим шкільним календарем.`, link: release.source_url, linkLabel: 'Відкрити незмінне джерело тривог' },
             { heading: 'architecture', body: 'Публікація є статичним сайтом без сервера застосунку та без зовнішніх мережевих запитів під час роботи. До браузера надходять лише агреговані JSON, довідник географії та підготовлені GeoJSON; шкільні рядки й первинний файл тривог не публікуються в інтерфейсі.' },
             { heading: 'geography', body: `Охоплено Україну, 26 територій обласного рівня та ${release.publication_scope.hromada_payload_coverage.controlled_hromadas} контрольовані громади. Для ${release.publication_scope.hromada_geometry_coverage.source_geometry_gaps} громад геометрія відсутня у контрольованому джерелі й не вигадується; їхні аналітичні та табличні результати залишаються доступними.` },
-            { heading: 'missingness', body: 'Нуль, часткове охоплення, недоступність і відсутність контрольованої геометрії є різними станами. Недоступні аналітичні значення не замінюються нулем.' },
+            { heading: 'missingness', body: 'Нуль, часткове охоплення, «не охоплено джерелом», загальна недоступність і відсутність контрольованої геометрії є різними станами. Для UA01 та UA44 джерело не надає постійних сиренних режимів; число нуль не вигадується.' },
             { heading: 'downloadCsv', body: 'CSV відображає поточний географічний рівень і вибраний період. Він містить неокруглені аналітичні значення, стабільні технічні назви полів англійською, статус охоплення та ідентифікатор аналітичної побудови.' },
         ];
     }
     return [
-        { heading: 'releaseInfo', body: `Final website release: ${release.website_release_id}. Status: production release. Analytical build: ${release.analytical_build_id} (${release.analytical_build_status}). Analytical values are unchanged in this release.` },
-        { heading: 'sources', body: `The frozen alarm source covers ${start} through ${end} UTC. SHA-256: ${release.analytical_source_sha256}. The raw file retrieval time was not recorded in the frozen build; that gap remains explicit.`, link: release.source_url, linkLabel: 'Open the frozen alarm source' },
+        { heading: 'releaseInfo', body: `Final website release candidate: ${release.website_release_id}. Analytical build: ${release.analytical_build_id} (${release.analytical_build_status}). Actual numeric measures match the frozen control without drift.` },
+        { heading: 'sources', body: `Immutable GitHub object ${release.analytical_source_upstream_commit_sha} covers ${start} through ${end} UTC and was retrieved and verified at ${retrieved} UTC. Git blob: ${release.analytical_source_git_blob_sha1}. SHA-256: ${release.analytical_source_sha256}. Source coverage in July and August does not make those months instructional months: metrics remain bounded by the governed school calendar.`, link: release.source_url, linkLabel: 'Open the immutable alarm source' },
         { heading: 'architecture', body: 'The publication is a static site with no application backend and no external network requests at runtime. The browser receives aggregate JSON, the geography catalogue and prepared GeoJSON only; school-level rows and the raw alarm file are not exposed through the interface.' },
         { heading: 'geography', body: `Coverage includes Ukraine, 26 oblast-level territories and ${release.publication_scope.hromada_payload_coverage.controlled_hromadas} controlled hromadas. Geometry is absent from the controlled source for ${release.publication_scope.hromada_geometry_coverage.source_geometry_gaps} hromadas and is not fabricated; their analytical and table results remain available.` },
-        { heading: 'missingness', body: 'Covered zero, partial coverage, analytical unavailability and unavailable controlled geometry are distinct states. An unavailable analytical value is not replaced with zero.' },
+        { heading: 'missingness', body: 'Covered zero, partial coverage, not covered by source, generic analytical unavailability and unavailable controlled geometry are distinct states. For UA01 and UA44, the source does not supply the permanent siren regimes; no zero value is invented.' },
         { heading: 'downloadCsv', body: 'CSV reflects the current geography level and selected period. It contains unrounded analytical values, stable English technical field names, coverage status and the analytical build identifier.' },
     ];
 }

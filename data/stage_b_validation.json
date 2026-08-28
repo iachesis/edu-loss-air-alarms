@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "governing_issue": "https://github.com/iachesis/edu-loss-air-alarms/issues/4",
+  "website_release_id": "AAE-WEB-1.1.0",
+  "analytical_build_id": "AAE-FULL-88db64d06afa99610f",
+  "project_fingerprint": "54d0ce63afe1c2c3cb718ebd17bc594e",
+  "frozen_executable_control": {
+    "status": "PASS",
+    "control_id": "AAE-FULL-9c94bc374ab5e7cf29",
+    "reproduced_build_id": "AAE-FULL-9c94bc374ab5e7cf29",
+    "canonical_table_count": 6,
+    "canonical_tables_byte_identical": 6,
+    "analytical_payload_count": 56,
+    "analytical_payloads_byte_identical": 56
+  },
+  "repaired_code_on_frozen_source": {
+    "status": "PASS",
+    "canonical_table_count": 6,
+    "analytical_payload_count": 56,
+    "actual_analytical_numeric_value_change_count": 0,
+    "prohibited_field_difference_count": 0,
+    "missing_or_added_key_count": 0,
+    "authorized_difference_count": 150480
+  },
+  "current_source_differential": {
+    "schema_version": 1,
+    "status": "PASS",
+    "published_window_definition": {
+      "school_years": "active governed school-year rows",
+      "weekdays": "governed Monday-Friday rule",
+      "vacations": "governed configured vacations",
+      "operating_window": "08:00-15:00 Europe/Kyiv"
+    },
+    "baseline": {
+      "label": "6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004",
+      "size_bytes": 39345075,
+      "sha256": "6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004",
+      "git_blob_sha1": "9007ff4decf40fb015cee84469971753f11fcad8",
+      "input_row_count": 285895
+    },
+    "candidate": {
+      "label": "108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445",
+      "size_bytes": 40954353,
+      "sha256": "108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445",
+      "git_blob_sha1": "c7b84747df0c434cf33d9e8d241c7554ca894168",
+      "input_row_count": 296882
+    },
+    "added": {
+      "record_count": 10987,
+      "distinct_record_count": 10987,
+      "valid_interval_count": 10987,
+      "invalid_interval_count": 0,
+      "declared_level_counts": {
+        "hromada": 591,
+        "oblast": 89,
+        "raion": 10307
+      },
+      "coverage_start_utc": "2026-07-24T06:05:48+00:00",
+      "coverage_end_utc": "2026-08-28T10:06:00+00:00",
+      "intersects_published_assumed_school_time_count": 0
+    },
+    "removed": {
+      "record_count": 0,
+      "distinct_record_count": 0,
+      "valid_interval_count": 0,
+      "invalid_interval_count": 0,
+      "declared_level_counts": {},
+      "coverage_start_utc": null,
+      "coverage_end_utc": null,
+      "intersects_published_assumed_school_time_count": 0
+    }
+  },
+  "current_build_vs_frozen": {
+    "status": "PASS",
+    "canonical_table_count": 6,
+    "analytical_payload_count": 56,
+    "actual_analytical_numeric_value_change_count": 0,
+    "prohibited_field_difference_count": 0,
+    "missing_or_added_key_count": 0,
+    "authorized_difference_count": 150480
+  },
+  "fresh_build_qa": {
+    "build_id": "AAE-FULL-88db64d06afa99610f",
+    "status": "PASS_WITH_REVIEW_FLAGS",
+    "review_status": "READY_FOR_INDEPENDENT_REVIEW",
+    "hard_failure_count": 0,
+    "review_flag_count": 850,
+    "checks_passed": 26,
+    "checks_total": 26,
+    "row_counts": {
+      "hromada_monthly": 70920,
+      "hromada_school_year": 7092,
+      "oblast_monthly": 1040,
+      "oblast_school_year": 104,
+      "national_monthly": 40,
+      "national_school_year": 4
+    },
+    "source_counts": {
+      "input_rows": 296882,
+      "duplicate_rows": 113845,
+      "invalid_rows": 2,
+      "unmapped_oblast_rows": 0,
+      "unmapped_raion_rows": 0,
+      "unmapped_hromada_rows": 0,
+      "unsupported_level_rows": 0,
+      "ambiguous_mapping_rows": 0,
+      "long_interval_rows": 848
+    }
+  },
+  "analytical_numeric_values_changed_vs_frozen": false,
+  "authorized_semantic_change": "controlled not-covered status and missingness for UA01 and UA44"
+}
