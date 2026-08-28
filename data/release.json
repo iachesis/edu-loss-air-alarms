@@ -1,6 +1,7 @@
 {
-  "website_release_id": "AAE-WEB-REVISED-PROTOTYPE-0.3-STAGE3P3",
-  "website_release_status": "STAGE3_ALL_GEOGRAPHY_INTERACTION_CHECKPOINT",
+  "website_release_id": "AAE-WEB-1.0.0",
+  "website_release_status": "PRODUCTION_RELEASE",
+  "website_release_date": "2026-08-28",
   "analytical_build_id": "AAE-FULL-9c94bc374ab5e7cf29",
   "analytical_build_status": "FROZEN_APPROVED",
   "analytical_source_sha256": "6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004",
@@ -25,7 +26,7 @@
     "2025_2026"
   ],
   "modality_rules_version": "0.1",
-  "prototype_scope": {
+  "publication_scope": {
     "all_oblasts": true,
     "hromada_oblasts": [
       "UA01",
@@ -524,29 +525,24 @@
     "search": "Fuse.js 7.5.0 vendored ES module",
     "i18n": "i18next 26.3.6 vendored browser build",
     "payload_validation": "JSON Schema Draft 2020-12 through Python jsonschema 4.26.0",
-    "build": "Vendored static Python build; no Node.js or npm required"
+    "build": "Static HTML, CSS and JavaScript site; no build step, Node.js or npm required"
   },
-  "publication_gate": "STAGE 3 COMPLETE CHECKPOINT: full controlled geography search and all-geography analytical interaction are implemented and independently audited; hostile Stage 4 review and production Stage 5 remain pending.",
-  "package_version": "0.12.0-stage3p3",
+  "publication_status": "FINAL_PUBLIC_RELEASE",
+  "package_version": "1.0.0",
   "node_required": false,
   "runtime_external_network_required": false,
-  "stage3": {
-    "completed_points": [
-      1,
-      2,
-      3
-    ],
-    "current_checkpoint": 3,
-    "stage4_started": false,
-    "stage5_started": false
+  "delivery": {
+    "unicef_deliverable": 2,
+    "product_status": "FINAL_PUBLIC_RELEASE",
+    "analytical_payload_values_changed": false
   },
   "release_marker": {
     "visible_element": "#footer-release",
     "machine_readable_source": "data/release.json:website_release_id",
-    "value": "AAE-WEB-REVISED-PROTOTYPE-0.3-STAGE3P3"
+    "value": "AAE-WEB-1.0.0"
   },
   "geography_catalogue": {
-    "version": "0.4-stage3p2",
+    "version": "0.4",
     "path": "geography_lookup.json",
     "national_records": 1,
     "oblast_records": 26,

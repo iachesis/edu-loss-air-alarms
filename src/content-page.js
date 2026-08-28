@@ -1,22 +1,144 @@
 import { initI18n, setLanguage, tr } from './i18n.js';
 import { dashboardUrlWithLanguage, lastDashboardUrl, preferredLanguage, saveLanguage, savedLanguage } from './logic.js';
+
 const page = document.body.dataset.page ?? 'methodology';
 const explicitLanguage = new URLSearchParams(location.search).get('lang');
 let lang = preferredLanguage(explicitLanguage, savedLanguage());
+let release;
+
 function dashboardReturnUrl() {
     return dashboardUrlWithLanguage(lastDashboardUrl(`./index.html?lang=${lang}`), lang, location.href);
 }
-const methodology = { uk: [['methodQuestion', 'methodQuestionText'], ['sources', 'Основне джерело тривог — офіційний файл Українського набору даних повітряних тривог. Кожен реліз фіксує URL, час отримання, SHA-256, кількість рядків, часовий діапазон та винятки. Географія і дані освіти використовуються у зафіксованих версіях.'], ['assumptions', 'Припущений навчальний час: понеділок–п’ятниця, без налаштованих канікул, з 08:00 до 15:00 за Europe/Kyiv. Це спільне порівняльне припущення, а не фактичний розклад кожного закладу.'], ['processing', 'Час UTC переводиться в Europe/Kyiv із переходами літнього часу. Точні дублікати вилучаються. Перекривні або дотичні інтервали об’єднуються; додатний розрив утворює новий епізод. Інтервали обрізаються межами припущеного навчального вікна.'], ['geography', 'Тривоги громади використовуються прямо. Тривоги району або області розподіляються до відповідних громад; первинний рівень оголошення зберігається у позначці точності. Ширші оголошення не підсумовуються як незалежні локальні події.'], ['indicators', 'Час під час тривоги = об’єднані секунди перетину ÷ 3 600. Частка часу = секунди перетину ÷ доступні припущені навчальні секунди × 100. Уражений день має будь-який додатний перетин. Епізоди — окремі оброблені ідентичності з додатним перетином.'], ['weighting', 'Громади обчислюються прямо. Область і Україна — середнє для активного місця розташування закладу, зважене кількістю активних закладів у громадах. Багаторічний діапазон ділиться за навчальними роками: у кожному сегменті застосовуються його ваги, після чого додаються нероз округлені чисельники та знаменники. Відсотки не усереднюються.'], ['education', 'Заклади й учні є контекстом, а не оцінкою фактичної присутності. Для 2022/23 офлайн = загальна кількість − онлайн. У наступні роки використовуються окремі офлайн, онлайн і змішані поля; залишок є іншими, переважно неочними формами. У багаторічному перегляді контекст показується за кожним роком окремо.'], ['missingness', 'Нуль означає повне потрібне охоплення і відсутність кваліфікованого перетину. Часткове охоплення позначається. Недоступні або неохоплені результати є null, а не нулем. Для довільного діапазону підсумок епізодів недоступний, оскільки один епізод може перетинати межу місяця.'], ['workedExample', 'Якщо об’єднані тривоги перетнули навчальне вікно на 12 600 секунд, а доступний знаменник становив 126 000 секунд, результат дорівнює 3,5 години та 10,0%. Якщо додатний перетин був у 4 із 5 днів, частка днів становить 80,0%.'], ['limitations', 'Продукт не вимірює фактично скасовані уроки, присутність, перебування в укритті, продовження онлайн-навчання, психологічні наслідки або навчальні втрати. Він не є причинною оцінкою чи автоматичним пріоритетним балом.'], ['releaseInfo', 'У заголовку релізу показано ідентифікатор аналітичної побудови, версії методології та припущень, часову межу джерела, географічну версію і статус. CSV зберігає нероз округлені значення.']], en: [['methodQuestion', 'methodQuestionText'], ['sources', 'The principal alarm source is the official Ukrainian Air Raid Sirens Dataset file. Every release records its URL, retrieval time, SHA-256, row counts, time coverage and exceptions. Geography and education inputs are frozen per release.'], ['assumptions', 'Assumed school time is Monday–Friday, excluding configured vacations, from 08:00 to 15:00 in Europe/Kyiv. This is a common comparison assumption, not each school’s observed timetable.'], ['processing', 'UTC timestamps are converted to Europe/Kyiv with daylight-saving transitions. Exact duplicates are removed. Overlapping or touching intervals are unioned; any positive gap forms a new episode. Intervals are clipped to the assumed school window.'], ['geography', 'Hromada declarations are used directly. Raion and oblast declarations are allocated to their contained hromadas, while the original declared level remains in the precision label. Broader declarations are not summed as independent local events.'], ['indicators', 'Time under alarm = unioned overlap seconds ÷ 3,600. Share of time = overlap seconds ÷ available assumed school seconds × 100. An affected day has any positive overlap. Episodes are distinct processed identities with positive overlap.'], ['weighting', 'Hromadas are calculated directly. Oblast and national results are averages per active school location, weighted by active schools in hromadas. A multi-year range is split by school year: each segment uses its approved weights, then unrounded numerators and denominators are summed. Percentages are never averaged.'], ['education', 'Schools and learners are context, not observed presence. For 2022/23, offline = total − online. Later years use separate offline, online and mixed fields; the residual is other, predominantly non-in-person modalities. Multi-year context is shown separately for every school year.'], ['missingness', 'Zero means required coverage and no qualifying overlap. Partial coverage is labelled. Unavailable or uncovered results are null, not zero. A distinct episode total is unavailable for an arbitrary range because an episode may cross a month boundary.'], ['workedExample', 'If unioned alarms overlap the school window for 12,600 seconds and the available denominator is 126,000 seconds, the result is 3.5 hours and 10.0%. If four of five school days have positive overlap, the affected-day share is 80.0%.'], ['limitations', 'The product does not measure lessons actually cancelled, attendance, shelter time, continuation of online learning, psychological effects or learning loss. It is not a causal estimate or automatic priority score.'], ['releaseInfo', 'Release information includes analytical build ID, methodology and assumption versions, source coverage end, geography version and status. CSV downloads retain unrounded values.']] };
-const dataContent = { uk: [['releaseInfo', 'Аналітична основа: AAE-FULL-9c94bc374ab5e7cf29. Публічний сайт містить лише агреговані JSON і GeoJSON; шкільні рядки та первинний файл тривог не передаються до браузера.'], ['sources', 'Джерело тривог SHA-256: 6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004. Охоплення джерела: 15 березня 2022 — 30 липня 2026 UTC. Версії географії й освіти записані в метаданих релізу.'], ['downloadCsv', 'CSV відображає поточний рівень географії, вибраний період і набір порівняння. Він містить нероз округлені значення, технічні назви полів англійською, статус охоплення та ідентифікатор побудови.'], ['missingness', 'Нуль, часткове охоплення, недоступність, неохоплена територія та відсутність застосовності є різними станами. Недоступне значення не замінюється нулем.']], en: [['releaseInfo', 'Analytical baseline: AAE-FULL-9c94bc374ab5e7cf29. The public site contains aggregate JSON and GeoJSON only; school-level rows and the raw alarm source are not delivered to the browser.'], ['sources', 'Alarm source SHA-256: 6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004. Source coverage is 15 March 2022 through 30 July 2026 UTC. Geography and education versions are recorded in release metadata.'], ['downloadCsv', 'CSV reflects the current geography level, selected period and comparison set. It contains unrounded values, stable English technical fields, coverage status and the analytical build identifier.'], ['missingness', 'Covered zero, partial coverage, unavailable, not covered and not applicable are distinct states. An unavailable value is not replaced with zero.']] };
-async function render() { await setLanguage(lang); document.querySelectorAll('[data-t]').forEach(e => e.textContent = tr(e.dataset.t)); document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang))); const back = document.getElementById('back-dashboard'); back.href = dashboardReturnUrl(); const main = document.getElementById('content'); main.replaceChildren(); const blocks = page === 'methodology' ? methodology[lang] : dataContent[lang]; for (const [heading, body] of blocks) {
-    const section = document.createElement('section');
-    section.className = 'panel prose';
-    const h = document.createElement('h2');
-    h.textContent = tr(heading);
-    const p = document.createElement('p');
-    p.textContent = body === 'methodQuestionText' ? tr(body) : body;
-    section.append(h, p);
-    main.append(section);
-} document.documentElement.lang = lang; }
-async function init() { await initI18n(lang); document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', async () => { lang = b.dataset.lang; saveLanguage(lang); history.replaceState(null, '', `${location.pathname}?lang=${lang}`); await render(); })); await render(); }
+
+function formatSourceDate(value) {
+    return new Intl.DateTimeFormat(lang === 'uk' ? 'uk-UA' : 'en-GB', {
+        dateStyle: 'long',
+        timeZone: 'UTC',
+    }).format(new Date(value));
+}
+
+function methodologyBlocks() {
+    if (lang === 'uk') {
+        return [
+            { heading: 'methodQuestion', body: 'Дашборд оцінює перетин зафіксованих інтервалів повітряних тривог із припущеним часом роботи закладів освіти. Це модельований показник порушення навчального дня, а не спостереження за фактичними уроками чи присутністю.' },
+            { heading: 'assumptions', body: 'Спільне порівняльне припущення: понеділок–п’ятниця, 08:00–15:00 за Europe/Kyiv, із виключенням передбачених шкільним календарем періодів. Це не фактичний розклад кожного закладу.' },
+            { heading: 'processing', body: 'Часові позначки тривог переводяться з UTC до Europe/Kyiv з урахуванням переходів літнього часу. Точні дублікати вилучаються, а перекривні або дотичні інтервали об’єднуються перед розрахунком перетину з навчальним вікном.' },
+            { heading: 'geography', body: 'Оголошення на рівні громади використовуються безпосередньо. Оголошення на рівні району або області розподіляються до відповідних громад; початковий рівень оголошення зберігається в позначці географічної точності.' },
+            { heading: 'indicators', body: 'Три показники: (1) час тривог у межах навчального дня; (2) навчальні дні з хоча б одним додатним перетином; (3) окремі оброблені епізоди тривог із додатним перетином. Частки обчислюються від доступного припущеного навчального часу або доступних навчальних днів.' },
+            { heading: 'weighting', body: 'Показники громад розраховано безпосередньо. Для областей та України абсолютні значення є середніми на одне активне місце розташування закладу освіти, зваженими за кількістю активних закладів у громадах. Тому, наприклад, 87,8 дня є середнім значенням, а не частиною календарного дня одного закладу. Частки обчислюються з відповідних зважених чисельників і знаменників, а не як середнє відсотків.' },
+            { heading: 'education', body: 'Кількість закладів і учнів описує освітню мережу та не є спостереженням за присутністю під час тривог. Для 2022/23 очну форму розраховано як загальну кількість учнів мінус дистанційна форма; у наступні роки очну, дистанційну та змішану форми наведено окремо, а інші форми є розрахунковим залишком.' },
+            { heading: 'missingness', body: 'Нуль означає, що за наявного потрібного охоплення кваліфікованого перетину не було. Часткове охоплення позначається окремо. Недоступні або неохоплені результати залишаються недоступними й не замінюються нулем. Для довільного багатомісячного діапазону підсумок епізодів не обчислюється, щоб не рахувати двічі епізод на межі місяців.' },
+            { heading: 'limitations', body: 'Дашборд не вимірює навчальні втрати, фактично скасовані уроки, відвідування, фактичний час в укриттях, реальні розклади, порушення виконання домашніх завдань, порушення сну чи індивідуальний вплив на учнів. Це не причинна оцінка й не автоматичний інструмент пріоритизації.' },
+            { heading: 'releaseInfo', body: `Реліз сайту: ${release.website_release_id}. Аналітична побудова: ${release.analytical_build_id}. Аналітичні значення збережено з замороженої схваленої побудови.` },
+        ];
+    }
+    return [
+        { heading: 'methodQuestion', body: 'The dashboard estimates overlap between recorded air-alarm intervals and assumed school operating time. It is a modelled measure of school-day disruption, not an observation of lessons delivered or learner presence.' },
+        { heading: 'assumptions', body: 'The common comparison assumption is Monday–Friday, 08:00–15:00 in Europe/Kyiv, excluding periods defined by the school-calendar rules. It is not each school’s actual timetable.' },
+        { heading: 'processing', body: 'Alarm timestamps are converted from UTC to Europe/Kyiv with daylight-saving transitions. Exact duplicates are removed, and overlapping or touching intervals are unioned before overlap with the assumed school window is calculated.' },
+        { heading: 'geography', body: 'Hromada-level declarations are used directly. Raion- and oblast-level declarations are allocated to their contained hromadas; the original declaration level remains visible through the geographic-precision label.' },
+        { heading: 'indicators', body: 'The three measures are: (1) alarm time within the school day; (2) school days with any positive overlap; and (3) distinct processed alarm episodes with positive overlap. Shares use available assumed school time or available school days as the denominator.' },
+        { heading: 'weighting', body: 'Hromada results are calculated directly. Oblast and national absolute values are averages per active school location, weighted by active schools in hromadas. A value such as 87.8 days is therefore an average, not a fraction of a calendar day experienced by one institution. Shares use the corresponding weighted numerators and denominators; percentages are not averaged.' },
+        { heading: 'education', body: 'School and learner figures describe the education network and are not observed presence during alarms. For 2022/23, in-person learners are derived as total minus remote learners. Later years report in-person, remote and mixed modalities separately; other modalities are a derived residual.' },
+        { heading: 'missingness', body: 'Zero means the required coverage was present and no qualifying overlap occurred. Partial coverage is labelled separately. Unavailable or uncovered results remain unavailable and are not replaced with zero. A distinct episode total is not produced for an arbitrary multi-month range because one episode may cross a month boundary.' },
+        { heading: 'limitations', body: 'The dashboard does not measure learning loss, lessons actually cancelled, attendance, actual shelter time, real school timetables, homework disruption, sleep disruption or individual learner exposure. It is not a causal estimate or an automatic prioritisation tool.' },
+        { heading: 'releaseInfo', body: `Website release: ${release.website_release_id}. Analytical build: ${release.analytical_build_id}. Analytical values are retained from the frozen approved build.` },
+    ];
+}
+
+function dataBlocks() {
+    const start = formatSourceDate(release.source_coverage_start_utc);
+    const end = formatSourceDate(release.source_coverage_end_utc);
+    if (lang === 'uk') {
+        return [
+            { heading: 'releaseInfo', body: `Фінальний реліз сайту: ${release.website_release_id}. Статус: фінальний публічний реліз. Аналітична побудова: ${release.analytical_build_id} (${release.analytical_build_status}). Аналітичні значення в цьому релізі не змінено.` },
+            { heading: 'sources', body: `Зафіксоване джерело тривог охоплює період від ${start} до ${end} UTC. SHA-256: ${release.analytical_source_sha256}. Час отримання первинного файлу не був записаний у замороженій побудові; цей пропуск збережено явно.`, link: release.source_url, linkLabel: 'Відкрити зафіксоване джерело тривог' },
+            { heading: 'architecture', body: 'Публікація є статичним сайтом без сервера застосунку та без зовнішніх мережевих запитів під час роботи. До браузера надходять лише агреговані JSON, довідник географії та підготовлені GeoJSON; шкільні рядки й первинний файл тривог не публікуються в інтерфейсі.' },
+            { heading: 'geography', body: `Охоплено Україну, 26 територій обласного рівня та ${release.publication_scope.hromada_payload_coverage.controlled_hromadas} контрольовані громади. Для ${release.publication_scope.hromada_geometry_coverage.source_geometry_gaps} громад геометрія відсутня у контрольованому джерелі й не вигадується; їхні аналітичні та табличні результати залишаються доступними.` },
+            { heading: 'missingness', body: 'Нуль, часткове охоплення, недоступність і відсутність контрольованої геометрії є різними станами. Недоступні аналітичні значення не замінюються нулем.' },
+            { heading: 'downloadCsv', body: 'CSV відображає поточний географічний рівень і вибраний період. Він містить неокруглені аналітичні значення, стабільні технічні назви полів англійською, статус охоплення та ідентифікатор аналітичної побудови.' },
+        ];
+    }
+    return [
+        { heading: 'releaseInfo', body: `Final website release: ${release.website_release_id}. Status: production release. Analytical build: ${release.analytical_build_id} (${release.analytical_build_status}). Analytical values are unchanged in this release.` },
+        { heading: 'sources', body: `The frozen alarm source covers ${start} through ${end} UTC. SHA-256: ${release.analytical_source_sha256}. The raw file retrieval time was not recorded in the frozen build; that gap remains explicit.`, link: release.source_url, linkLabel: 'Open the frozen alarm source' },
+        { heading: 'architecture', body: 'The publication is a static site with no application backend and no external network requests at runtime. The browser receives aggregate JSON, the geography catalogue and prepared GeoJSON only; school-level rows and the raw alarm file are not exposed through the interface.' },
+        { heading: 'geography', body: `Coverage includes Ukraine, 26 oblast-level territories and ${release.publication_scope.hromada_payload_coverage.controlled_hromadas} controlled hromadas. Geometry is absent from the controlled source for ${release.publication_scope.hromada_geometry_coverage.source_geometry_gaps} hromadas and is not fabricated; their analytical and table results remain available.` },
+        { heading: 'missingness', body: 'Covered zero, partial coverage, analytical unavailability and unavailable controlled geometry are distinct states. An unavailable analytical value is not replaced with zero.' },
+        { heading: 'downloadCsv', body: 'CSV reflects the current geography level and selected period. It contains unrounded analytical values, stable English technical field names, coverage status and the analytical build identifier.' },
+    ];
+}
+
+function applyTranslations() {
+    document.querySelectorAll('[data-t]').forEach(element => { element.textContent = tr(element.dataset.t); });
+    document.querySelectorAll('[data-t-aria-label]').forEach(element => { element.setAttribute('aria-label', tr(element.dataset.tAriaLabel)); });
+    document.querySelectorAll('[data-lang]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.lang === lang)));
+    document.querySelectorAll('[data-support-page]').forEach(anchor => { anchor.href = `./${anchor.dataset.supportPage}.html?lang=${lang}`; });
+    document.title = `${tr(page === 'methodology' ? 'methodology' : 'dataRelease')} — ${tr('appTitle')}`;
+}
+
+async function render() {
+    applyTranslations();
+    document.getElementById('back-dashboard').href = dashboardReturnUrl();
+    document.getElementById('footer-release').textContent = release.website_release_id;
+    document.getElementById('footer-build').textContent = ` · ${release.analytical_build_id}`;
+    const main = document.getElementById('content');
+    main.replaceChildren();
+    const blocks = page === 'methodology' ? methodologyBlocks() : dataBlocks();
+    for (const block of blocks) {
+        const section = document.createElement('section');
+        section.className = 'panel prose';
+        const heading = document.createElement('h2');
+        heading.textContent = tr(block.heading);
+        const paragraph = document.createElement('p');
+        paragraph.textContent = block.body;
+        section.append(heading, paragraph);
+        if (block.link) {
+            const link = document.createElement('a');
+            link.href = block.link;
+            link.textContent = block.linkLabel;
+            section.append(link);
+        }
+        main.append(section);
+    }
+    document.documentElement.lang = lang;
+}
+
+async function switchContentLanguage(nextLanguage, button) {
+    if (nextLanguage === lang)
+        return;
+    const viewport = { x: window.scrollX, y: window.scrollY };
+    lang = nextLanguage;
+    saveLanguage(lang);
+    history.replaceState(null, '', `${location.pathname}?lang=${lang}`);
+    await setLanguage(lang);
+    await render();
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    window.scrollTo({ left: viewport.x, top: viewport.y, behavior: 'auto' });
+    button.focus({ preventScroll: true });
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    window.scrollTo({ left: viewport.x, top: viewport.y, behavior: 'auto' });
+}
+
+async function init() {
+    try {
+        await initI18n(lang);
+        const response = await fetch('./data/release.json');
+        if (!response.ok)
+            throw new Error(`release metadata: ${response.status}`);
+        release = await response.json();
+        const marker = document.querySelector('meta[name="aae-release-id"]')?.content;
+        if (marker !== release.website_release_id || document.body.dataset.releaseId !== release.website_release_id)
+            throw new Error(tr('releaseMismatch'));
+        document.querySelectorAll('[data-lang]').forEach(button => button.addEventListener('click', () => { switchContentLanguage(button.dataset.lang, button); }));
+        await render();
+    }
+    catch (error) {
+        console.error(error);
+        const message = document.getElementById('content-error');
+        message.hidden = false;
+        message.textContent = `${tr('fatal')} ${tr('fatalHelp')}`;
+    }
+}
+
 init();

@@ -46,7 +46,7 @@ export function periodBounds(state) { if (state.periodMode === 'school_year') {
     return { start: state.month, end: state.month }; if (state.periodMode === 'all_available')
     return { start: ALL_MONTHS[0], end: ALL_MONTHS[ALL_MONTHS.length - 1] }; return { start: state.rangeStart, end: state.rangeEnd }; }
 export function periodLabel(state, lang) { if (state.periodMode === 'school_year')
-    return `${SCHOOL_YEAR_LABELS[state.schoolYear]} ${lang === 'uk' ? 'навчальний рік' : 'school year'}`; const b = periodBounds(state); if (state.periodMode === 'all_available')
+    return lang === 'uk' ? `Весь навчальний рік · ${SCHOOL_YEAR_LABELS[state.schoolYear]}` : `Whole school year · ${SCHOOL_YEAR_LABELS[state.schoolYear]}`; const b = periodBounds(state); if (state.periodMode === 'all_available')
     return lang === 'uk' ? `Усі доступні дані · ${rangeLabel(b.start, b.end, lang)}` : `All available data · ${rangeLabel(b.start, b.end, lang)}`; return rangeLabel(b.start, b.end, lang); }
 const LANG_KEY = 'aae.language', DASH_KEY = 'aae.lastDashboardUrl';
 export function preferredLanguage(explicit, saved) { return explicit === 'uk' || explicit === 'en' ? explicit : saved ?? 'uk'; }

@@ -1,1 +1,47 @@
-<!doctype html><html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="aae-release-id" content="AAE-WEB-REVISED-PROTOTYPE-0.3-STAGE3P3"><link rel="icon" href="data:,"><title>AAE</title><link rel="stylesheet" href="./src/styles.css"><script src="./vendor/i18next.min.js"></script><script type="module" src="./src/content-page.js"></script></head><body data-page="data" data-release-id="AAE-WEB-REVISED-PROTOTYPE-0.3-STAGE3P3"><header class="site-header"><div class="header-inner"><div><p class="eyebrow">UNICEF · МОН · ІОА</p><h1 data-t="dataRelease"></h1></div><div class="header-actions"><div class="language-switch"><button data-lang="uk">УКР</button><button data-lang="en">ENG</button></div></div></div></header><main class="page-shell"><p><a id="back-dashboard" class="button-secondary" data-t="backDashboard"></a></p><div id="content"></div></main></body></html>
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Data and release information for the Air Alarms and the School Day in Ukraine dashboard.">
+  <meta name="aae-release-id" content="AAE-WEB-1.0.0">
+  <link rel="icon" href="data:,">
+  <title>Data and release — How Air Alarms Disrupt the School Day in Ukraine</title>
+  <link rel="stylesheet" href="./src/styles.css">
+  <script src="./vendor/i18next.min.js"></script>
+  <script type="module" src="./src/content-page.js"></script>
+</head>
+<body data-page="data" data-release-id="AAE-WEB-1.0.0">
+  <a class="skip-link" href="#main-content" data-t="skipToContent"></a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <p class="eyebrow">UNICEF · МОН · ІОА</p>
+        <h1 data-t="dataRelease"></h1>
+      </div>
+      <div class="header-actions">
+        <span class="status-badge" data-t="releaseStatus"></span>
+        <div class="language-switch" role="group" data-t-aria-label="language">
+          <button type="button" data-lang="uk">УКР</button>
+          <button type="button" data-lang="en">ENG</button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main id="main-content" class="page-shell">
+    <p><a id="back-dashboard" class="button-secondary" data-t="backDashboard"></a></p>
+    <div id="content"></div>
+    <p id="content-error" class="fatal-error" role="alert" hidden></p>
+  </main>
+  <footer class="site-footer">
+    <div class="release-line">
+      <span data-t="releaseStatus"></span>
+      <strong id="footer-release"></strong>
+      <span id="footer-build"></span>
+    </div>
+    <nav data-t-aria-label="supportingPages">
+      <a href="./methodology.html" data-support-page="methodology" data-t="methodology"></a>
+    </nav>
+  </footer>
+</body>
+</html>

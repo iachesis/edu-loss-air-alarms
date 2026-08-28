@@ -1,10 +1,309 @@
-<!doctype html><html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><meta name="description" content="Estimated overlap between recorded air alarms and assumed school operating hours in Ukraine."><meta name="aae-release-id" content="AAE-WEB-REVISED-PROTOTYPE-0.3-STAGE3P3"><title>Air alarms and the school day</title><link rel="stylesheet" href="./src/styles.css"><link rel="stylesheet" href="./vendor/leaflet.css"><script src="./vendor/leaflet.js"></script><script src="./vendor/echarts.min.js"></script><script src="./vendor/i18next.min.js"></script><script type="module" src="./src/main.js"></script></head><body data-release-id="AAE-WEB-REVISED-PROTOTYPE-0.3-STAGE3P3"><a class="skip-link" href="#main-content">Skip to content</a><header class="site-header"><div class="header-inner"><div><p class="eyebrow">UNICEF · МОН · ІОА</p><h1 id="page-title"></h1><p id="page-subtitle" class="subtitle"></p></div><div class="header-actions"><span class="status-badge" data-t="prototype"></span><div class="language-switch" role="group" aria-label="Language"><button data-lang="uk">УКР</button><button data-lang="en">ENG</button></div></div></div></header><main id="main-content" class="page-shell"><div id="loading" role="status" data-t="loading"></div><div id="fatal-error" class="fatal-error" hidden></div><div id="parameter-notice" class="notice" hidden></div><div id="area-load-status" class="notice" role="status" hidden></div><div id="dashboard" hidden>
-<section class="panel filter-panel" aria-labelledby="choose-heading"><div class="section-heading-row"><div><p class="section-kicker" data-t="chooseView"></p><h2 id="choose-heading"><span data-t="territory"></span> · <span data-t="period"></span></h2></div><button id="reset-filters" class="button-secondary" data-t="reset"></button></div><div class="view-controls"><div class="territory-combobox"><label for="territory-search" data-t="territory"></label><input id="territory-search" role="combobox" aria-autocomplete="list" aria-controls="territory-results" autocomplete="off"><span id="territory-result-count" class="visually-hidden" aria-live="polite"></span><ul id="territory-results" role="listbox" hidden></ul></div><div class="period-controls"><label for="period-mode" data-t="period"></label><select id="period-mode"></select><div id="period-detail" class="period-detail"><label id="school-year-field"><span data-t="schoolYear"></span><select id="school-year"></select></label><label id="month-field" hidden><span data-t="month"></span><select id="month"></select></label><div id="range-fields" class="range-fields" hidden><label><span data-t="from"></span><select id="range-start"></select></label><label><span data-t="to"></span><select id="range-end"></select></label></div><p id="all-period-note" hidden data-t="allAvailable"></p></div></div></div></section>
-<section class="summary-panel" aria-labelledby="summary-heading"><p class="section-kicker" data-t="atGlance"></p><h2 id="summary-heading"><span id="summary-context"></span></h2><p id="summary-text" class="summary-text"></p><p id="aggregation-note" class="aggregation-note"></p></section>
-<section aria-labelledby="measures-heading"><p class="section-kicker" data-t="keyMeasures"></p><h2 id="measures-heading" class="visually-hidden" data-t="keyMeasures"></h2><div class="cards-grid"><article class="metric-card"><div class="card-title-row"><h3 data-t="alarmTime"></h3><button data-info="alarm" class="info-button" aria-label="Information">i</button></div><div id="alarm-time-value" class="metric-value"></div><div id="alarm-time-secondary" class="metric-secondary"></div></article><article class="metric-card"><div class="card-title-row"><h3 data-t="affectedDays"></h3><button data-info="days" class="info-button">i</button></div><div id="affected-days-value" class="metric-value"></div><div id="affected-days-secondary" class="metric-secondary"></div></article><article class="metric-card"><div class="card-title-row"><h3 data-t="episodes"></h3><button data-info="episodes" class="info-button">i</button></div><div id="episodes-value" class="metric-value"></div><div id="episodes-secondary" class="metric-secondary"></div></article></div></section>
-<section class="panel education-panel" aria-labelledby="education-heading"><div class="section-heading-row"><div><p class="section-kicker" data-t="educationContext"></p><h2 id="education-heading" data-t="educationContext"></h2></div><details><summary data-t="modalityDetails"></summary><div id="modality-chart" class="chart modality-chart"></div></details></div><div id="education-summary" class="education-summary"></div><p id="education-multi-note" class="context-note" hidden></p><div id="education-years"></div><p id="education-note" class="context-note"></p></section>
-<section class="panel" aria-labelledby="time-heading"><div class="section-heading-row"><div><p class="section-kicker" data-t="overTime"></p><h2 id="time-heading" data-t="overTime"></h2></div><label><span class="visually-hidden">Measure</span><select id="trend-measure"><option value="alarm_hours_average_school_location" data-t="hours">Hours</option><option value="school_time_under_alarm_pct" data-t="alarmShare">Share</option><option value="affected_school_days_pct" data-t="daysShare">Days</option></select></label></div><div class="segmented" role="group"><button data-temporal="monthly" aria-pressed="true" data-t="monthlyTrend"></button><button data-temporal="school_years" aria-pressed="false" data-t="schoolYearComparison"></button><button data-temporal="heatmap" aria-pressed="false" data-t="heatmap"></button></div><p id="chart-error" class="notice" hidden></p><div id="monthly-panel"><h3 data-t="monthlyTrend"></h3><div id="monthly-chart" class="chart" role="img" aria-label="Monthly trend"></div><details><summary>Data table</summary><div id="monthly-data" class="table-wrap"></div></details></div><div id="year-panel" hidden><h3 data-t="schoolYearComparison"></h3><div id="year-chart" class="chart" role="img" aria-label="School-year comparison"></div><details><summary>Data table</summary><div id="year-data" class="table-wrap"></div></details></div><div id="heatmap-panel" hidden><h3 data-t="heatmap"></h3><div id="heatmap-chart" class="chart" role="img" aria-label="Month by school-year heatmap"></div><details><summary>Data table</summary><div id="heatmap-data" class="table-wrap"></div></details></div></section>
-<section class="panel" aria-labelledby="places-heading"><div class="section-heading-row"><div><p class="section-kicker" data-t="acrossPlaces"></p><h2 id="places-heading" data-t="map"></h2></div><div class="map-controls"><label><span data-t="colourBy"></span><select id="map-measure"><option value="school_time_under_alarm_pct" data-t="alarmShare"></option><option value="alarm_hours_average_school_location" data-t="hours"></option><option value="affected_school_days_pct" data-t="daysShare"></option></select></label><button id="fit-selected" class="button-secondary" data-t="fitSelected"></button><button id="reset-map" class="button-secondary" data-t="resetMap"></button></div></div><p id="map-error" class="notice" hidden></p><div id="map-container" class="map-container" aria-label="Map"></div><div id="map-legend" class="map-legend"></div><p class="context-note" data-t="mapAlternative"></p></section>
-<section class="panel" aria-labelledby="comparison-heading"><div class="section-heading-row"><div><p class="section-kicker" data-t="compareAreas"></p><h2 id="comparison-heading" data-t="compareAreas"></h2></div><button id="download-csv" class="button-primary" data-t="downloadCsv"></button></div><label class="comparison-search"><span class="visually-hidden" data-t="territory"></span><input id="comparison-search" type="search" data-t-placeholder="territoryHint"></label><div id="comparison-cards" class="comparison-cards"></div><div id="comparison-table" class="table-wrap"></div></section>
-<section class="panel notes-panel" aria-labelledby="interpret-heading"><p class="section-kicker" data-t="interpret"></p><h2 id="interpret-heading" data-t="interpret"></h2><div class="notes-grid"><article><h3 data-t="methodQuestion"></h3><p data-t="methodQuestionText"></p></article><article><h3 data-t="precision"></h3><p id="precision-text"></p></article><article><h3 data-t="notMeasured"></h3><p data-t="limitations"></p></article></div></section>
-</div></main><footer class="site-footer"><div><strong id="footer-release"></strong><span id="footer-build"></span></div><nav><a data-page="methodology" data-t="methodology"></a><a data-page="data" data-t="dataRelease"></a></nav></footer><dialog id="indicator-dialog"><form method="dialog"><button class="dialog-close" aria-label="Close">×</button><h2 id="dialog-title"></h2><p id="dialog-meaning"></p><dl><div><dt data-t="formula"></dt><dd><code id="dialog-formula"></code></dd></div><div><dt data-t="aggregateTreatment"></dt><dd id="dialog-aggregate"></dd></div><div><dt data-t="assumption"></dt><dd id="dialog-assumption"></dd></div><div><dt data-t="notMeasured"></dt><dd id="dialog-not"></dd></div></dl><button class="button-primary" value="close" data-t="close"></button></form></dialog></body></html>
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:,">
+  <meta name="description" content="Estimated overlap between recorded air alarms and assumed school operating hours in Ukraine.">
+  <meta name="aae-release-id" content="AAE-WEB-1.0.0">
+  <title>How Air Alarms Disrupt the School Day in Ukraine</title>
+  <link rel="stylesheet" href="./src/styles.css">
+  <link rel="stylesheet" href="./vendor/leaflet.css">
+  <script src="./vendor/leaflet.js"></script>
+  <script src="./vendor/echarts.min.js"></script>
+  <script src="./vendor/i18next.min.js"></script>
+  <script type="module" src="./src/main.js"></script>
+</head>
+<body data-release-id="AAE-WEB-1.0.0">
+  <a class="skip-link" href="#main-content" data-t="skipToContent"></a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <p class="eyebrow">UNICEF · МОН · ІОА</p>
+        <h1 id="page-title"></h1>
+        <p id="page-subtitle" class="subtitle"></p>
+      </div>
+      <div class="header-actions">
+        <span class="status-badge" data-t="releaseStatus"></span>
+        <div class="language-switch" role="group" data-t-aria-label="language">
+          <button type="button" data-lang="uk">УКР</button>
+          <button type="button" data-lang="en">ENG</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="page-shell">
+    <div id="loading" role="status" data-t="loading"></div>
+    <div id="fatal-error" class="fatal-error" role="alert" hidden></div>
+    <div id="parameter-notice" class="notice" hidden></div>
+    <div id="area-load-status" class="notice" role="status" hidden></div>
+
+    <div id="dashboard" hidden>
+      <section class="panel filter-panel" aria-labelledby="choose-heading">
+        <div class="section-heading-row">
+          <div>
+            <p class="section-kicker" data-t="chooseView"></p>
+            <h2 id="choose-heading"><span data-t="territory"></span> · <span data-t="period"></span></h2>
+          </div>
+          <button id="reset-filters" type="button" class="button-secondary" data-t="reset"></button>
+        </div>
+
+        <div class="view-controls">
+          <div class="territory-combobox">
+            <label for="territory-search" data-t="territory"></label>
+            <input id="territory-search" role="combobox" aria-autocomplete="list" aria-controls="territory-results" autocomplete="off">
+            <span id="territory-result-count" class="visually-hidden" aria-live="polite"></span>
+            <ul id="territory-results" role="listbox" hidden></ul>
+          </div>
+
+          <div class="period-controls">
+            <label for="period-mode" data-t="period"></label>
+            <select id="period-mode"></select>
+            <div id="period-detail" class="period-detail">
+              <label id="school-year-field">
+                <span data-t="schoolYear"></span>
+                <select id="school-year"></select>
+              </label>
+              <label id="month-field" hidden>
+                <span data-t="month"></span>
+                <select id="month"></select>
+              </label>
+              <div id="range-fields" class="range-fields" hidden>
+                <label>
+                  <span data-t="from"></span>
+                  <select id="range-start"></select>
+                </label>
+                <label>
+                  <span data-t="to"></span>
+                  <select id="range-end"></select>
+                </label>
+              </div>
+              <p id="all-period-note" class="control-note" hidden data-t="allAvailableNote"></p>
+            </div>
+          </div>
+        </div>
+
+        <div id="hromada-navigation" class="context-navigation" hidden>
+          <button id="back-to-oblast" type="button" class="button-secondary"></button>
+        </div>
+      </section>
+
+      <section class="summary-panel" aria-labelledby="summary-heading">
+        <p class="section-kicker" data-t="atGlance"></p>
+        <h2 id="summary-heading"><span id="summary-context"></span></h2>
+        <p id="summary-text" class="summary-text"></p>
+        <p id="aggregation-note" class="aggregation-note"></p>
+      </section>
+
+      <section aria-labelledby="measures-heading">
+        <p class="section-kicker" data-t="keyMeasures"></p>
+        <h2 id="measures-heading" class="visually-hidden" data-t="keyMeasures"></h2>
+        <div class="cards-grid">
+          <article class="metric-card">
+            <div class="card-title-row">
+              <h3 data-t="alarmTime"></h3>
+              <button type="button" data-info="alarm" class="info-button" data-t-aria-label="indicatorInfo">i</button>
+            </div>
+            <div id="alarm-time-value" class="metric-value"></div>
+            <div id="alarm-time-secondary" class="metric-secondary"></div>
+            <p id="alarm-time-context" class="metric-context"></p>
+          </article>
+
+          <article class="metric-card">
+            <div class="card-title-row">
+              <h3 data-t="affectedDays"></h3>
+              <button type="button" data-info="days" class="info-button" data-t-aria-label="indicatorInfo">i</button>
+            </div>
+            <div id="affected-days-value" class="metric-value"></div>
+            <div id="affected-days-secondary" class="metric-secondary"></div>
+            <p id="affected-days-context" class="metric-context"></p>
+          </article>
+
+          <article class="metric-card">
+            <div class="card-title-row">
+              <h3 data-t="episodes"></h3>
+              <button type="button" data-info="episodes" class="info-button" data-t-aria-label="indicatorInfo">i</button>
+            </div>
+            <div id="episodes-value" class="metric-value"></div>
+            <div id="episodes-secondary" class="metric-secondary"></div>
+            <p id="episodes-context" class="metric-context"></p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel education-panel" aria-labelledby="education-heading">
+        <div class="section-heading-row">
+          <div>
+            <p class="section-kicker" data-t="educationContext"></p>
+            <h2 id="education-heading" data-t="educationContext"></h2>
+          </div>
+        </div>
+        <div id="education-summary" class="education-summary"></div>
+        <p id="education-multi-note" class="context-note" hidden></p>
+        <div id="education-years"></div>
+        <p id="education-empty" class="notice" hidden></p>
+        <details id="modality-details" class="modality-details">
+          <summary data-t="modalityDetails"></summary>
+          <p class="context-note" data-t="modalityChartIntro"></p>
+          <div id="modality-chart" class="chart modality-chart" role="img" data-t-aria-label="modalityChartLabel"></div>
+        </details>
+        <p id="education-note" class="context-note"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="time-heading">
+        <div class="section-heading-row">
+          <div>
+            <p class="section-kicker" data-t="overTime"></p>
+            <h2 id="time-heading" data-t="overTime"></h2>
+          </div>
+          <label class="control-label" for="trend-measure">
+            <span data-t="trendMeasure"></span>
+            <select id="trend-measure">
+              <option value="alarm_hours_average_school_location" data-t="hours"></option>
+              <option value="school_time_under_alarm_pct" data-t="alarmShare"></option>
+              <option value="affected_school_days_pct" data-t="daysShare"></option>
+            </select>
+          </label>
+        </div>
+        <div class="segmented" role="group" data-t-aria-label="trendView">
+          <button type="button" data-temporal="monthly" aria-pressed="true" data-t="monthlyTrend"></button>
+          <button type="button" data-temporal="school_years" aria-pressed="false" data-t="schoolYearComparison"></button>
+          <button type="button" data-temporal="heatmap" aria-pressed="false" data-t="heatmap"></button>
+        </div>
+        <p id="chart-error" class="notice" hidden></p>
+
+        <div id="monthly-panel">
+          <h3 data-t="monthlyTrend"></h3>
+          <div id="monthly-chart" class="chart" role="img" data-t-aria-label="monthlyChartLabel"></div>
+          <details class="data-details">
+            <summary data-t="dataTable"></summary>
+            <div id="monthly-data" class="table-wrap chart-table"></div>
+          </details>
+        </div>
+
+        <div id="year-panel" hidden>
+          <h3 data-t="schoolYearComparison"></h3>
+          <div id="year-chart" class="chart" role="img" data-t-aria-label="yearChartLabel"></div>
+          <details class="data-details">
+            <summary data-t="dataTable"></summary>
+            <div id="year-data" class="table-wrap chart-table"></div>
+          </details>
+        </div>
+
+        <div id="heatmap-panel" hidden>
+          <h3 data-t="heatmap"></h3>
+          <div id="heatmap-chart" class="chart" role="img" data-t-aria-label="heatmapChartLabel"></div>
+          <details class="data-details">
+            <summary data-t="dataTable"></summary>
+            <div id="heatmap-data" class="table-wrap chart-table"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="places-heading">
+        <div class="section-heading-row">
+          <div>
+            <p class="section-kicker" data-t="acrossPlaces"></p>
+            <h2 id="places-heading" data-t="map"></h2>
+          </div>
+          <div class="map-controls">
+            <label for="map-measure">
+              <span data-t="colourBy"></span>
+              <select id="map-measure">
+                <option value="school_time_under_alarm_pct" data-t="alarmShare"></option>
+                <option value="alarm_hours_average_school_location" data-t="hours"></option>
+                <option value="affected_school_days_pct" data-t="daysShare"></option>
+              </select>
+            </label>
+            <button id="fit-selected" type="button" class="button-secondary" data-t="fitSelected"></button>
+            <button id="reset-map" type="button" class="button-secondary" data-t="resetMap"></button>
+          </div>
+        </div>
+        <p id="map-error" class="notice" hidden></p>
+        <p id="map-action-status" class="map-action-status" role="status" aria-live="polite"></p>
+        <div id="map-container" class="map-container" data-t-aria-label="mapLabel"></div>
+        <div id="map-legend" class="map-legend"></div>
+        <p class="context-note" data-t="mapAlternative"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="comparison-heading">
+        <div class="section-heading-row">
+          <div>
+            <p class="section-kicker" data-t="compareAreas"></p>
+            <h2 id="comparison-heading" data-t="compareAreas"></h2>
+          </div>
+          <button id="download-csv" type="button" class="button-primary" data-t="downloadCsv"></button>
+        </div>
+        <label class="comparison-search" for="comparison-search">
+          <span data-t="filterAreas"></span>
+          <input id="comparison-search" type="search" data-t-placeholder="territoryHint">
+        </label>
+        <p id="comparison-result-count" class="result-count" aria-live="polite"></p>
+        <p id="csv-status" class="result-count" role="status" aria-live="polite"></p>
+        <div id="comparison-cards" class="comparison-cards"></div>
+        <div id="comparison-table" class="table-wrap comparison-table"></div>
+      </section>
+
+      <section class="panel notes-panel" aria-labelledby="interpret-heading">
+        <p class="section-kicker" data-t="interpret"></p>
+        <h2 id="interpret-heading" data-t="interpret"></h2>
+        <div class="notes-grid">
+          <article>
+            <h3 data-t="methodQuestion"></h3>
+            <p data-t="methodQuestionText"></p>
+          </article>
+          <article>
+            <h3 data-t="precision"></h3>
+            <p id="precision-text"></p>
+          </article>
+          <article>
+            <h3 data-t="notMeasured"></h3>
+            <p data-t="limitationsText"></p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="release-line">
+      <span id="footer-status" data-t="releaseStatus"></span>
+      <strong id="footer-release"></strong>
+      <span id="footer-build"></span>
+    </div>
+    <nav data-t-aria-label="supportingPages">
+      <a data-page="methodology" data-t="methodology"></a>
+      <a data-page="data" data-t="dataRelease"></a>
+    </nav>
+  </footer>
+
+  <dialog id="indicator-dialog">
+    <form method="dialog">
+      <button class="dialog-close" value="close" data-t-aria-label="close">×</button>
+      <h2 id="dialog-title"></h2>
+      <p id="dialog-meaning"></p>
+      <dl>
+        <div>
+          <dt data-t="formula"></dt>
+          <dd><code id="dialog-formula"></code></dd>
+        </div>
+        <div>
+          <dt data-t="aggregateTreatment"></dt>
+          <dd id="dialog-aggregate"></dd>
+        </div>
+        <div>
+          <dt data-t="assumption"></dt>
+          <dd id="dialog-assumption"></dd>
+        </div>
+        <div>
+          <dt data-t="notMeasured"></dt>
+          <dd id="dialog-not"></dd>
+        </div>
+      </dl>
+      <button class="button-primary" value="close" data-t="close"></button>
+    </form>
+  </dialog>
+</body>
+</html>

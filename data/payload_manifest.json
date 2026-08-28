@@ -1,6 +1,6 @@
 {
-  "version": "0.12.0-stage3p3",
-  "release_id": "AAE-WEB-REVISED-PROTOTYPE-0.3-STAGE3P3",
+  "version": "1.0.0",
+  "release_id": "AAE-WEB-1.0.0",
   "analytical_build_id": "AAE-FULL-9c94bc374ab5e7cf29",
   "files": [
     {
@@ -440,8 +440,8 @@
     },
     {
       "path": "release.json",
-      "size_bytes": 18621,
-      "sha256": "f1cd26f6e5fe6794093e1f5f7804d8022a1e40df295144ec24eb4a1410e84742"
+      "size_bytes": 18383,
+      "sha256": "00134baf9572da23c732a22217b1583965f08f4e73dd17cd39fa36786ed49631"
     },
     {
       "path": "schemas/payload-row.schema.json",
