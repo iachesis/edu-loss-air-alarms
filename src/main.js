@@ -1,4 +1,4 @@
-import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
+import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, buildComparisonCsv, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
 import { initI18n, setLanguage, tr } from './i18n.js';
 import { createGeographyFuse, createSearchItems, itemLabel, itemName, itemParent, searchGeography } from './search.js';
 import { renderLeafletMap } from './map.js';
@@ -176,8 +176,8 @@ function renderSummary(row) {
     const denominator = formatNumber(row.available_school_days_average_school_location, state.lang, digits);
     if (state.lang === 'uk') {
         $('summary-text').textContent = aggregate
-            ? `${nameOf(row.area_id)}: у середньому на одне активне місце розташування закладу освіти припало ${hours} тривог у межах припущеного навчального часу (${pct}%). Тривоги зачепили в середньому ${days} із ${denominator} доступних навчальних днів.`
-            : `${nameOf(row.area_id)}: ${hours} тривог припали на припущений навчальний час (${pct}%). Тривоги зачепили ${days} із ${denominator} доступних навчальних днів.`;
+            ? `${nameOf(row.area_id)}: тривоги перекривали припущений навчальний час протягом ${hours} у середньому для одного активного місця розташування закладу освіти (${pct}%). У середньому вони зачепили ${days} із ${denominator} доступних навчальних днів.`
+            : `${nameOf(row.area_id)}: тривоги перекривали припущений навчальний час протягом ${hours} (${pct}%). Вони зачепили ${days} із ${denominator} доступних навчальних днів.`;
     }
     else {
         $('summary-text').textContent = aggregate
@@ -492,11 +492,7 @@ function renderComparison() {
     }));
 }
 function renderInterpretation(row) { $('precision-text').textContent = `${sourcePrecisionText(row.source_precision_label)}; ${statusText(row.coverage_status)}.`; }
-function csvEscape(v) { const s = String(v ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; }
-function downloadCsv() { const cols = ['area_id', 'area_name', 'area_level', 'period_id', 'alarm_hours', 'school_time_under_alarm_pct', 'affected_school_days', 'available_school_days', 'affected_school_days_pct', 'episodes', 'schools', 'learners', 'source_precision', 'coverage', 'analytical_build_id']; const lines = [cols.join(',')]; for (const r of currentRows) {
-    const x = [r.area_id, nameOf(r.area_id), r.area_level, r.period_id, r.alarm_hours_average_school_location, r.school_time_under_alarm_pct, r.affected_school_days_average_school_location, r.available_school_days_average_school_location, affectedDaysPct(r), r.school_time_alarm_episodes_average_school_location, r.school_count, r.learners_total, r.source_precision_label, r.coverage_status, data.release.analytical_build_id];
-    lines.push(x.map(csvEscape).join(','));
-} const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); $('csv-status').textContent = tr('csvPrepared', { count: currentRows.length }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
+function downloadCsv() { const csv = buildComparisonCsv(currentRows, id => nameOf(id), data.release.analytical_build_id); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); $('csv-status').textContent = tr('csvPrepared', { count: currentRows.length }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
 function updateControls() { populatePeriodControls(); $('map-measure').value = state.mapMeasure; $('trend-measure').value = state.trendMeasure; const current = searchItems.find(x => x.id === state.areaId); $('territory-search').value = itemName(current, state.lang); }
 async function render() {
     applyStaticTranslations();
