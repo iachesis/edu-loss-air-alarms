@@ -1,286 +1,143 @@
-# Air Alarms and Education in Ukraine
+# How Air Alarms Disrupt the School Day in Ukraine
 
-A public-facing analytical dashboard showing how air alarms disrupt education across Ukraine over time and across geography.
+Public analytical dashboard for UNICEF Deliverable 2: **Model for quantification of disruption of educational activities due to air alarms and dashboard**.
 
-This dashboard is designed as a lightweight static web application. It uses precomputed JSON payloads and prepared geographic assets, with no backend and no runtime database. The goal is to provide a fast, transparent, and maintainable analytical interface suitable for public communication, exploration, and decision support.
+The dashboard estimates overlap between recorded air-alarm intervals and an assumed school operating window. It supports public communication, comparative analysis, and policy or donor discussion across Ukraine, oblasts, and hromadas.
 
-## What this dashboard shows
+## Product purpose
 
-The dashboard helps users explore how air alarms affect education through several analytical lenses:
+The product provides a consistent way to compare how recorded air alarms intersect with assumed school operating time. It is intended for UNICEF, education authorities, analysts, donors, and the public.
 
-- disruption to instruction time
-- disruption to homework time
-- disruption to sleep
-- frequency of disruption events
-- affected instruction days
-- student context by learning modality
-- per-student disruption intensity
+The dashboard is an analytical model, not a monitoring system for individual schools or learners. Its results describe estimated overlap under a common set of assumptions.
 
-Users can compare patterns:
+## Three core measures
 
-- across time
-- across oblasts
-- across hromadas where geometry is available
+1. **School time under alarm** — the duration of recorded alarm intervals that overlaps the assumed school operating window, together with its share of available assumed school time.
+2. **School days affected** — the number and share of available assumed school days with at least one positive alarm overlap.
+3. **School-time alarm episodes** — distinct processed alarm episodes with positive overlap during assumed school time.
 
-## Analytical concept
+For oblast and national views, absolute values such as hours, affected days, and episodes are averages per active school location. A value such as `87.8` affected days is therefore an average across active school locations, not a fractional calendar day experienced by one institution. Hromada values remain direct geographic results under the frozen analytical contract.
 
-The dashboard is built around the idea that air alarms do not affect education in only one way.
+## Education context
 
-They interrupt formal learning during the school day, interfere with homework outside classroom hours, and disturb sleep at night. These effects can be examined both in total and relative to the number of students potentially exposed.
+School and learner figures provide contextual information about the education network. They are not measurements of attendance, learner presence, or exposure during an alarm.
 
-This makes it possible to move beyond raw event counts and look at disruption as an educational burden.
+For the 2022/23 school year, the in-person figure is derived as total learners minus remote learners because a more detailed modality classification was not available. Later years report in-person, remote, and mixed modalities separately; other modalities are a derived residual, as documented in [`data/modality_rules.json`](data/modality_rules.json).
 
-## Main features
-
-- static GitHub Pages–friendly architecture
-- no backend required
-- gradual payload loading
-- oblast-first drilldown into hromadas
-- precomputed analytics for better frontend performance
-- choropleth mapping with dynamic legends
-- trend visualisation over time
-- focused summary panel for selected geography
-- ranking view in a drawer
-- methodology, metrics, and assumptions drawer
-- desktop-first layout with structure suitable for later mobile refinement
-
-## Time views
-
-The dashboard supports three time granularities:
-
-- all time
-- school year
-- school month
-
-It does not implement a daily view.
-
-## Geographic levels
+## Geography and periods
 
 The dashboard supports three geographic levels:
 
-- national
-- oblast
-- hromada
+- Ukraine;
+- oblast;
+- hromada.
 
-The default analytical map view starts at the oblast level. Hromada geometries and hromada monthly payloads are loaded only after an oblast is selected.
+Oblast geometry loads with the initial page. Hromada data and geometry load for the relevant oblast after an oblast or hromada is selected. Six controlled hromadas have no geometry in the frozen source; the interface does not fabricate geometry and keeps their analytical and table results available.
 
-This keeps the application lightweight and avoids unnecessary initial payload size.
+Users can view:
 
-## Metrics currently supported
+- a whole school year;
+- a month;
+- a custom month range;
+- all available data.
 
-### Disruption
-- instruction disruption minutes
-- homework disruption minutes
-- sleep disruption minutes
-- instruction disruption events
-- affected instruction days
+## Methodological concept
 
-### Student context
-- students total
-- students in person
-- students in person (expanded)
-- students online
+The analytical chain distinguishes three things:
 
-### Intensity
-- instruction minutes per in-person student
-- instruction minutes per in-person student (expanded)
-- homework minutes per student
-- sleep minutes per student
+1. **Observed input:** recorded air-alarm intervals from the frozen source.
+2. **Model assumption:** Monday–Friday school days, relevant school-calendar exclusions, and an assumed 08:00–15:00 operating window in `Europe/Kyiv`.
+3. **Modelled result:** the overlap between the recorded intervals and the assumed operating window.
 
-## Methodological logic
+Alarm timestamps are converted from UTC to `Europe/Kyiv`, including daylight-saving transitions. Exact duplicates are removed, and overlapping or touching intervals are unioned before the school-window overlap is calculated. Hromada declarations are used directly; raion- and oblast-level declarations are allocated to their contained hromadas while preserving the original geographic precision label.
 
-The dashboard relies on modelled disruption windows rather than raw alarm counts alone.
+At oblast and national levels, absolute measures are weighted averages per active school location. Shares are calculated from the corresponding weighted numerators and denominators; percentages are not averaged.
 
-### Instruction disruption
-Estimated within the school-day window of 08:00–15:00. If an air alarm overlaps this window, the overlapping minutes are counted as disrupted instruction time. A return-to-class allowance is added after overlapping event fragments.
+See the public [`methodology.html`](methodology.html) page for the concise rendered explanation.
 
-### Homework disruption
-Estimated within the assumed homework window of 16:00–20:00.
+## Explicit limitations
 
-### Sleep disruption
-Estimated within the assumed sleep window of 22:00–06:00.
+The dashboard does **not** directly measure:
 
-### School-year filtering
-The analytical dataset excludes weekends and assumed vacation periods and retains only school-year windows relevant to likely learning activity.
+- learning loss;
+- lessons actually cancelled;
+- attendance;
+- actual time spent in shelters;
+- actual school timetables;
+- homework disruption;
+- sleep disruption;
+- individual learner exposure.
 
-### Event preprocessing
-Air alarm intervals close to one another are merged during preprocessing to avoid overstating disruption through artificial fragmentation.
+It is not a causal estimate, a school-level administrative record, or an automatic prioritisation score. A covered zero, partial coverage, analytical unavailability, and unavailable geometry are distinct states; unavailable analytical values are not replaced with zero.
 
-## Data architecture
+## Architecture
 
-The frontend consumes static payloads generated by a Python data pipeline.
+This repository is the deployable static site. It has no application backend, runtime database, package-install step, tracking, cookies, or runtime dependency on third-party network services.
 
-### Expected payload structure
+The browser stack is vendored in the repository:
 
-```text
-public/data/payloads/
-  dashboard_payload_manifest.json
+- vanilla HTML, CSS, and JavaScript modules;
+- Leaflet for maps;
+- Apache ECharts for charts;
+- Fuse.js for geography search;
+- i18next for UKR/ENG switching;
+- precomputed JSON and GeoJSON assets.
 
-  national_all_time.json
-  national_school_year.json
-  national_school_month.json
-
-  oblast_all_time.json
-  oblast_school_year.json
-  oblast_school_month.json
-
-  hromada_all_time.json
-  hromada_school_year.json
-
-  hromada_school_month_by_oblast/
-    hromada_school_month_<oblast_id>.json
-```
-
-### Expected geo structure
+Major repository paths:
 
 ```text
-public/data/geo/
-  oblasts_web.json
-  geo_asset_manifest.json
-  hromadas_by_oblast/
-    hromadas_<oblast_id>.json
+index.html                 Main dashboard
+methodology.html           Public methodology page
+data.html                  Public data and release page
+src/main.js                Application state, loading and rendering
+src/logic.js               Period, aggregation and formatting logic
+src/charts.js              Time-series, heatmap and modality charts
+src/map.js                 Leaflet map rendering and viewport controls
+src/search.js              Geography search
+src/content-page.js        Supporting-page rendering
+src/resources.js           UKR/ENG interface copy
+src/styles.css             Shared responsive presentation
+data/release.json          Release, source and analytical provenance
+data/payload_manifest.json Static payload manifest
+data/geography_lookup.json Geography catalogue and search metadata
+data/geography/            Oblast and hromada GeoJSON
+data/*_monthly.json        Monthly analytical payloads
+data/*_school_year.json    School-year analytical payloads
+vendor/                    Vendored browser libraries
 ```
 
-## Frontend stack
+## Local serving
 
-- HTML
-- CSS
-- vanilla JavaScript
-- Leaflet
-- Chart.js
-- static JSON payloads
-- static GeoJSON assets
-
-No framework is required.
-
-## Project structure
-
-A typical frontend structure is:
-
-```text
-dashboard/
-  index.html
-  styles.css
-  js/
-    app.js
-    config.js
-    data-loader.js
-    detail-view.js
-    formatters.js
-    map-view.js
-    state.js
-    table-view.js
-    ui-controls.js
-  public/
-    data/
-      payloads/
-      geo/
-```
-
-## Design approach
-
-This dashboard is intended to be serious, public-facing, and analytical.
-
-The design direction emphasises:
-
-- clarity over decoration
-- high information density without clutter
-- restrained styling
-- clear metric labeling
-- map-first exploration
-- lightweight overlays for context
-- calm visual hierarchy appropriate for public-sector and donor-facing communication
-
-Recent UI refinements include:
-
-- map context displayed as a floating overlay pill
-- contextual “Back to oblasts” control inside the map
-- focused summary and trend placed in a compact right rail
-- ranking moved into an on-demand drawer
-- methodology and assumptions available in a separate drawer
-- choropleth classification improved to reduce outlier domination
-
-## Choropleth logic
-
-The map does not rely on a simple raw min–max linear colour scale.
-
-Instead, it uses classed choropleth logic designed to improve interpretability, especially when values are highly skewed.
-
-Current approach:
-
-- quantile classification
-- five classes
-- percentile capping for disruption and context metrics where appropriate
-- dynamic legend updates based on selected metric
-
-This helps avoid situations where one extreme outlier makes nearly all other areas appear visually identical.
-
-## Running locally
-
-Any static web server will work.
-
-For example:
+Serve the repository root over HTTP:
 
 ```bash
-uv run python -m http.server 8000
+python3 -m http.server 8000
 ```
 
-Then open:
+Then open [http://localhost:8000](http://localhost:8000).
 
-```text
-http://localhost:8000
-```
+Opening the HTML directly with a `file://` URL is not supported because the application loads local JSON and GeoJSON assets with `fetch`.
+
+## Provenance
+
+- Website release ID: `AAE-WEB-1.0.0`
+- Analytical build ID: `AAE-FULL-9c94bc374ab5e7cf29`
+- Analytical build status: `FROZEN_APPROVED`
+- Alarm source: [Ukrainian Air Raid Sirens Dataset — official data](https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/main/datasets/official_data_uk.csv)
+- Frozen source SHA-256: `6415f582020a9b731a38a5f56d325b24d22cc9a61c0e7d58971ec6f41cd68004`
+- Frozen source coverage: 15 March 2022 through 30 July 2026 UTC
+- Machine-readable release metadata: [`data/release.json`](data/release.json)
+- Static payload manifest: [`data/payload_manifest.json`](data/payload_manifest.json)
+
+The source retrieval timestamp was not recorded in the frozen analytical build; that provenance gap remains explicit in the release metadata. Website copy, interaction, and release-metadata changes do not create a new analytical build, and this release does not regenerate analytical data.
 
 ## Intended use
 
-This dashboard is intended for:
+The dashboard is intended for:
 
-- public communication
-- comparative analysis
-- high-level prioritization
-- exploration of spatial and temporal patterns
-- discussion with policy, donor, and education stakeholders
+- public communication about the scale and distribution of school-day alarm overlap;
+- comparison across time and geography;
+- high-level policy and donor discussion;
+- transparent exploration of a common analytical model and its limitations.
 
-It is not intended to serve as a real-time operational system or a school-by-school administrative record.
-
-## Strengths of the approach
-
-- simple deployment
-- transparent architecture
-- no infrastructure burden
-- fast loading for a public site
-- maintainable codebase
-- clear separation between data pipeline and frontend presentation
-- scalable drilldown structure
-- well-suited for iterative refinement
-
-## Current limitations
-
-- no backend or on-demand computation
-- no daily view
-- map detail depends on the prepared geometry coverage
-- some geographies may still require refinement of names or viewport behaviour
-- some metrics are inherently dominated by population size when shown as raw counts
-- a mobile-specific layout still requires a dedicated refinement pass
-
-## Future improvements
-
-Planned or likely next improvements include:
-
-- further refinement of focused summary logic
-- stronger comparative interpretation inside the side panel
-- improved map viewport handling for irregular oblast geometries
-- additional map classification options where analytically useful
-- better handling of very sparse or highly skewed metrics
-- improved naming normalisation for all drilldown levels
-- mobile layout refinement
-- accessibility pass for keyboard and screen-reader behaviour
-- richer explanatory text for users unfamiliar with the methodology
-
-## Why this project matters
-
-Air alarms are usually discussed in terms of security or emergency response. This dashboard helps make visible another layer of impact: educational disruption.
-
-By translating alarm exposure into analytically meaningful measures of learning-time burden, it provides a clearer picture of how insecurity shapes educational experience across Ukraine.
-
-That makes the dashboard useful not only as a visualisation tool, but as a structured way to talk about educational continuity, inequality of burden, and the lived reality behind aggregate disruption.
+It should be interpreted alongside local operational knowledge and other education evidence, not as a direct observation of learning outcomes or individual experience.

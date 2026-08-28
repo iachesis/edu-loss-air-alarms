@@ -1,4 +1,4 @@
-import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
+import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, buildComparisonCsv, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
 import { initI18n, setLanguage, tr } from './i18n.js';
 import { createGeographyFuse, createSearchItems, itemLabel, itemName, itemParent, searchGeography } from './search.js';
 import { renderLeafletMap } from './map.js';
@@ -6,7 +6,18 @@ import { heatmapChart, modalityChart, monthlyChart, resizeCharts, schoolYearChar
 const $ = (id) => document.getElementById(id);
 let data, state, searchItems, fuse, mapActions, currentRows = [];
 let sortKey = 'school_time_under_alarm_pct', sortDirection = -1;
-const hromadaLoadFailures = new Set();
+let lastModalityRows = [];
+const PERIOD_MODE_TRANSLATIONS = {
+    school_year: 'wholeSchoolYear',
+    month: 'month',
+    custom_range: 'customRange',
+    all_available: 'allAvailable',
+};
+const TREND_MEASURE_TRANSLATIONS = {
+    alarm_hours_average_school_location: 'hours',
+    school_time_under_alarm_pct: 'alarmShare',
+    affected_school_days_pct: 'daysShare',
+};
 function normalize(raw) { if (raw.area_level !== 'hromada')
     return raw; return { area_level: 'hromada', area_id: raw.hromada_id, school_year: raw.school_year, period_type: raw.period_type, period_id: raw.period_id, alarm_seconds_average_school_location: raw.alarm_seconds, alarm_hours_average_school_location: raw.alarm_hours, available_school_seconds_average_school_location: raw.available_school_seconds, expected_school_seconds_average_school_location: raw.expected_school_seconds, school_time_under_alarm_pct: raw.school_time_under_alarm_pct, affected_school_days_average_school_location: raw.affected_school_days, available_school_days_average_school_location: raw.available_school_days, expected_school_days_average_school_location: raw.expected_school_days, school_time_alarm_episodes_average_school_location: raw.school_time_alarm_episodes, source_precision_label: raw.source_precision_label, coverage_status: raw.coverage_status, school_count: raw.school_count, learners_total: raw.learners_total, learners_offline: raw.learners_offline, learners_online: raw.learners_online, learners_mixed: raw.learners_mixed, education_snapshot_date: raw.education_snapshot_date }; }
 async function json(path) { const r = await fetch(path); if (!r.ok)
@@ -26,13 +37,11 @@ async function ensureHromada(oblastId) {
         data.hromadaMonthly[oblastId] = m.map(normalize);
         data.hromadaYear[oblastId] = y.map(normalize);
         data.hromadaGeo[oblastId] = g;
-        hromadaLoadFailures.delete(oblastId);
         status.hidden = true;
         return true;
     }
     catch (error) {
         console.error(error);
-        hromadaLoadFailures.add(oblastId);
         status.hidden = false;
         status.textContent = tr('loadAreaFailed');
         return false;
@@ -44,6 +53,10 @@ async function ensureHromada(oblastId) {
 function parentOblast(id) { return data.lookup.hromadas[id]?.oblast_id ?? (data.lookup.oblasts[id] ? id : undefined); }
 function nameOf(id, lang = state.lang) { if (id === 'UA')
     return data.lookup.national.UA[lang]; const x = data.lookup.oblasts[id] ?? data.lookup.hromadas[id]; return x?.[lang] ?? id; }
+function sourcePrecisionText(value) { const keys = { mixed: 'sourcePrecisionMixed', 'not applicable': 'sourcePrecisionNotApplicable', 'oblast allocation': 'sourcePrecisionOblast', 'raion allocation': 'sourcePrecisionRaion' }; return keys[value] ? tr(keys[value]) : tr('unavailable'); }
+function trendMeasureLabel() { return tr(TREND_MEASURE_TRANSLATIONS[state.trendMeasure]); }
+async function selectArea(id) { state.areaId = id; const oblastId = parentOblast(id); if (oblastId)
+    await ensureHromada(oblastId); updateUrl(state); await render(); }
 function monthlyRows(id = state.areaId) { if (id === 'UA')
     return data.nationalMonthly; if (data.lookup.oblasts[id])
     return data.oblastMonthly.filter(r => r.area_id === id); const o = parentOblast(id); return o ? (data.hromadaMonthly[o] ?? []).filter(r => r.area_id === id) : []; }
@@ -57,19 +70,50 @@ function value(r, key) { return isAnalyticallyUnavailable(r) ? null : key === 'a
 function periodRowsForComparison(forOblast) { const ids = forOblast ? Object.entries(data.lookup.hromadas).filter(([, x]) => x.oblast_id === forOblast).map(([id]) => id) : Object.keys(data.lookup.oblasts); return ids.map(id => rowForState(id)).filter((r) => Boolean(r)); }
 function periodContext() { const b = periodBounds(state); return educationContexts([...monthlyRows(), ...yearRows()], b.start, b.end); }
 function statusText(x) { return x === 'complete' ? tr('complete') : x === 'partial' ? tr('partial') : tr('unavailable'); }
-function applyStaticTranslations() { document.querySelectorAll('[data-t]').forEach(el => { el.textContent = tr(el.dataset.t); }); document.title = tr('appTitle'); $('page-title').textContent = tr('appTitle'); $('page-subtitle').textContent = tr('subtitle'); document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang))); const params = `?lang=${state.lang}`; document.querySelectorAll('[data-page]').forEach(a => { const page = a.dataset.page; a.href = `./${page}.html${params}`; }); }
-function option(value, label) { const o = document.createElement('option'); o.value = value; o.textContent = label; return o; }
-function populatePeriodControls() { const mode = $('period-mode'); if (!mode.options.length) {
-    [['school_year', 'schoolYear'], ['month', 'month'], ['custom_range', 'customRange'], ['all_available', 'allAvailable']].forEach(([v, k]) => mode.append(option(v, tr(k))));
+function applyStaticTranslations() {
+    document.querySelectorAll('[data-t]').forEach(el => { el.textContent = tr(el.dataset.t); });
+    document.querySelectorAll('[data-t-placeholder]').forEach(el => { el.placeholder = tr(el.dataset.tPlaceholder); });
+    document.querySelectorAll('[data-t-aria-label]').forEach(el => { el.setAttribute('aria-label', tr(el.dataset.tAriaLabel)); });
+    document.title = tr('appTitle');
+    $('page-title').textContent = tr('appTitle');
+    $('page-subtitle').textContent = tr('subtitle');
+    document.querySelectorAll('[data-lang]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.lang === state.lang)));
+    const params = `?lang=${state.lang}`;
+    document.querySelectorAll('[data-page]').forEach(anchor => { anchor.href = `./${anchor.dataset.page}.html${params}`; });
 }
-else
-    [...mode.options].forEach(o => o.textContent = tr(o.value === 'custom_range' ? 'customRange' : o.value === 'all_available' ? 'allAvailable' : o.value)); mode.value = state.periodMode; const sy = $('school-year'); sy.replaceChildren(...data.release.available_school_years.map(y => option(y, SCHOOL_YEAR_LABELS[y]))); sy.value = state.schoolYear; const mo = $('month'); mo.replaceChildren(...ALL_MONTHS.map(m => option(m, monthLabel(m, state.lang)))); mo.value = state.month; for (const id of ['range-start', 'range-end']) {
-    const s = $(id);
-    s.replaceChildren(...ALL_MONTHS.map(m => option(m, `${monthLabel(m, state.lang)} · ${SCHOOL_YEAR_LABELS[schoolYearForMonthSafe(m)]}`)));
-    s.value = id === 'range-start' ? state.rangeStart : state.rangeEnd;
-} $('school-year-field').hidden = state.periodMode !== 'school_year'; $('month-field').hidden = state.periodMode !== 'month'; $('range-fields').hidden = state.periodMode !== 'custom_range'; $('all-period-note').hidden = state.periodMode !== 'all_available'; }
+function option(value, label) { const o = document.createElement('option'); o.value = value; o.textContent = label; return o; }
+function populatePeriodControls() {
+    const mode = $('period-mode');
+    if (!mode.options.length) {
+        Object.entries(PERIOD_MODE_TRANSLATIONS).forEach(([value, key]) => mode.append(option(value, tr(key))));
+    }
+    else {
+        [...mode.options].forEach(item => { item.textContent = tr(PERIOD_MODE_TRANSLATIONS[item.value]); });
+    }
+    mode.value = state.periodMode;
+
+    const schoolYear = $('school-year');
+    schoolYear.replaceChildren(...data.release.available_school_years.map(year => option(year, SCHOOL_YEAR_LABELS[year])));
+    schoolYear.value = state.schoolYear;
+
+    const month = $('month');
+    month.replaceChildren(...ALL_MONTHS.map(period => option(period, monthLabel(period, state.lang))));
+    month.value = state.month;
+
+    for (const id of ['range-start', 'range-end']) {
+        const control = $(id);
+        control.replaceChildren(...ALL_MONTHS.map(period => option(period, `${monthLabel(period, state.lang)} · ${SCHOOL_YEAR_LABELS[schoolYearForMonthSafe(period)]}`)));
+        control.value = id === 'range-start' ? state.rangeStart : state.rangeEnd;
+    }
+
+    $('school-year-field').hidden = state.periodMode !== 'school_year';
+    $('month-field').hidden = state.periodMode !== 'month';
+    $('range-fields').hidden = state.periodMode !== 'custom_range';
+    $('all-period-note').hidden = state.periodMode !== 'all_available';
+}
 function schoolYearForMonthSafe(m) { const [y, n] = m.split('-').map(Number); return n >= 9 ? `${y}_${y + 1}` : `${y - 1}_${y}`; }
-function renderSearchResults(query = '') { const box = $('territory-results'); const selected = searchItems.find(x => x.id === state.areaId); $('territory-search').value = query || itemName(selected, state.lang); const results = searchGeography(fuse, searchItems, query, 12); box.replaceChildren(); $('territory-result-count').textContent = String(results.length); if (!results.length) {
+function renderSearchResults(query = '', preserveInput = false) { const box = $('territory-results'); const selected = searchItems.find(x => x.id === state.areaId); if (!preserveInput)
+    $('territory-search').value = query || itemName(selected, state.lang); const results = searchGeography(fuse, searchItems, query, 12); box.replaceChildren(); $('territory-result-count').textContent = String(results.length); if (!results.length) {
     box.innerHTML = `<li class="no-result">${tr('searchNoResults')}</li>`;
     return;
 } for (const x of results) {
@@ -82,12 +126,11 @@ function renderSearchResults(query = '') { const box = $('territory-results'); c
     strong.textContent = itemName(x, state.lang);
     small.textContent = x.level === 'hromada' ? `${itemParent(x, state.lang)} · ${x.katottg}` : x.katottg;
     b.append(strong, small);
-    b.addEventListener('click', async () => { state.areaId = x.id; const o = parentOblast(x.id); if (o)
-        await ensureHromada(o); box.hidden = true; updateUrl(state); await render(); });
+    b.addEventListener('click', async () => { box.hidden = true; await selectArea(x.id); });
     li.append(b);
     box.append(li);
 } }
-function setupTerritoryCombobox() { const input = $('territory-search'), box = $('territory-results'); input.placeholder = tr('territoryHint'); input.addEventListener('focus', () => { box.hidden = false; renderSearchResults(input.value === itemName(searchItems.find(x => x.id === state.areaId), state.lang) ? '' : input.value); }); input.addEventListener('input', () => { box.hidden = false; renderSearchResults(input.value); }); input.addEventListener('keydown', e => { const buttons = [...box.querySelectorAll('button')]; if (e.key === 'ArrowDown') {
+function setupTerritoryCombobox() { const input = $('territory-search'), box = $('territory-results'); input.placeholder = tr('territoryHint'); input.addEventListener('focus', () => { box.hidden = false; renderSearchResults(input.value === itemName(searchItems.find(x => x.id === state.areaId), state.lang) ? '' : input.value); }); input.addEventListener('input', () => { box.hidden = false; renderSearchResults(input.value, true); }); input.addEventListener('keydown', e => { const buttons = [...box.querySelectorAll('button')]; if (e.key === 'ArrowDown') {
     e.preventDefault();
     buttons[0]?.focus();
 } if (e.key === 'Escape')
@@ -106,126 +149,468 @@ function setupTerritoryCombobox() { const input = $('territory-search'), box = $
 } }); document.addEventListener('click', e => { if (!e.target.closest('.territory-combobox'))
     box.hidden = true; }); }
 function periodHeading() { return `${nameOf(state.areaId)} · ${periodLabel(state, state.lang)}`; }
-function renderSummary(row) { $('summary-context').textContent = periodHeading(); if (isAnalyticallyUnavailable(row)) {
-    $('summary-text').textContent = `${nameOf(row.area_id)}: ${tr('analyticalUnavailable')}`;
-    $('aggregation-note').textContent = tr('unavailable');
-    return;
-} const pct = formatNumber(row.school_time_under_alarm_pct, state.lang, 1), hours = formatDuration(row.alarm_hours_average_school_location, state.lang), days = formatNumber(row.affected_school_days_average_school_location, state.lang, row.area_level === 'hromada' ? 0 : 1), den = formatNumber(row.available_school_days_average_school_location, state.lang, row.area_level === 'hromada' ? 0 : 1); $('summary-text').textContent = state.lang === 'uk' ? `${nameOf(row.area_id)}: ${hours} перетину тривог із припущеним навчальним часом (${pct}%). Тривоги припали на ${days} із ${den} доступних навчальних днів.` : `${nameOf(row.area_id)}: ${hours} of alarm overlap with assumed school time (${pct}%). Alarms occurred on ${days} of ${den} available school days.`; $('aggregation-note').textContent = row.area_level === 'hromada' ? tr('directResult') : tr('averageLocation'); }
-function renderCards(row) { const unavailable = isAnalyticallyUnavailable(row); $('alarm-time-value').textContent = formatDuration(unavailable ? null : row.alarm_hours_average_school_location, state.lang); $('alarm-time-secondary').textContent = unavailable ? tr('unavailable') : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`; $('affected-days-value').textContent = unavailable ? '—' : `${formatNumber(row.affected_school_days_average_school_location, state.lang, row.area_level === 'hromada' ? 0 : 1)} / ${formatNumber(row.available_school_days_average_school_location, state.lang, row.area_level === 'hromada' ? 0 : 1)}`; $('affected-days-secondary').textContent = unavailable ? tr('unavailable') : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`; const ep = unavailable ? null : row.school_time_alarm_episodes_average_school_location; $('episodes-value').textContent = ep === null ? '—' : formatNumber(ep, state.lang, row.area_level === 'hromada' ? 0 : 1); $('episodes-secondary').textContent = unavailable ? tr('unavailable') : ep === null ? tr('noEpisodesRange') : (row.area_level === 'hromada' ? tr('directResult') : tr('averageLocation')); }
-function renderEducation() { const contexts = periodContext(), multi = contexts.length > 1; const summary = $('education-summary'), details = $('education-years'); summary.replaceChildren(); details.replaceChildren(); if (!multi) {
-    const c = contexts[0];
-    if (!c)
+function renderHromadaNavigation() {
+    const navigation = $('hromada-navigation');
+    const button = $('back-to-oblast');
+    const hromada = data.lookup.hromadas[state.areaId];
+    if (!hromada) {
+        navigation.hidden = true;
+        button.textContent = '';
         return;
-    summary.innerHTML = `<div><span>${tr('schools')}</span><strong>${formatNumber(c.row.school_count, state.lang)}</strong></div><div><span>${tr('learners')}</span><strong>${formatNumber(c.row.learners_total, state.lang)}</strong></div><small>${tr('snapshot')} ${new Intl.DateTimeFormat(state.lang === 'uk' ? 'uk-UA' : 'en-GB', { dateStyle: 'long' }).format(new Date(c.row.education_snapshot_date + 'T00:00:00Z'))}</small>`;
+    }
+    navigation.hidden = false;
+    button.textContent = tr('backToOblast', { oblast: nameOf(hromada.oblast_id) });
 }
-else {
-    $('education-multi-note').hidden = false;
-    $('education-multi-note').textContent = tr('multiYearContext');
-    for (const c of contexts) {
-        const row = document.createElement('div');
-        row.className = 'education-year-row';
-        row.innerHTML = `<strong>${SCHOOL_YEAR_LABELS[c.schoolYear]}</strong><span>${tr('schools')}: ${formatNumber(c.row.school_count, state.lang)}</span><span>${tr('learners')}: ${formatNumber(c.row.learners_total, state.lang)}</span><small>${c.row.education_snapshot_date}</small>`;
-        details.append(row);
+function renderSummary(row) {
+    $('summary-context').textContent = periodHeading();
+    if (isAnalyticallyUnavailable(row)) {
+        $('summary-text').textContent = `${nameOf(row.area_id)}: ${tr('analyticalUnavailable')}`;
+        $('aggregation-note').textContent = tr('unavailable');
+        return;
     }
-} $('education-multi-note').hidden = !multi; const chartRows = contexts.map(c => c.row); modalityChart($('modality-chart'), chartRows, state.lang); $('education-note').textContent = `${tr('contextCaveat')} ${contexts.some(c => c.schoolYear === '2022_2023') ? tr('modality2022') : tr('modalityLater')}`; }
-function renderChartTable(el, rows, labelKey) { const table = document.createElement('table'); table.innerHTML = `<thead><tr><th>${labelKey === 'period_id' ? tr('month') : tr('schoolYear')}</th><th>${tr('hours')}</th><th>${tr('alarmShare')}</th><th>${tr('daysShare')}</th></tr></thead><tbody></tbody>`; const body = table.querySelector('tbody'); for (const r of rows) {
-    const trr = document.createElement('tr');
-    const label = labelKey === 'period_id' ? monthLabel(r.period_id, state.lang) : SCHOOL_YEAR_LABELS[r.school_year];
-    const unavailable = isAnalyticallyUnavailable(r);
-    [label, formatNumber(unavailable ? null : r.alarm_hours_average_school_location, state.lang, 2), unavailable ? '—' : formatNumber(r.school_time_under_alarm_pct, state.lang, 2) + '%', unavailable ? '—' : formatNumber(affectedDaysPct(r), state.lang, 2) + '%'].forEach((x, i) => { const c = document.createElement(i ? 'td' : 'th'); c.textContent = x; trr.append(c); });
-    body.append(trr);
-} el.replaceChildren(table); }
-async function renderTime() { const monthly = monthlyRows(), yearly = yearRows(); document.querySelectorAll('[data-temporal]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.temporal === state.temporalView))); $('monthly-panel').hidden = state.temporalView !== 'monthly'; $('year-panel').hidden = state.temporalView !== 'school_years'; $('heatmap-panel').hidden = state.temporalView !== 'heatmap'; $('chart-error').hidden = true; try {
-    if (state.temporalView === 'monthly') {
-        monthlyChart($('monthly-chart'), monthly, state.trendMeasure, state.lang, id => { state.periodMode = 'month'; state.month = id; updateUrl(state); render(); });
-        renderChartTable($('monthly-data'), monthly, 'period_id');
+    const aggregate = row.area_level !== 'hromada';
+    const digits = aggregate ? 1 : 0;
+    const pct = formatNumber(row.school_time_under_alarm_pct, state.lang, 1);
+    const hours = formatDuration(row.alarm_hours_average_school_location, state.lang);
+    const days = formatNumber(row.affected_school_days_average_school_location, state.lang, digits);
+    const denominator = formatNumber(row.available_school_days_average_school_location, state.lang, digits);
+    if (state.lang === 'uk') {
+        $('summary-text').textContent = aggregate
+            ? `${nameOf(row.area_id)}: тривоги перекривали припущений навчальний час протягом ${hours} у середньому для одного активного місця розташування закладу освіти (${pct}%). У середньому вони зачепили ${days} із ${denominator} доступних навчальних днів.`
+            : `${nameOf(row.area_id)}: тривоги перекривали припущений навчальний час протягом ${hours} (${pct}%). Вони зачепили ${days} із ${denominator} доступних навчальних днів.`;
     }
-    if (state.temporalView === 'school_years') {
-        schoolYearChart($('year-chart'), yearly, state.trendMeasure, state.lang);
-        renderChartTable($('year-data'), yearly, 'school_year');
+    else {
+        $('summary-text').textContent = aggregate
+            ? `${nameOf(row.area_id)}: an average of ${hours} per active school location overlapped assumed school time (${pct}%). Alarms affected an average of ${days} of ${denominator} available school days.`
+            : `${nameOf(row.area_id)}: ${hours} overlapped assumed school time (${pct}%). Alarms affected ${days} of ${denominator} available school days.`;
     }
-    if (state.temporalView === 'heatmap') {
-        heatmapChart($('heatmap-chart'), monthly, state.lang);
-        renderChartTable($('heatmap-data'), monthly, 'period_id');
-    }
+    $('aggregation-note').textContent = aggregate ? tr('aggregateMetricContext') : tr('directResult');
 }
-catch (e) {
-    console.error(e);
-    $('chart-error').hidden = false;
-    $('chart-error').textContent = state.lang === 'uk' ? 'Візуалізація недоступна; дані залишаються в таблиці.' : 'Visualisation unavailable; data remain available in the table.';
+function renderCards(row) {
+    const unavailable = isAnalyticallyUnavailable(row);
+    const aggregate = row.area_level !== 'hromada';
+    const digits = aggregate ? 1 : 0;
+    const context = aggregate ? tr('averageLocation') : tr('directResult');
+    $('alarm-time-value').textContent = formatDuration(unavailable ? null : row.alarm_hours_average_school_location, state.lang);
+    $('alarm-time-secondary').textContent = unavailable ? tr('unavailable') : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`;
+    $('alarm-time-context').textContent = unavailable ? '' : context;
+    $('affected-days-value').textContent = unavailable ? '—' : `${formatNumber(row.affected_school_days_average_school_location, state.lang, digits)} / ${formatNumber(row.available_school_days_average_school_location, state.lang, digits)}`;
+    $('affected-days-secondary').textContent = unavailable ? tr('unavailable') : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`;
+    $('affected-days-context').textContent = unavailable ? '' : context;
+    const episodes = unavailable ? null : row.school_time_alarm_episodes_average_school_location;
+    $('episodes-value').textContent = episodes === null ? '—' : formatNumber(episodes, state.lang, digits);
+    $('episodes-secondary').textContent = unavailable ? tr('unavailable') : episodes === null ? tr('noEpisodesRange') : '';
+    $('episodes-context').textContent = unavailable || episodes === null ? '' : context;
+}
+function drawModalityChart() {
+    if (!$('modality-details').open || !lastModalityRows.length)
+        return;
+    modalityChart($('modality-chart'), lastModalityRows, state.lang, {
+        offline: tr('offline'),
+        online: tr('online'),
+        mixed: tr('mixed'),
+        other: tr('other'),
+    });
+}
+function renderEducation() {
+    const contexts = periodContext().filter(context => context.row && Number.isFinite(context.row.learners_total) && context.row.education_snapshot_date);
+    const multi = contexts.length > 1;
+    const summary = $('education-summary');
+    const yearRowsElement = $('education-years');
+    const empty = $('education-empty');
+    const modalityDetails = $('modality-details');
+    summary.replaceChildren();
+    yearRowsElement.replaceChildren();
+    lastModalityRows = contexts.map(context => context.row);
+    if (!contexts.length) {
+        $('education-multi-note').hidden = true;
+        empty.hidden = false;
+        empty.textContent = tr('educationUnavailable');
+        modalityDetails.hidden = true;
+        $('education-note').textContent = tr('contextCaveat');
+        return;
+    }
+    empty.hidden = true;
+    modalityDetails.hidden = false;
+    const dateFormatter = new Intl.DateTimeFormat(state.lang === 'uk' ? 'uk-UA' : 'en-GB', { dateStyle: 'long', timeZone: 'UTC' });
+    if (!multi) {
+        const context = contexts[0];
+        summary.innerHTML = `<div><span>${tr('schools')}</span><strong>${formatNumber(context.row.school_count, state.lang)}</strong></div><div><span>${tr('learners')}</span><strong>${formatNumber(context.row.learners_total, state.lang)}</strong></div><small>${tr('snapshot')} ${dateFormatter.format(new Date(context.row.education_snapshot_date + 'T00:00:00Z'))}</small>`;
+    }
+    else {
+        for (const context of contexts) {
+            const row = document.createElement('div');
+            row.className = 'education-year-row';
+            row.innerHTML = `<strong>${SCHOOL_YEAR_LABELS[context.schoolYear]}</strong><span>${tr('schools')}: ${formatNumber(context.row.school_count, state.lang)}</span><span>${tr('learners')}: ${formatNumber(context.row.learners_total, state.lang)}</span><small>${dateFormatter.format(new Date(context.row.education_snapshot_date + 'T00:00:00Z'))}</small>`;
+            yearRowsElement.append(row);
+        }
+    }
+    $('education-multi-note').hidden = !multi;
+    $('education-multi-note').textContent = multi ? tr('multiYearContext') : '';
+    const notes = [tr('contextCaveat')];
+    if (contexts.some(context => context.schoolYear === '2022_2023'))
+        notes.push(tr('modality2022'));
+    if (contexts.some(context => context.schoolYear !== '2022_2023'))
+        notes.push(tr('modalityLater'));
+    $('education-note').textContent = notes.join(' ');
+    drawModalityChart();
+}
+function renderChartTable(el, rows, labelKey) {
+    const measures = [
+        ['alarm_hours_average_school_location', 'hours'],
+        ['school_time_under_alarm_pct', 'alarmShare'],
+        ['affected_school_days_pct', 'daysShare'],
+    ];
+    const table = document.createElement('table');
+    const caption = document.createElement('caption');
+    caption.textContent = `${tr('dataTable')} · ${trendMeasureLabel()}`;
+    const head = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    const periodHead = document.createElement('th');
+    periodHead.scope = 'col';
+    periodHead.textContent = labelKey === 'period_id' ? tr('month') : tr('schoolYear');
+    headRow.append(periodHead);
+    for (const [measure, translation] of measures) {
+        const heading = document.createElement('th');
+        heading.scope = 'col';
+        heading.textContent = tr(translation);
+        if (measure === state.trendMeasure) {
+            heading.className = 'selected-measure';
+            heading.setAttribute('aria-current', 'true');
+        }
+        headRow.append(heading);
+    }
+    head.append(headRow);
+    const body = document.createElement('tbody');
+    for (const row of rows) {
+        const tableRow = document.createElement('tr');
+        const label = labelKey === 'period_id' ? monthLabel(row.period_id, state.lang) : SCHOOL_YEAR_LABELS[row.school_year];
+        const rowHead = document.createElement('th');
+        rowHead.scope = 'row';
+        rowHead.textContent = label;
+        tableRow.append(rowHead);
+        for (const [measure] of measures) {
+            const cell = document.createElement('td');
+            const raw = value(row, measure);
+            cell.textContent = measure === 'alarm_hours_average_school_location'
+                ? formatDuration(raw, state.lang)
+                : raw === null ? '—' : `${formatNumber(raw, state.lang, 1)}%`;
+            if (measure === state.trendMeasure)
+                cell.className = 'selected-measure';
+            tableRow.append(cell);
+        }
+        body.append(tableRow);
+    }
+    table.append(caption, head, body);
+    el.replaceChildren(table);
+}
+async function renderTime() {
+    const monthly = monthlyRows();
+    const yearly = yearRows();
+    const measureLabel = trendMeasureLabel();
+    document.querySelectorAll('[data-temporal]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.temporal === state.temporalView)));
+    $('monthly-panel').hidden = state.temporalView !== 'monthly';
+    $('year-panel').hidden = state.temporalView !== 'school_years';
+    $('heatmap-panel').hidden = state.temporalView !== 'heatmap';
+    $('chart-error').hidden = true;
     renderChartTable($('monthly-data'), monthly, 'period_id');
-} }
-async function renderMapAndTable() { const scope = mapScopeForArea(state.areaId, data.lookup), oblastId = scope.oblastId, atHromada = scope.level === 'hromada'; if (atHromada && !(await ensureHromada(oblastId))) {
+    renderChartTable($('year-data'), yearly, 'school_year');
+    renderChartTable($('heatmap-data'), monthly, 'period_id');
+    try {
+        if (state.temporalView === 'monthly') {
+            monthlyChart($('monthly-chart'), monthly, state.trendMeasure, measureLabel, state.lang, id => {
+                state.periodMode = 'month';
+                state.month = id;
+                updateUrl(state);
+                render();
+            });
+        }
+        if (state.temporalView === 'school_years')
+            schoolYearChart($('year-chart'), yearly, state.trendMeasure, measureLabel, state.lang);
+        if (state.temporalView === 'heatmap')
+            heatmapChart($('heatmap-chart'), monthly, state.trendMeasure, measureLabel, state.lang);
+    }
+    catch (error) {
+        console.error(error);
+        $('chart-error').hidden = false;
+        $('chart-error').textContent = tr('chartUnavailable');
+    }
+}
+async function renderMapAndTable() { const scope = mapScopeForArea(state.areaId, data.lookup), oblastId = scope.oblastId, atHromada = scope.level === 'hromada'; $('map-action-status').textContent = ''; $('csv-status').textContent = ''; if (atHromada && !(await ensureHromada(oblastId))) {
     currentRows = [];
     renderComparison();
+    mapActions = null;
+    $('fit-selected').disabled = true;
+    $('reset-map').disabled = true;
     $('map-error').hidden = false;
     $('map-error').textContent = tr('loadAreaFailed');
     return;
 } const rows = periodRowsForComparison(atHromada ? oblastId : undefined), geo = atHromada ? data.hromadaGeo[oblastId] : data.oblastGeo, selected = data.lookup.hromadas[state.areaId] ? state.areaId : ''; currentRows = rows; renderComparison(); const geometryUnavailable = data.lookup.hromadas[state.areaId]?.geometry_status !== undefined && data.lookup.hromadas[state.areaId]?.geometry_status !== 'available'; $('map-error').hidden = !geometryUnavailable; if (geometryUnavailable)
     $('map-error').textContent = tr('geometryUnavailable'); try {
-    mapActions = renderLeafletMap($('map-container'), $('map-legend'), geo, rows, state.mapMeasure, state.lang, selected, id => { state.areaId = id; updateUrl(state); render(); });
+    mapActions = renderLeafletMap($('map-container'), $('map-legend'), geo, rows, state.mapMeasure, state.lang, selected, id => { selectArea(id); });
+    $('fit-selected').disabled = false;
+    $('reset-map').disabled = false;
 }
 catch (e) {
     console.error(e);
+    mapActions = null;
+    $('fit-selected').disabled = true;
+    $('reset-map').disabled = true;
     $('map-error').hidden = false;
-    $('map-error').textContent = state.lang === 'uk' ? 'Карта недоступна; вибір території та значення залишаються в таблиці.' : 'Map unavailable; area selection and values remain available in the table.';
+    $('map-error').textContent = tr('mapUnavailable');
 } }
-function renderComparison() { const query = $('comparison-search').value.trim(); let rows = currentRows; if (query)
-    rows = fuse.search(query, { limit: 300 }).map((x) => x.item.id).filter((id) => rows.some(r => r.area_id === id)).map((id) => rows.find(r => r.area_id === id)); rows = [...rows].sort((a, b) => { const av = sortKey === 'affected_days_pct' ? affectedDaysPct(a) : a[sortKey], bv = sortKey === 'affected_days_pct' ? affectedDaysPct(b) : b[sortKey]; return ((av ?? -Infinity) - (bv ?? -Infinity)) * sortDirection; }); const desktop = $('comparison-table'), mobile = $('comparison-cards'); desktop.innerHTML = '<table><thead><tr><th>' + tr('area') + '</th><th><button data-sort="school_time_under_alarm_pct">' + tr('share') + '</button></th><th><button data-sort="alarm_hours_average_school_location">' + tr('hours') + '</button></th><th><button data-sort="affected_days_pct">' + tr('days') + '</button></th><th>' + tr('precision') + '</th><th>' + tr('coverage') + '</th></tr></thead><tbody></tbody></table>'; const tbody = desktop.querySelector('tbody'); mobile.replaceChildren(); for (const r of rows) {
-    const unavailable = isAnalyticallyUnavailable(r);
-    const td = [nameOf(r.area_id), unavailable ? '—' : `${formatNumber(r.school_time_under_alarm_pct, state.lang, 1)}%`, formatDuration(unavailable ? null : r.alarm_hours_average_school_location, state.lang), unavailable ? '—' : `${formatNumber(affectedDaysPct(r), state.lang, 1)}%`, r.source_precision_label, statusText(r.coverage_status)];
-    const trr = document.createElement('tr');
-    td.forEach((x, i) => { const cell = document.createElement(i ? 'td' : 'th'); if (i === 0) {
-        const b = document.createElement('button');
-        b.textContent = x;
-        b.addEventListener('click', () => { state.areaId = r.area_id; updateUrl(state); render(); });
-        cell.append(b);
+function renderComparison() {
+    const query = $('comparison-search').value.trim();
+    let rows = currentRows;
+    if (query) {
+        const matchingIds = new Set(fuse.search(query, { limit: 300 }).map(result => result.item.id));
+        rows = rows.filter(row => matchingIds.has(row.area_id));
     }
-    else
-        cell.textContent = x; trr.append(cell); });
-    tbody.append(trr);
-    const d = document.createElement('details');
-    d.className = 'comparison-card';
-    d.innerHTML = `<summary><strong>${td[0]}</strong><span>${td[1]}</span><small>${td[2]} · ${td[3]}</small></summary><dl><div><dt>${tr('episodes')}</dt><dd>${unavailable || r.school_time_alarm_episodes_average_school_location === null ? '—' : formatNumber(r.school_time_alarm_episodes_average_school_location, state.lang, 1)}</dd></div><div><dt>${tr('schools')}</dt><dd>${formatNumber(r.school_count, state.lang)}</dd></div><div><dt>${tr('learners')}</dt><dd>${formatNumber(r.learners_total, state.lang)}</dd></div><div><dt>${tr('precision')}</dt><dd>${r.source_precision_label}</dd></div><div><dt>${tr('coverage')}</dt><dd>${statusText(r.coverage_status)}</dd></div></dl>`;
-    mobile.append(d);
-} desktop.querySelectorAll('[data-sort]').forEach(b => b.addEventListener('click', () => { const k = b.dataset.sort; if (sortKey === k)
-    sortDirection *= -1;
-else {
-    sortKey = k;
-    sortDirection = -1;
-} renderComparison(); })); }
-function renderInterpretation(row) { $('precision-text').textContent = `${row.source_precision_label}; ${statusText(row.coverage_status)}.`; }
-function csvEscape(v) { const s = String(v ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; }
-function downloadCsv() { const cols = ['area_id', 'area_name', 'area_level', 'period_id', 'alarm_hours', 'school_time_under_alarm_pct', 'affected_school_days', 'available_school_days', 'affected_school_days_pct', 'episodes', 'schools', 'learners', 'source_precision', 'coverage', 'analytical_build_id']; const lines = [cols.join(',')]; for (const r of currentRows) {
-    const x = [r.area_id, nameOf(r.area_id), r.area_level, r.period_id, r.alarm_hours_average_school_location, r.school_time_under_alarm_pct, r.affected_school_days_average_school_location, r.available_school_days_average_school_location, affectedDaysPct(r), r.school_time_alarm_episodes_average_school_location, r.school_count, r.learners_total, r.source_precision_label, r.coverage_status, data.release.analytical_build_id];
-    lines.push(x.map(csvEscape).join(','));
-} const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.click(); URL.revokeObjectURL(a.href); }
+    rows = [...rows].sort((a, b) => {
+        const first = value(a, sortKey);
+        const second = value(b, sortKey);
+        if (first === null && second === null)
+            return 0;
+        if (first === null)
+            return 1;
+        if (second === null)
+            return -1;
+        return (first - second) * sortDirection;
+    });
+
+    $('comparison-result-count').textContent = tr('areasShown', { count: rows.length });
+    const desktop = $('comparison-table');
+    const mobile = $('comparison-cards');
+    desktop.replaceChildren();
+    mobile.replaceChildren();
+
+    const table = document.createElement('table');
+    const head = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    const columns = [
+        [null, 'area'],
+        ['school_time_under_alarm_pct', 'share'],
+        ['alarm_hours_average_school_location', 'hours'],
+        ['affected_school_days_pct', 'days'],
+        [null, 'precision'],
+        [null, 'coverage'],
+    ];
+    for (const [key, translation] of columns) {
+        const heading = document.createElement('th');
+        heading.scope = 'col';
+        if (!key) {
+            heading.textContent = tr(translation);
+        }
+        else {
+            const button = document.createElement('button');
+            const active = sortKey === key;
+            const arrow = active ? (sortDirection === -1 ? ' ↓' : ' ↑') : '';
+            button.type = 'button';
+            button.dataset.sort = key;
+            button.textContent = `${tr(translation)}${arrow}`;
+            button.title = active ? tr(sortDirection === -1 ? 'sortDescending' : 'sortAscending') : '';
+            heading.setAttribute('aria-sort', active ? (sortDirection === -1 ? 'descending' : 'ascending') : 'none');
+            heading.append(button);
+        }
+        headRow.append(heading);
+    }
+    head.append(headRow);
+    const body = document.createElement('tbody');
+
+    if (!rows.length) {
+        const emptyRow = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = columns.length;
+        cell.textContent = tr('tableNoResults');
+        emptyRow.append(cell);
+        body.append(emptyRow);
+        const mobileEmpty = document.createElement('p');
+        mobileEmpty.className = 'notice';
+        mobileEmpty.textContent = tr('tableNoResults');
+        mobile.append(mobileEmpty);
+    }
+
+    for (const row of rows) {
+        const unavailable = isAnalyticallyUnavailable(row);
+        const display = [
+            nameOf(row.area_id),
+            unavailable ? '—' : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`,
+            formatDuration(unavailable ? null : row.alarm_hours_average_school_location, state.lang),
+            unavailable ? '—' : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`,
+            sourcePrecisionText(row.source_precision_label),
+            statusText(row.coverage_status),
+        ];
+        const tableRow = document.createElement('tr');
+        if (row.area_id === state.areaId)
+            tableRow.className = 'current-row';
+        display.forEach((text, index) => {
+            const cell = document.createElement(index ? 'td' : 'th');
+            if (!index) {
+                cell.scope = 'row';
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.textContent = text;
+                button.setAttribute('aria-label', `${tr('selectArea')}: ${text}`);
+                if (row.area_id === state.areaId)
+                    button.setAttribute('aria-current', 'true');
+                button.addEventListener('click', () => { selectArea(row.area_id); });
+                cell.append(button);
+            }
+            else {
+                cell.textContent = text;
+            }
+            tableRow.append(cell);
+        });
+        body.append(tableRow);
+
+        const card = document.createElement('details');
+        card.className = 'comparison-card';
+        if (row.area_id === state.areaId)
+            card.classList.add('current-card');
+        card.innerHTML = `<summary><strong>${display[0]}</strong><span>${display[1]}</span><small>${display[2]} · ${display[3]}</small></summary><dl><div><dt>${tr('episodes')}</dt><dd>${unavailable || row.school_time_alarm_episodes_average_school_location === null ? '—' : formatNumber(row.school_time_alarm_episodes_average_school_location, state.lang, 1)}</dd></div><div><dt>${tr('schools')}</dt><dd>${formatNumber(row.school_count, state.lang)}</dd></div><div><dt>${tr('learners')}</dt><dd>${formatNumber(row.learners_total, state.lang)}</dd></div><div><dt>${tr('precision')}</dt><dd>${display[4]}</dd></div><div><dt>${tr('coverage')}</dt><dd>${display[5]}</dd></div></dl>`;
+        const selectButton = document.createElement('button');
+        selectButton.type = 'button';
+        selectButton.className = 'button-secondary comparison-select';
+        selectButton.textContent = row.area_id === state.areaId ? tr('currentArea') : tr('selectArea');
+        selectButton.disabled = row.area_id === state.areaId;
+        selectButton.addEventListener('click', () => { selectArea(row.area_id); });
+        card.append(selectButton);
+        mobile.append(card);
+    }
+
+    table.append(head, body);
+    desktop.append(table);
+    desktop.querySelectorAll('[data-sort]').forEach(button => button.addEventListener('click', () => {
+        const key = button.dataset.sort;
+        if (sortKey === key)
+            sortDirection *= -1;
+        else {
+            sortKey = key;
+            sortDirection = -1;
+        }
+        renderComparison();
+    }));
+}
+function renderInterpretation(row) { $('precision-text').textContent = `${sourcePrecisionText(row.source_precision_label)}; ${statusText(row.coverage_status)}.`; }
+function downloadCsv() { const csv = buildComparisonCsv(currentRows, id => nameOf(id), data.release.analytical_build_id); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); $('csv-status').textContent = tr('csvPrepared', { count: currentRows.length }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
 function updateControls() { populatePeriodControls(); $('map-measure').value = state.mapMeasure; $('trend-measure').value = state.trendMeasure; const current = searchItems.find(x => x.id === state.areaId); $('territory-search').value = itemName(current, state.lang); }
-async function render() { applyStaticTranslations(); updateControls(); $('fatal-error').hidden = true; const o = parentOblast(state.areaId); const loaded = o ? await ensureHromada(o) : true; const row = rowForState(); if (!row) {
-    $('summary-context').textContent = periodHeading();
-    $('summary-text').textContent = loaded ? tr('noData') : tr('loadAreaFailed');
-    $('aggregation-note').textContent = tr('unavailable');
-    renderCards({ area_level: 'hromada', coverage_status: 'unavailable', available_school_seconds_average_school_location: 0, school_time_alarm_episodes_average_school_location: null });
+async function render() {
+    applyStaticTranslations();
+    updateControls();
+    renderHromadaNavigation();
+    $('fatal-error').hidden = true;
+    const oblastId = parentOblast(state.areaId);
+    const loaded = oblastId ? await ensureHromada(oblastId) : true;
+    const row = rowForState();
+    renderEducation();
+    if (!row) {
+        $('summary-context').textContent = periodHeading();
+        $('summary-text').textContent = loaded ? tr('noData') : tr('loadAreaFailed');
+        $('aggregation-note').textContent = tr('unavailable');
+        renderCards({
+            area_level: data.lookup.hromadas[state.areaId] ? 'hromada' : data.lookup.oblasts[state.areaId] ? 'oblast' : 'national',
+            coverage_status: 'unavailable',
+            available_school_seconds_average_school_location: 0,
+            school_time_alarm_episodes_average_school_location: null,
+        });
+        $('precision-text').textContent = tr('unavailable');
+    }
+    else {
+        renderSummary(row);
+        renderCards(row);
+        renderInterpretation(row);
+    }
+    await renderTime();
+    await renderMapAndTable();
     updateUrl(state);
-    return;
-} renderSummary(row); renderCards(row); renderEducation(); await renderTime(); await renderMapAndTable(); renderInterpretation(row); updateUrl(state); setTimeout(resizeCharts, 0); }
-function dialog(kind) { const content = { alarm: { title: tr('alarmTime'), meaning: state.lang === 'uk' ? 'Унікальний час тривог, що перетинається з припущеним навчальним вікном.' : 'The union of alarm time overlapping the assumed school window.', formula: 'alarm overlap seconds ÷ 3,600; share = alarm overlap seconds ÷ available assumed school seconds × 100', aggregate: tr('averageLocation'), assumption: 'Monday–Friday, configured vacations, 08:00–15:00 Europe/Kyiv.', not: 'Actual lessons cancelled, attendance or learning loss.' }, days: { title: tr('affectedDays'), meaning: state.lang === 'uk' ? 'День враховано, якщо є хоча б один додатний перетин.' : 'A day is counted when any positive overlap occurs.', formula: 'affected school days ÷ available assumed school days × 100', aggregate: tr('averageLocation'), assumption: 'Only available assumed school days enter the denominator.', not: 'Whether teaching stopped for the entire day.' }, episodes: { title: tr('episodes'), meaning: state.lang === 'uk' ? 'Окремі оброблені епізоди з додатним перетином.' : 'Distinct processed episodes with positive overlap.', formula: 'count distinct processed episode IDs with positive school-time overlap', aggregate: tr('averageLocation'), assumption: 'A long episode crossing days is counted once.', not: 'Combined arbitrary-range episodes from summed monthly counts.' } }; const x = content[kind]; $('dialog-title').textContent = x.title; $('dialog-meaning').textContent = x.meaning; $('dialog-formula').textContent = x.formula; $('dialog-aggregate').textContent = x.aggregate; $('dialog-assumption').textContent = x.assumption; $('dialog-not').textContent = x.not; $('indicator-dialog').showModal(); }
-function bind() { document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', async () => { state.lang = b.dataset.lang; saveLanguage(state.lang); await setLanguage(state.lang); render(); })); $('period-mode').addEventListener('change', e => { state.periodMode = e.target.value; render(); }); $('school-year').addEventListener('change', e => { state.schoolYear = e.target.value; render(); }); $('month').addEventListener('change', e => { state.month = e.target.value; render(); }); $('range-start').addEventListener('change', e => { state.rangeStart = e.target.value; if (state.rangeStart > state.rangeEnd)
-    state.rangeEnd = state.rangeStart; render(); }); $('range-end').addEventListener('change', e => { state.rangeEnd = e.target.value; if (state.rangeEnd < state.rangeStart)
-    state.rangeStart = state.rangeEnd; render(); }); $('map-measure').addEventListener('change', e => { state.mapMeasure = e.target.value; renderMapAndTable(); updateUrl(state); }); $('trend-measure').addEventListener('change', e => { state.trendMeasure = e.target.value; renderTime(); updateUrl(state); }); document.querySelectorAll('[data-temporal]').forEach(b => b.addEventListener('click', () => { state.temporalView = b.dataset.temporal; renderTime(); updateUrl(state); })); $('fit-selected').addEventListener('click', () => mapActions?.fitSelected()); $('reset-map').addEventListener('click', () => mapActions?.reset()); $('reset-filters').addEventListener('click', () => { state = defaultState(data.release.available_school_years); render(); }); $('comparison-search').addEventListener('input', renderComparison); $('download-csv').addEventListener('click', downloadCsv); document.querySelectorAll('[data-info]').forEach(b => b.addEventListener('click', () => dialog(b.dataset.info))); window.addEventListener('resize', resizeCharts); setupTerritoryCombobox(); }
+    setTimeout(resizeCharts, 0);
+}
+function dialog(kind) {
+    const content = {
+        alarm: { title: tr('alarmTime'), meaning: tr('alarmMeaning'), formula: tr('alarmFormula'), assumption: tr('alarmAssumption'), not: tr('alarmNot') },
+        days: { title: tr('affectedDays'), meaning: tr('daysMeaning'), formula: tr('daysFormula'), assumption: tr('daysAssumption'), not: tr('daysNot') },
+        episodes: { title: tr('episodes'), meaning: tr('episodesMeaning'), formula: tr('episodesFormula'), assumption: tr('episodesAssumption'), not: tr('episodesNot') },
+    };
+    const selected = content[kind];
+    $('dialog-title').textContent = selected.title;
+    $('dialog-meaning').textContent = selected.meaning;
+    $('dialog-formula').textContent = selected.formula;
+    $('dialog-aggregate').textContent = data.lookup.hromadas[state.areaId] ? tr('directResult') : tr('aggregateMetricContext');
+    $('dialog-assumption').textContent = selected.assumption;
+    $('dialog-not').textContent = selected.not;
+    $('indicator-dialog').showModal();
+}
+async function switchLanguage(lang, button) {
+    if (lang === state.lang)
+        return;
+    const viewport = { x: window.scrollX, y: window.scrollY };
+    state.lang = lang;
+    saveLanguage(lang);
+    await setLanguage(lang);
+    await render();
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    window.scrollTo({ left: viewport.x, top: viewport.y, behavior: 'auto' });
+    button.focus({ preventScroll: true });
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    window.scrollTo({ left: viewport.x, top: viewport.y, behavior: 'auto' });
+}
+function bind() {
+    document.querySelectorAll('[data-lang]').forEach(button => button.addEventListener('click', () => { switchLanguage(button.dataset.lang, button); }));
+    $('period-mode').addEventListener('change', event => { state.periodMode = event.target.value; render(); });
+    $('school-year').addEventListener('change', event => { state.schoolYear = event.target.value; render(); });
+    $('month').addEventListener('change', event => { state.month = event.target.value; render(); });
+    $('range-start').addEventListener('change', event => { state.rangeStart = event.target.value; if (state.rangeStart > state.rangeEnd)
+        state.rangeEnd = state.rangeStart; render(); });
+    $('range-end').addEventListener('change', event => { state.rangeEnd = event.target.value; if (state.rangeEnd < state.rangeStart)
+        state.rangeStart = state.rangeEnd; render(); });
+    $('map-measure').addEventListener('change', event => { state.mapMeasure = event.target.value; renderMapAndTable(); updateUrl(state); });
+    $('trend-measure').addEventListener('change', event => { state.trendMeasure = event.target.value; renderTime(); updateUrl(state); });
+    document.querySelectorAll('[data-temporal]').forEach(button => button.addEventListener('click', () => { state.temporalView = button.dataset.temporal; renderTime(); updateUrl(state); }));
+    $('fit-selected').addEventListener('click', () => {
+        if (!mapActions)
+            return;
+        $('map-action-status').textContent = mapActions.fitSelected() ? tr('mapFitSuccess') : tr('mapFitUnavailable');
+    });
+    $('reset-map').addEventListener('click', () => {
+        if (!mapActions)
+            return;
+        mapActions.reset();
+        $('map-action-status').textContent = tr('mapResetSuccess');
+    });
+    $('back-to-oblast').addEventListener('click', () => { const oblastId = parentOblast(state.areaId); if (oblastId)
+        selectArea(oblastId); });
+    $('modality-details').addEventListener('toggle', () => { if ($('modality-details').open)
+        setTimeout(drawModalityChart, 0); });
+    $('reset-filters').addEventListener('click', () => {
+        const lang = state.lang;
+        state = defaultState(data.release.available_school_years);
+        state.lang = lang;
+        sortKey = 'school_time_under_alarm_pct';
+        sortDirection = -1;
+        $('comparison-search').value = '';
+        render();
+    });
+    $('comparison-search').addEventListener('input', renderComparison);
+    $('download-csv').addEventListener('click', downloadCsv);
+    document.querySelectorAll('[data-info]').forEach(button => button.addEventListener('click', () => dialog(button.dataset.info)));
+    window.addEventListener('resize', resizeCharts);
+    setupTerritoryCombobox();
+}
 async function init() { try {
+    const requestedLanguage = new URLSearchParams(location.search).get('lang');
+    await initI18n(requestedLanguage === 'en' ? 'en' : 'uk');
     data = await loadData();
     searchItems = createSearchItems(data.lookup).filter(x => x.level !== 'hromada' || data.lookup.prototype_hromada_oblasts.includes(x.oblastId));
     fuse = createGeographyFuse(searchItems);
     const parsed = stateFromUrl(data.release.available_school_years, new Set(searchItems.map(x => x.id)));
     state = parsed.state;
-    await initI18n(state.lang);
+    await setLanguage(state.lang);
+    const releaseMarker = document.querySelector('meta[name="aae-release-id"]')?.content;
+    if (releaseMarker !== data.release.website_release_id || document.body.dataset.releaseId !== data.release.website_release_id)
+        throw new Error(tr('releaseMismatch'));
     bind();
     $('loading').hidden = true;
     $('dashboard').hidden = false;
-    const releaseMarker = document.querySelector('meta[name="aae-release-id"]')?.content;
-    if (releaseMarker !== data.release.website_release_id || document.body.dataset.releaseId !== data.release.website_release_id)
-        throw new Error('Release marker mismatch');
     document.documentElement.dataset.releaseId = data.release.website_release_id;
     $('footer-release').textContent = data.release.website_release_id;
     $('footer-build').textContent = ` · ${data.release.analytical_build_id}`;
@@ -239,6 +624,6 @@ catch (e) {
     console.error(e);
     $('loading').hidden = true;
     $('fatal-error').hidden = false;
-    $('fatal-error').textContent = `${tr('fatal')} ${e instanceof Error ? e.message : ''}`;
+    $('fatal-error').textContent = `${tr('fatal')} ${tr('fatalHelp')}`;
 } }
 init();

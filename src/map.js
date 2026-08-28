@@ -1,19 +1,131 @@
 const L = window.L;
+
 import { affectedDaysPct, formatDuration, formatNumber, isAnalyticallyUnavailable } from './logic.js';
-let map, layer;
+
+let map;
+let layer;
+
 const palette = ['#EDF4F8', '#CFE1EC', '#9BC5D9', '#5B9DBB', '#286B8D', '#123B5D'];
-function value(r, m) { return isAnalyticallyUnavailable(r) ? null : m === 'affected_school_days_pct' ? affectedDaysPct(r) : r[m]; }
-function breaks(values) { if (!values.length)
-    return [0, 0, 0, 0, 0]; const s = [...values].sort((a, b) => a - b); return [.2, .4, .6, .8].map(q => s[Math.min(s.length - 1, Math.floor(q * (s.length - 1)))]); }
-function colour(v, b) { if (v === null)
-    return '#E5E7EB'; let i = 0; while (i < b.length && v > b[i])
-    i++; return palette[i + 1] ?? palette.at(-1); }
-export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected, onSelect) { const byId = new Map(rows.map(r => [r.area_id, r])); const vals = rows.map(r => value(r, measure)).filter((x) => x !== null && Number.isFinite(x)); const b = breaks(vals); if (!map) {
-    map = L.map(el, { attributionControl: false, zoomControl: true, minZoom: 4, maxZoom: 10, keyboard: true, preferCanvas: false });
-} if (layer)
-    layer.remove(); layer = L.geoJSON(geo, { style: (f) => { const id = String(f?.properties?.area_id ?? f?.properties?.id ?? ''); const r = byId.get(id); return { color: id === selected ? '#111827' : '#FFFFFF', weight: id === selected ? 3 : 1, fillColor: colour(r ? value(r, measure) : null, b), fillOpacity: .88, dashArray: !r || value(r, measure) === null ? '5 4' : undefined }; }, onEachFeature: (f, l) => { const id = String(f?.properties?.area_id ?? f?.properties?.id ?? ''); const r = byId.get(id); const name = lang === 'uk' ? (f.properties?.name_uk ?? id) : (f.properties?.name_en ?? f.properties?.name_uk ?? id); const v = r ? value(r, measure) : null; const shown = measure === 'alarm_hours_average_school_location' ? formatDuration(v, lang) : `${formatNumber(v, lang, 1)}%`; l.bindTooltip(`<strong>${name}</strong><br>${shown}`, { sticky: true }); l.on('click', () => onSelect(id)); l.on('keypress', (e) => { if (e.originalEvent?.key === 'Enter' || e.originalEvent?.key === ' ')
-        onSelect(id); }); } }).addTo(map); const bounds = layer.getBounds(); if (bounds.isValid())
-    map.fitBounds(bounds.pad(.04), { animate: false }); setTimeout(() => map?.invalidateSize(), 0); legend.innerHTML = ''; const labels = [`≤ ${formatNumber(b[0], lang, 1)}`, ...b.slice(1).map((x, i) => `${formatNumber(b[i], lang, 1)}–${formatNumber(x, lang, 1)}`), `> ${formatNumber(b.at(-1), lang, 1)}`]; palette.slice(1).forEach((c, i) => { const x = document.createElement('span'); x.innerHTML = `<i style="background:${c}"></i>${labels[i] ?? ''}`; legend.append(x); }); return { fitSelected() { const feature = layer.getLayers().find((l) => String(l.feature?.properties?.area_id ?? l.feature?.properties?.id) == selected); if (feature)
-        map?.fitBounds(feature.getBounds().pad(.2)); else if (bounds.isValid())
-        map?.fitBounds(bounds.pad(.04)); }, reset() { if (bounds.isValid())
-        map?.fitBounds(bounds.pad(.04)); } }; }
+
+function value(row, measure) {
+    if (isAnalyticallyUnavailable(row))
+        return null;
+    return measure === 'affected_school_days_pct' ? affectedDaysPct(row) : row[measure];
+}
+
+function breaks(values) {
+    if (!values.length)
+        return [0, 0, 0, 0];
+    const sorted = [...values].sort((a, b) => a - b);
+    return [.2, .4, .6, .8].map(quantile => sorted[Math.min(sorted.length - 1, Math.floor(quantile * (sorted.length - 1)))]);
+}
+
+function colour(raw, thresholds) {
+    if (raw === null)
+        return '#E5E7EB';
+    let index = 0;
+    while (index < thresholds.length && raw > thresholds[index])
+        index++;
+    return palette[index + 1] ?? palette.at(-1);
+}
+
+function areaId(feature) {
+    return String(feature?.properties?.area_id ?? feature?.properties?.id ?? '');
+}
+
+export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected, onSelect) {
+    if (!L)
+        throw new Error('Map library unavailable');
+
+    const byId = new Map(rows.map(row => [row.area_id, row]));
+    const values = rows.map(row => value(row, measure)).filter(raw => raw !== null && Number.isFinite(raw));
+    const thresholds = breaks(values);
+
+    if (!map) {
+        map = L.map(el, {
+            attributionControl: false,
+            zoomControl: true,
+            minZoom: 4,
+            maxZoom: 10,
+            keyboard: true,
+            preferCanvas: false,
+        });
+    }
+
+    if (layer)
+        layer.remove();
+
+    layer = L.geoJSON(geo, {
+        style: feature => {
+            const id = areaId(feature);
+            const row = byId.get(id);
+            const raw = row ? value(row, measure) : null;
+            return {
+                color: id === selected ? '#111827' : '#FFFFFF',
+                weight: id === selected ? 3 : 1,
+                fillColor: colour(raw, thresholds),
+                fillOpacity: .88,
+                dashArray: raw === null ? '5 4' : undefined,
+            };
+        },
+        onEachFeature: (feature, featureLayer) => {
+            const id = areaId(feature);
+            const row = byId.get(id);
+            const name = lang === 'uk'
+                ? (feature.properties?.name_uk ?? id)
+                : (feature.properties?.name_en ?? feature.properties?.name_uk ?? id);
+            const raw = row ? value(row, measure) : null;
+            const shown = measure === 'alarm_hours_average_school_location'
+                ? formatDuration(raw, lang)
+                : raw === null ? '—' : `${formatNumber(raw, lang, 1)}%`;
+            featureLayer.bindTooltip(`<strong>${name}</strong><br>${shown}`, { sticky: true });
+            featureLayer.on('click', () => onSelect(id));
+            featureLayer.on('keypress', event => {
+                if (event.originalEvent?.key === 'Enter' || event.originalEvent?.key === ' ')
+                    onSelect(id);
+            });
+        },
+    }).addTo(map);
+
+    const bounds = layer.getBounds();
+    const showFullExtent = () => {
+        if (!bounds.isValid())
+            return false;
+        map.fitBounds(bounds.pad(.04), { animate: false });
+        return true;
+    };
+
+    showFullExtent();
+    setTimeout(() => map?.invalidateSize(), 0);
+
+    legend.replaceChildren();
+    const labels = [
+        `≤ ${formatNumber(thresholds[0], lang, 1)}`,
+        ...thresholds.slice(1).map((threshold, index) => `${formatNumber(thresholds[index], lang, 1)}–${formatNumber(threshold, lang, 1)}`),
+        `> ${formatNumber(thresholds.at(-1), lang, 1)}`,
+    ];
+    palette.slice(1).forEach((swatch, index) => {
+        const item = document.createElement('span');
+        const chip = document.createElement('i');
+        chip.style.background = swatch;
+        item.append(chip, document.createTextNode(labels[index] ?? ''));
+        legend.append(item);
+    });
+
+    return {
+        fitSelected() {
+            if (!selected)
+                return showFullExtent();
+            const feature = layer.getLayers().find(candidate => areaId(candidate.feature) === selected);
+            if (!feature) {
+                showFullExtent();
+                return false;
+            }
+            map.fitBounds(feature.getBounds().pad(.2), { animate: false });
+            return true;
+        },
+        reset() {
+            return showFullExtent();
+        },
+    };
+}

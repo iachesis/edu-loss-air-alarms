@@ -15,6 +15,31 @@ export function isAnalyticallyUnavailable(row) { return row.coverage_status === 
 export function otherModalities(row) { if (row.school_year === '2022_2023')
     return null; const x = row.learners_total - row.learners_offline - row.learners_online - row.learners_mixed; if (x < -0.5)
     throw new Error(`Negative modality residual: ${row.area_id} ${row.school_year}`); return Math.max(0, x); }
+const EDUCATION_CONTEXT_FIELDS = ['school_count', 'learners_total', 'learners_offline', 'learners_online', 'learners_mixed', 'education_snapshot_date'];
+function unavailableEducationContext() { return Object.fromEntries(EDUCATION_CONTEXT_FIELDS.map(field => [field, null])); }
+function rangeEducationContext(rows, years) {
+    if (years.length !== 1)
+        return unavailableEducationContext();
+    const candidate = rows[0];
+    const valid = EDUCATION_CONTEXT_FIELDS.slice(0, -1).every(field => Number.isFinite(candidate[field]) && candidate[field] >= 0)
+        && typeof candidate.education_snapshot_date === 'string' && candidate.education_snapshot_date.length > 0;
+    const consistent = rows.every(row => EDUCATION_CONTEXT_FIELDS.every(field => row[field] === candidate[field]));
+    return valid && consistent
+        ? Object.fromEntries(EDUCATION_CONTEXT_FIELDS.map(field => [field, candidate[field]]))
+        : unavailableEducationContext();
+}
+export function aggregateSourcePrecision(rows) {
+    const available = rows.filter(row => !isAnalyticallyUnavailable(row));
+    if (!available.length)
+        return null;
+    const labels = new Set(available
+        .filter(row => row.alarm_seconds_average_school_location > 0)
+        .map(row => row.source_precision_label)
+        .filter(label => label && label !== 'not applicable'));
+    if (!labels.size)
+        return 'not applicable';
+    return labels.size === 1 ? [...labels][0] : 'mixed';
+}
 export function aggregateRange(rows, start, end) {
     const chosen = rows.filter(r => r.period_type === 'month' && r.period_id >= start && r.period_id <= end).sort((a, b) => a.period_id.localeCompare(b.period_id));
     if (!chosen.length)
@@ -22,9 +47,19 @@ export function aggregateRange(rows, start, end) {
     const first = chosen[0];
     const n = (k) => chosen.reduce((a, r) => a + (typeof r[k] === 'number' ? r[k] : 0), 0);
     const alarm = n('alarm_seconds_average_school_location'), available = n('available_school_seconds_average_school_location'), affected = n('affected_school_days_average_school_location'), days = n('available_school_days_average_school_location');
-    const years = [...new Set(chosen.map(r => r.school_year))];
+    const years = [...new Set(monthsInRange(start, end).map(schoolYearForMonth))];
     const coverage = available <= 0 ? 'unavailable' : chosen.every(r => r.coverage_status === 'complete') ? 'complete' : 'partial';
-    return { ...first, period_type: 'derived_range', period_id: `${start}..${end}`, school_year: years.length === 1 ? years[0] : 'MULTI_YEAR', alarm_seconds_average_school_location: alarm, alarm_hours_average_school_location: alarm / 3600, available_school_seconds_average_school_location: available, expected_school_seconds_average_school_location: n('expected_school_seconds_average_school_location'), school_time_under_alarm_pct: available > 0 ? alarm / available * 100 : null, affected_school_days_average_school_location: affected, available_school_days_average_school_location: days, expected_school_days_average_school_location: n('expected_school_days_average_school_location'), school_time_alarm_episodes_average_school_location: chosen.length === 1 ? chosen[0].school_time_alarm_episodes_average_school_location : null, coverage_status: coverage, school_count: 0, learners_total: 0, learners_offline: 0, learners_online: 0, learners_mixed: 0, education_snapshot_date: '' };
+    return { ...first, period_type: 'derived_range', period_id: `${start}..${end}`, school_year: years.length === 1 ? years[0] : 'MULTI_YEAR', alarm_seconds_average_school_location: alarm, alarm_hours_average_school_location: alarm / 3600, available_school_seconds_average_school_location: available, expected_school_seconds_average_school_location: n('expected_school_seconds_average_school_location'), school_time_under_alarm_pct: available > 0 ? alarm / available * 100 : null, affected_school_days_average_school_location: affected, available_school_days_average_school_location: days, expected_school_days_average_school_location: n('expected_school_days_average_school_location'), school_time_alarm_episodes_average_school_location: chosen.length === 1 ? chosen[0].school_time_alarm_episodes_average_school_location : null, coverage_status: coverage, source_precision_label: aggregateSourcePrecision(chosen), ...rangeEducationContext(chosen, years) };
+}
+export const COMPARISON_CSV_COLUMNS = ['area_id', 'area_name', 'area_level', 'period_id', 'alarm_hours', 'school_time_under_alarm_pct', 'affected_school_days', 'available_school_days', 'affected_school_days_pct', 'episodes', 'schools', 'learners', 'source_precision', 'coverage', 'analytical_build_id'];
+function csvEscape(value) { const text = String(value ?? ''); return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text; }
+export function buildComparisonCsv(rows, areaName, analyticalBuildId) {
+    const lines = [COMPARISON_CSV_COLUMNS.join(',')];
+    for (const row of rows) {
+        const values = [row.area_id, areaName(row.area_id), row.area_level, row.period_id, row.alarm_hours_average_school_location, row.school_time_under_alarm_pct, row.affected_school_days_average_school_location, row.available_school_days_average_school_location, affectedDaysPct(row), row.school_time_alarm_episodes_average_school_location, row.school_count, row.learners_total, row.source_precision_label, row.coverage_status, analyticalBuildId];
+        lines.push(values.map(csvEscape).join(','));
+    }
+    return '\uFEFF' + lines.join('\n');
 }
 export function educationContexts(rows, start, end) {
     const years = [...new Set(monthsInRange(start, end).map(schoolYearForMonth))];
@@ -46,7 +81,7 @@ export function periodBounds(state) { if (state.periodMode === 'school_year') {
     return { start: state.month, end: state.month }; if (state.periodMode === 'all_available')
     return { start: ALL_MONTHS[0], end: ALL_MONTHS[ALL_MONTHS.length - 1] }; return { start: state.rangeStart, end: state.rangeEnd }; }
 export function periodLabel(state, lang) { if (state.periodMode === 'school_year')
-    return `${SCHOOL_YEAR_LABELS[state.schoolYear]} ${lang === 'uk' ? 'навчальний рік' : 'school year'}`; const b = periodBounds(state); if (state.periodMode === 'all_available')
+    return lang === 'uk' ? `Весь навчальний рік · ${SCHOOL_YEAR_LABELS[state.schoolYear]}` : `Whole school year · ${SCHOOL_YEAR_LABELS[state.schoolYear]}`; const b = periodBounds(state); if (state.periodMode === 'all_available')
     return lang === 'uk' ? `Усі доступні дані · ${rangeLabel(b.start, b.end, lang)}` : `All available data · ${rangeLabel(b.start, b.end, lang)}`; return rangeLabel(b.start, b.end, lang); }
 const LANG_KEY = 'aae.language', DASH_KEY = 'aae.lastDashboardUrl';
 export function preferredLanguage(explicit, saved) { return explicit === 'uk' || explicit === 'en' ? explicit : saved ?? 'uk'; }
