@@ -35,7 +35,7 @@ function areaId(feature) {
     return String(feature?.properties?.area_id ?? feature?.properties?.id ?? '');
 }
 
-export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected, onSelect, onFullExtent) {
+export function renderLeafletMap(el, legend, geo, rows, measure, measureLabel, lang, selected, onSelect, onFullExtent) {
     if (!L)
         throw new Error('Map library unavailable');
 
@@ -85,7 +85,7 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
             const status = raw !== null ? '' : row?.coverage_status === 'not_covered'
                 ? (lang === 'uk' ? 'Не охоплено джерелом' : 'Not covered by source')
                 : (lang === 'uk' ? 'Недоступно' : 'Unavailable');
-            featureLayer.bindTooltip(`<strong>${name}</strong><br>${status || shown}`, { sticky: true });
+            featureLayer.bindTooltip(`<strong>${name}</strong><br>${measureLabel}: ${status || shown}`, { sticky: true });
             featureLayer.on('mouseover', () => {
                 featureLayer.setStyle({
                     color: '#182D39',

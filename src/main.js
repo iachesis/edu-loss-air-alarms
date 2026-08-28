@@ -1,4 +1,4 @@
-import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, availabilityReasonKey, buildComparisonCsv, cleanDashboardUrl, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
+import { ALL_MONTHS, SCHOOL_YEAR_LABELS, affectedDaysPct, aggregateRange, availabilityReasonKey, buildComparisonCsv, cleanDashboardUrl, coverageDescriptionKey, defaultState, educationContexts, formatDuration, formatNumber, isAnalyticallyUnavailable, mapScopeForArea, monthLabel, periodBounds, periodLabel, saveLanguage, stateFromUrl, updateUrl } from './logic.js';
 import { initI18n, setLanguage, tr } from './i18n.js';
 import { createGeographyFuse, createSearchItems, itemLabel, itemName, itemParent, searchGeography } from './search.js';
 import { renderLeafletMap } from './map.js';
@@ -53,7 +53,7 @@ async function ensureHromada(oblastId) {
 function parentOblast(id) { return data.lookup.hromadas[id]?.oblast_id ?? (data.lookup.oblasts[id] ? id : undefined); }
 function nameOf(id, lang = state.lang) { if (id === 'UA')
     return data.lookup.national.UA[lang]; const x = data.lookup.oblasts[id] ?? data.lookup.hromadas[id]; return x?.[lang] ?? id; }
-function sourcePrecisionText(value) { const keys = { mixed: 'sourcePrecisionMixed', 'not applicable': 'sourcePrecisionNotApplicable', 'oblast allocation': 'sourcePrecisionOblast', 'raion allocation': 'sourcePrecisionRaion' }; return keys[value] ? tr(keys[value]) : tr('unavailable'); }
+function sourcePrecisionText(value) { const keys = { hromada: 'sourcePrecisionHromada', mixed: 'sourcePrecisionMixed', 'not applicable': 'sourcePrecisionNotApplicable', 'oblast allocation': 'sourcePrecisionOblast', 'raion allocation': 'sourcePrecisionRaion' }; return keys[value] ? tr(keys[value]) : tr('unavailable'); }
 function trendMeasureLabel() { return tr(TREND_MEASURE_TRANSLATIONS[state.trendMeasure]); }
 async function selectArea(id) { state.areaId = id; const oblastId = parentOblast(id); if (oblastId)
     await ensureHromada(oblastId); updateUrl(state); await render(); }
@@ -204,11 +204,11 @@ function renderSummary(row) {
         const notCovered = row.coverage_status === 'not_covered';
         $('summary-text').textContent = notCovered
             ? state.lang === 'uk'
-                ? `${periodClause} територія «${area}» не охоплена джерелом тривог за цією методологією; нуль не підставлено.`
-                : `${periodClause}, ${area} is not covered by the alarm source under this methodology; zero has not been substituted.`
+                ? `Для території «${area}» у межах цієї методології немає порівнюваного охоплення джерелом тривог.`
+                : `Comparable alarm-source coverage is not available for ${area} under this methodology.`
             : state.lang === 'uk'
-                ? `${periodClause} аналітичний результат на території «${area}» недоступний; нуль не підставлено.`
-                : `${periodClause}, the analytical result for ${area} is unavailable; zero has not been substituted.`;
+                ? `Для території «${area}» та цього періоду неможливо розрахувати результат із доступних даних.`
+                : `A result cannot be calculated for ${area} and this period from the available data.`;
         $('aggregation-note').textContent = tr(notCovered ? 'notCovered' : 'unavailable');
         return;
     }
@@ -220,15 +220,15 @@ function renderSummary(row) {
     const denominator = formatNumber(row.available_school_days_average_school_location, state.lang, digits);
     if (state.lang === 'uk') {
         $('summary-text').textContent = aggregate
-            ? `${periodClause} зафіксовані повітряні тривоги перекривали припущений навчальний час у середньому протягом ${hours} на одне активне місце розташування закладу освіти на території «${area}», що становить ${pct}% доступного припущеного навчального часу. Вони зачепили в середньому ${days} із ${denominator} доступних навчальних днів.`
-            : `${periodClause} зафіксовані повітряні тривоги на території «${area}» перекривали припущений навчальний час протягом ${hours}, що становить ${pct}% доступного припущеного навчального часу. Вони зачепили ${days} із ${denominator} доступних навчальних днів.`;
+            ? `${periodClause} зафіксовані повітряні тривоги перетиналися з розрахунковим навчальним часом у середньому протягом ${hours} на одне активне місце розташування закладу освіти на території «${area}». Це становить ${pct}% розрахункового навчального часу, охопленого джерелом. У середньому в ${days} із ${denominator} розрахункових навчальних днів був принаймні один перетин із тривогою.`
+            : `${periodClause} на території «${area}» зафіксовані повітряні тривоги перетиналися з розрахунковим навчальним часом протягом ${hours}. Це становить ${pct}% розрахункового навчального часу, охопленого джерелом. У ${days} із ${denominator} розрахункових навчальних днів був принаймні один перетин із тривогою.`;
     }
     else {
         $('summary-text').textContent = aggregate
-            ? `${periodClause}, recorded air alarms overlapped with an average of ${hours} of assumed school time per active school location in ${area}, equivalent to ${pct}% of available assumed school time. They affected an average of ${days} of ${denominator} available school days.`
-            : `${periodClause}, recorded air alarms in ${area} overlapped with ${hours} of assumed school time, equivalent to ${pct}% of available assumed school time. They affected ${days} of ${denominator} available school days.`;
+            ? `${periodClause}, recorded air alarms overlapped with ${hours} of modelled school time on average per active school location in ${area}, equal to ${pct}% of modelled school time with source coverage. An average of ${days} of ${denominator} modelled school days had at least one alarm overlap.`
+            : `${periodClause}, recorded air alarms in ${area} overlapped with ${hours} of modelled school time, equal to ${pct}% of modelled school time with source coverage. ${days} of ${denominator} modelled school days had at least one alarm overlap.`;
     }
-    $('aggregation-note').textContent = aggregate ? tr('aggregateMetricContext') : tr('directResult');
+    $('aggregation-note').textContent = aggregate ? tr('aggregateMetricContext') : tr('hromadaMetricContext');
 }
 function setHeadlineMetric(element, text, label, reason = null) {
     element.textContent = text;
@@ -256,7 +256,8 @@ function renderCards(row) {
     setHeadlineMetric($('alarm-time-secondary'), unavailable ? '—' : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`, tr('alarmShare'), unavailableText);
     $('alarm-time-context').textContent = unavailable ? '' : context;
     $('affected-days-value').textContent = unavailable ? '—' : `${formatNumber(row.affected_school_days_average_school_location, state.lang, digits)} / ${formatNumber(row.available_school_days_average_school_location, state.lang, digits)}`;
-    setHeadlineMetric($('affected-days-secondary'), unavailable ? '—' : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`, tr('affectedDays'), unavailableText);
+    $('affected-days-value').setAttribute('aria-label', `${tr('affectedDays')}: ${$('affected-days-value').textContent}`);
+    setHeadlineMetric($('affected-days-secondary'), unavailable ? '—' : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`, tr('daysShare'), unavailableText);
     $('affected-days-context').textContent = unavailable ? '' : context;
     const episodes = unavailable ? null : row.school_time_alarm_episodes_average_school_location;
     const episodeReason = unavailable ? unavailableText : episodes === null ? tr('noEpisodesRange') : null;
@@ -408,7 +409,7 @@ async function renderMapAndTable() { const scope = mapScopeForArea(state.areaId,
     return;
 } const rows = periodRowsForComparison(atHromada ? oblastId : undefined), geo = atHromada ? data.hromadaGeo[oblastId] : data.oblastGeo, selected = data.lookup.hromadas[state.areaId] ? state.areaId : ''; currentRows = rows; renderComparison(); const geometryUnavailable = data.lookup.hromadas[state.areaId]?.geometry_status !== undefined && data.lookup.hromadas[state.areaId]?.geometry_status !== 'available'; $('map-error').hidden = !geometryUnavailable; if (geometryUnavailable)
     $('map-error').textContent = tr('geometryUnavailable'); try {
-    mapActions = renderLeafletMap($('map-container'), $('map-legend'), geo, rows, state.mapMeasure, state.lang, selected, id => { selectArea(id); }, () => { $('map-action-status').textContent = tr('mapResetSuccess'); });
+    mapActions = renderLeafletMap($('map-container'), $('map-legend'), geo, rows, state.mapMeasure, tr(TREND_MEASURE_TRANSLATIONS[state.mapMeasure]), state.lang, selected, id => { selectArea(id); }, () => { $('map-action-status').textContent = tr('mapResetSuccess'); });
     $('fit-selected').disabled = false;
 }
 catch (e) {
@@ -439,7 +440,7 @@ function comparisonTechnicalDetails(row) {
     const details = document.createElement('details');
     details.className = 'comparison-technical';
     const summary = document.createElement('summary');
-    summary.textContent = tr('details');
+    summary.textContent = tr('sourceDetails');
     const list = document.createElement('dl');
     appendDefinition(list, tr('precision'), sourcePrecisionText(row.source_precision_label));
     appendDefinition(list, tr('coverage'), statusText(row.coverage_status));
@@ -602,10 +603,23 @@ function renderComparison() {
     }));
 }
 function renderInterpretation(row) {
-    const details = [sourcePrecisionText(row.source_precision_label)];
-    if (row.coverage_status !== 'complete')
-        details.push(statusText(row.coverage_status));
-    $('precision-text').textContent = `${details.join('; ')}.`;
+    const sourceKeys = {
+        hromada: 'sourceDescriptionHromada',
+        'raion allocation': 'sourceDescriptionRaion',
+        'oblast allocation': 'sourceDescriptionOblast',
+        mixed: 'sourceDescriptionMixed',
+        'not applicable': 'sourcePrecisionNotApplicable',
+    };
+    const details = [];
+    const sourceKey = sourceKeys[row.source_precision_label];
+    if (sourceKey) {
+        const sourceText = tr(sourceKey);
+        details.push(/[.!?…]$/.test(sourceText) ? sourceText : `${sourceText}.`);
+    }
+    const coverageKey = coverageDescriptionKey(row);
+    if (coverageKey)
+        details.push(tr(coverageKey));
+    $('precision-text').textContent = details.join(' ');
 }
 function downloadCsv() { const csv = buildComparisonCsv(currentRows, id => nameOf(id), data.release.analytical_build_id, statusText); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); $('csv-status').textContent = tr('csvPrepared', { count: currentRows.length }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
 function updateControls() {
@@ -650,17 +664,17 @@ async function render() {
 }
 function dialog(kind) {
     const content = {
-        alarm: { title: tr('alarmTime'), meaning: tr('alarmMeaning'), formula: tr('alarmFormula'), assumption: tr('alarmAssumption'), not: tr('alarmNot') },
-        share: { title: tr('alarmShare'), meaning: tr('shareMeaning'), formula: tr('shareFormula'), assumption: tr('shareAssumption'), not: tr('shareNot') },
-        days: { title: tr('affectedDays'), meaning: tr('daysMeaning'), formula: tr('daysFormula'), assumption: tr('daysAssumption'), not: tr('daysNot') },
-        episodes: { title: tr('episodes'), meaning: tr('episodesMeaning'), formula: tr('episodesFormula'), assumption: tr('episodesAssumption'), not: tr('episodesNot') },
+        alarm: { title: tr('alarmTime'), meaning: tr('alarmMeaning'), formula: tr('alarmFormula'), not: tr('alarmNot') },
+        share: { title: tr('alarmShare'), meaning: tr('shareMeaning'), formula: tr('shareFormula'), not: tr('shareNot') },
+        days: { title: tr('daysShare'), meaning: tr('daysMeaning'), formula: tr('daysFormula'), not: tr('daysNot') },
+        episodes: { title: tr('episodes'), meaning: tr('episodesMeaning'), formula: tr('episodesFormula'), not: tr('episodesNot') },
     };
     const selected = content[kind];
     $('dialog-title').textContent = selected.title;
     $('dialog-meaning').textContent = selected.meaning;
     $('dialog-formula').textContent = selected.formula;
-    $('dialog-aggregate').textContent = data.lookup.hromadas[state.areaId] ? tr('directResult') : tr('aggregateMetricContext');
-    $('dialog-assumption').textContent = selected.assumption;
+    $('dialog-aggregate').textContent = data.lookup.hromadas[state.areaId] ? tr('hromadaMetricContext') : tr('aggregateMetricContext');
+    $('dialog-assumption').textContent = tr('modelledHoursDefinition');
     $('dialog-not').textContent = selected.not;
     $('indicator-dialog').showModal();
 }
