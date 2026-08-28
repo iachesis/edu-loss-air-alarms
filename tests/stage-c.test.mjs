@@ -85,16 +85,16 @@ test('full-extent control converges intercepted keyboard activation on its click
 test('all four final human-facing indicator names are present and obsolete labels are absent', () => {
     const expected = {
         en: [
-            'Air-alarm time during assumed school hours',
-            'Share of assumed school time under air alarm',
-            'Assumed school days with air alarms during assumed school hours',
-            'Air-alarm episodes overlapping assumed school time',
+            'Air-alarm time during modelled school hours',
+            'Share of modelled school time under air alarm',
+            'Modelled school days with an air alarm',
+            'Air-alarm episodes during modelled school hours',
         ],
         uk: [
-            'Час повітряних тривог у межах припущеного навчального часу',
-            'Частка припущеного навчального часу, перекрита повітряними тривогами',
-            'Припущені навчальні дні з повітряними тривогами в межах припущеного навчального часу',
-            'Епізоди повітряних тривог, що перетнулися з припущеним навчальним часом',
+            'Час повітряних тривог у межах розрахункового навчального часу',
+            'Частка розрахункового навчального часу під час повітряних тривог',
+            'Розрахункові навчальні дні з повітряною тривогою',
+            'Епізоди повітряних тривог у межах розрахункового навчального часу',
         ],
     };
     assert.deepEqual([
@@ -109,9 +109,9 @@ test('all four final human-facing indicator names are present and obsolete label
         resources.uk.translation.affectedDays,
         resources.uk.translation.episodes,
     ], expected.uk);
-    assert.equal(resources.en.translation.daysShare, 'Share of available assumed school days with air alarms during assumed school hours');
-    assert.equal(resources.en.translation.days, 'Share of available assumed school days with air alarms during assumed school hours');
-    assert.equal(resources.uk.translation.daysShare, 'Частка доступних припущених навчальних днів із повітряними тривогами в межах припущеного навчального часу');
-    assert.equal(resources.uk.translation.days, 'Частка доступних припущених навчальних днів із повітряними тривогами в межах припущеного навчального часу');
-    assert.doesNotMatch(resourcesSource, /Alarm time within the school day|Share of school time|School days affected|Alarm episodes within the school day|Assumed school days with an air alarm|Share of available assumed school days with an air alarm|Припущені навчальні дні з повітряною тривогою|Частка доступних припущених навчальних днів із повітряною тривогою/);
+    assert.equal(resources.en.translation.daysShare, 'Share of modelled school days with an air alarm');
+    assert.equal(resources.en.translation.days, 'Share of modelled school days with an air alarm');
+    assert.equal(resources.uk.translation.daysShare, 'Частка розрахункових навчальних днів із повітряною тривогою');
+    assert.equal(resources.uk.translation.days, 'Частка розрахункових навчальних днів із повітряною тривогою');
+    assert.doesNotMatch(resourcesSource, /Alarm time within the school day|Share of school time|School days affected|Alarm episodes within the school day|assumed school|припущен(ий|ого|і)/i);
 });

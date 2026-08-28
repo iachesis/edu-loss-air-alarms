@@ -1477,10 +1477,158 @@ dialog code {
 
 .prose p {
     max-width: 70ch;
-    margin: 0;
+    margin: 0 0 .85rem;
     color: #3e4246;
     font-size: .98rem;
     line-height: 1.7;
+}
+
+.prose h3 {
+    margin: 1.7rem 0 .55rem;
+    color: var(--midnight);
+    font-family: var(--font-editorial);
+    font-size: 1.35rem;
+    font-weight: 550;
+    letter-spacing: -.025em;
+    line-height: 1.18;
+}
+
+.prose ul {
+    max-width: 68ch;
+    margin: .6rem 0 1rem;
+    padding-left: 1.25rem;
+    color: #3e4246;
+}
+
+.prose li {
+    margin: .35rem 0;
+    padding-left: .15rem;
+    line-height: 1.58;
+}
+
+.method-callout {
+    margin: 1rem 0 !important;
+    padding: .9rem 1rem;
+    border-left: 3px solid var(--signal);
+    background: var(--warm-pale);
+    color: var(--ink) !important;
+}
+
+.content-definitions,
+.indicator-definitions dl {
+    display: grid;
+    gap: 0;
+    margin: 1rem 0;
+    border-top: 1px solid var(--hairline);
+}
+
+.content-definitions > div,
+.indicator-definitions dl > div {
+    display: grid;
+    grid-template-columns: minmax(150px, .42fr) minmax(0, 1fr);
+    gap: 1rem;
+    padding: .75rem 0;
+    border-bottom: 1px solid var(--hairline);
+}
+
+.content-definitions dt,
+.indicator-definitions dt {
+    color: var(--secondary);
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .035em;
+    line-height: 1.45;
+    text-transform: uppercase;
+}
+
+.content-definitions dd,
+.indicator-definitions dd {
+    margin: 0;
+    color: #3e4246;
+    line-height: 1.55;
+}
+
+.indicator-definitions {
+    margin-top: 1rem;
+}
+
+.indicator-definitions article {
+    padding: 1.1rem 0 1.35rem;
+    border-top: 2px solid var(--midnight);
+}
+
+.indicator-definitions article + article {
+    margin-top: 1rem;
+}
+
+.indicator-definitions article h3 {
+    max-width: 34ch;
+    margin-top: 0;
+}
+
+.indicator-definitions article p {
+    font-size: .9rem;
+}
+
+.method-subsection {
+    margin-top: 1.2rem;
+    padding-top: .2rem;
+}
+
+.content-table-wrap {
+    margin: 1rem 0;
+    overflow-x: auto;
+    border-top: 2px solid var(--midnight);
+}
+
+.content-table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.content-table-wrap th,
+.content-table-wrap td {
+    padding: .7rem .8rem;
+    border-bottom: 1px solid var(--hairline);
+    text-align: left;
+    vertical-align: top;
+}
+
+.content-table-wrap thead th {
+    color: var(--secondary);
+    font-family: var(--font-mono);
+    font-size: .67rem;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+
+.content-table-wrap tbody th {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.technical-release-details {
+    margin-top: 1rem;
+    border-top: 1px solid var(--hairline-strong);
+    border-bottom: 1px solid var(--hairline-strong);
+}
+
+.technical-release-details > summary {
+    padding: .9rem 0;
+    color: var(--midnight);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.technical-release-details[open] > summary {
+    border-bottom: 1px solid var(--hairline);
+}
+
+.technical-definitions dd {
+    overflow-wrap: anywhere;
+    font-family: var(--font-mono);
+    font-size: .75rem;
 }
 
 .prose a {
@@ -1999,6 +2147,16 @@ dialog code {
 
     .prose h2 {
         font-size: 1.75rem;
+    }
+
+    .content-definitions > div,
+    .indicator-definitions dl > div {
+        grid-template-columns: 1fr;
+        gap: .3rem;
+    }
+
+    .content-table-wrap {
+        font-size: .82rem;
     }
 }
 

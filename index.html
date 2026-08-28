@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" href="data:,">
-  <meta name="description" content="Estimated overlap between recorded air alarms and assumed school operating hours in Ukraine.">
+  <meta name="description" content="Dashboard showing how recorded air alarms overlapped with modelled school hours in Ukraine, 2022/23–2025/26.">
   <meta name="aae-release-id" content="AAE-WEB-1.1.0">
-  <title>How Air Alarms Disrupt the School Day in Ukraine</title>
+  <title>Air Alarms and the School Day in Ukraine</title>
   <link rel="stylesheet" href="./src/styles.css">
   <style>
     .organization-eyebrow { text-transform: none; }
@@ -126,7 +126,7 @@
               <article class="metric-card metric-card-days">
                 <div id="affected-days-secondary" class="metric-value"></div>
                 <div class="card-title-row">
-                  <h3 data-t="affectedDays"></h3>
+                  <h3 data-t="daysShare"></h3>
                   <button type="button" data-info="days" class="info-button" data-t-aria-label="indicatorInfo">i</button>
                 </div>
                 <div id="affected-days-value" class="metric-denominator"></div>
@@ -284,15 +284,15 @@
         </div>
         <div class="notes-grid">
           <article>
-            <h3 data-t="methodQuestion"></h3>
-            <p data-t="methodQuestionText"></p>
+            <h3 data-t="whatThisMeasures"></h3>
+            <p data-t="whatThisMeasuresText"></p>
           </article>
           <article>
-            <h3 data-t="precision"></h3>
+            <h3 data-t="sourceGeographyCoverage"></h3>
             <p id="precision-text"></p>
           </article>
           <article>
-            <h3 data-t="notMeasured"></h3>
+            <h3 data-t="whatThisDoesNotMeasure"></h3>
             <p data-t="limitationsText"></p>
           </article>
         </div>
@@ -325,22 +325,25 @@
     <form method="dialog">
       <button class="dialog-close" value="close" data-t-aria-label="close">×</button>
       <h2 id="dialog-title"></h2>
-      <p id="dialog-meaning"></p>
       <dl>
         <div>
-          <dt data-t="formula"></dt>
+          <dt data-t="whatItMeasures"></dt>
+          <dd id="dialog-meaning"></dd>
+        </div>
+        <div>
+          <dt data-t="calculation"></dt>
           <dd><code id="dialog-formula"></code></dd>
         </div>
         <div>
-          <dt data-t="aggregateTreatment"></dt>
+          <dt data-t="howTerritoryValuesWork"></dt>
           <dd id="dialog-aggregate"></dd>
         </div>
         <div>
-          <dt data-t="assumption"></dt>
+          <dt data-t="modelledSchoolHours"></dt>
           <dd id="dialog-assumption"></dd>
         </div>
         <div>
-          <dt data-t="notMeasured"></dt>
+          <dt data-t="whatItDoesNotMean"></dt>
           <dd id="dialog-not"></dd>
         </div>
       </dl>
