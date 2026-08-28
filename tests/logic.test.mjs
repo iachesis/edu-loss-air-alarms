@@ -4,7 +4,7 @@ import test from 'node:test';
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
 const logicSource = readFileSync(new URL('../src/logic.js', import.meta.url), 'utf8');
-const { aggregateRange, aggregateSourcePrecision, buildComparisonCsv, isAnalyticallyUnavailable } = await import(`data:text/javascript;base64,${Buffer.from(logicSource).toString('base64')}`);
+const { aggregateRange, aggregateSourcePrecision, availabilityReasonKey, buildComparisonCsv, cleanDashboardUrl, clampedTooltipPosition, isAnalyticallyUnavailable } = await import(`data:text/javascript;base64,${Buffer.from(logicSource).toString('base64')}`);
 const nationalRows = readJson('../data/national_monthly.json');
 const oblastRows = readJson('../data/oblast_monthly.json');
 const release = readJson('../data/release.json');
@@ -133,6 +133,23 @@ test('not-covered rows remain analytically non-numeric without becoming generic 
     assert.equal(derived.school_time_under_alarm_pct, null);
     assert.equal(derived.affected_school_days_average_school_location, null);
     assert.equal(derived.source_precision_label, 'not applicable');
+});
+
+test('clean title navigation retains language and strips all dashboard state', () => {
+    assert.equal(cleanDashboardUrl('en', './index.html?lang=uk&area=UA44&mode=month#map'), './index.html?lang=en');
+    assert.equal(cleanDashboardUrl('uk', './index.html?area=UA32&year=2025_2026'), './index.html?lang=uk');
+});
+
+test('not-covered and generic unavailable headline reasons remain distinct', () => {
+    assert.equal(availabilityReasonKey(component('2024-09', 'not_covered')), 'notCovered');
+    assert.equal(availabilityReasonKey(component('2024-09', 'unavailable')), 'unavailable');
+    assert.equal(availabilityReasonKey(component('2024-09', 'complete', 10000)), null);
+});
+
+test('chart tooltip position follows the datum and remains inside the viewport', () => {
+    assert.deepEqual(clampedTooltipPosition([220, 180], { x: 200, y: 150, width: 40, height: 80 }, [500, 300], [140, 60]), [150, 78]);
+    assert.deepEqual(clampedTooltipPosition([12, 12], { x: 0, y: 0, width: 24, height: 24 }, [320, 180], [180, 70]), [4, 36]);
+    assert.deepEqual(clampedTooltipPosition([310, 170], null, [320, 180], [180, 70]), [136, 88]);
 });
 
 test('CSV uses the supplied display label instead of exposing the raw not-covered key', () => {

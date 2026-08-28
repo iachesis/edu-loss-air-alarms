@@ -12,6 +12,24 @@ export function formatDuration(hours, lang) { if (hours === null || hours === un
     return `${formatNumber(Math.round(hours * 60), lang)} ${lang === 'uk' ? 'хв' : 'min'}`; return `${formatNumber(hours, lang, hours < 10 ? 1 : 0)} ${lang === 'uk' ? 'год' : 'hr'}`; }
 export function affectedDaysPct(row) { return row.available_school_days_average_school_location > 0 ? row.affected_school_days_average_school_location / row.available_school_days_average_school_location * 100 : null; }
 export function isAnalyticallyUnavailable(row) { return row.coverage_status === 'unavailable' || row.coverage_status === 'not_covered' || row.available_school_seconds_average_school_location <= 0; }
+export function availabilityReasonKey(row) { if (!isAnalyticallyUnavailable(row))
+    return null; return row.coverage_status === 'not_covered' ? 'notCovered' : 'unavailable'; }
+export function clampedTooltipPosition(point, rect, viewSize, contentSize, gap = 12) {
+    const [viewWidth, viewHeight] = viewSize;
+    const [contentWidth, contentHeight] = contentSize;
+    const hasRect = rect && [rect.x, rect.y, rect.width, rect.height].every(Number.isFinite);
+    const anchorX = hasRect ? rect.x + rect.width / 2 : point[0];
+    const anchorTop = hasRect ? rect.y : point[1];
+    const anchorBottom = hasRect ? rect.y + rect.height : point[1];
+    const inset = 4;
+    let x = anchorX - contentWidth / 2;
+    let y = anchorTop - contentHeight - gap;
+    if (y < inset)
+        y = anchorBottom + gap;
+    x = Math.max(inset, Math.min(x, Math.max(inset, viewWidth - contentWidth - inset)));
+    y = Math.max(inset, Math.min(y, Math.max(inset, viewHeight - contentHeight - inset)));
+    return [Math.round(x), Math.round(y)];
+}
 export function otherModalities(row) { if (row.school_year === '2022_2023')
     return null; const x = row.learners_total - row.learners_offline - row.learners_online - row.learners_mixed; if (x < -0.5)
     throw new Error(`Negative modality residual: ${row.area_id} ${row.school_year}`); return Math.max(0, x); }
@@ -87,6 +105,7 @@ export function periodLabel(state, lang) { if (state.periodMode === 'school_year
     return lang === 'uk' ? `Усі доступні дані · ${rangeLabel(b.start, b.end, lang)}` : `All available data · ${rangeLabel(b.start, b.end, lang)}`; return rangeLabel(b.start, b.end, lang); }
 const LANG_KEY = 'aae.language', DASH_KEY = 'aae.lastDashboardUrl';
 export function preferredLanguage(explicit, saved) { return explicit === 'uk' || explicit === 'en' ? explicit : saved ?? 'uk'; }
+export function cleanDashboardUrl(lang, path = './index.html') { return `${path.split(/[?#]/, 1)[0]}?lang=${lang === 'en' ? 'en' : 'uk'}`; }
 export function dashboardUrlWithLanguage(raw, lang, base) { const url = new URL(raw, base); url.searchParams.set('lang', lang); return url.href; }
 export function savedLanguage() { try {
     const x = localStorage.getItem(LANG_KEY);

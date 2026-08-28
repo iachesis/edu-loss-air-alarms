@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="title-lockup">
-        <h1 id="page-title"></h1>
+        <h1><a id="page-title" class="publication-home-link" href="./index.html?lang=uk"></a></h1>
         <p id="page-subtitle" class="subtitle"></p>
       </div>
     </div>
@@ -119,7 +119,7 @@
                 <div id="alarm-time-secondary" class="metric-value"></div>
                 <div class="card-title-row">
                   <h3 data-t="alarmShare"></h3>
-                  <button type="button" data-info="alarm" class="info-button" data-t-aria-label="indicatorInfo">i</button>
+                  <button type="button" data-info="share" class="info-button" data-t-aria-label="indicatorInfo">i</button>
                 </div>
               </article>
 
@@ -168,7 +168,6 @@
               </label>
               <div class="map-action-buttons">
                 <button id="fit-selected" type="button" class="button-secondary" data-t="fitSelected"></button>
-                <button id="reset-map" type="button" class="button-secondary" data-t="resetMap"></button>
               </div>
             </div>
           </div>
@@ -208,7 +207,7 @@
           <h3 data-t="monthlyTrend"></h3>
           <div id="monthly-chart" class="chart" role="img" data-t-aria-label="monthlyChartLabel"></div>
           <details class="data-details">
-            <summary data-t="dataTable"></summary>
+            <summary class="data-disclosure-summary"></summary>
             <div id="monthly-data" class="table-wrap chart-table"></div>
           </details>
         </div>
@@ -217,7 +216,7 @@
           <h3 data-t="schoolYearComparison"></h3>
           <div id="year-chart" class="chart" role="img" data-t-aria-label="yearChartLabel"></div>
           <details class="data-details">
-            <summary data-t="dataTable"></summary>
+            <summary class="data-disclosure-summary"></summary>
             <div id="year-data" class="table-wrap chart-table"></div>
           </details>
         </div>
@@ -226,7 +225,7 @@
           <h3 data-t="heatmap"></h3>
           <div id="heatmap-chart" class="chart" role="img" data-t-aria-label="heatmapChartLabel"></div>
           <details class="data-details">
-            <summary data-t="dataTable"></summary>
+            <summary class="data-disclosure-summary"></summary>
             <div id="heatmap-data" class="table-wrap chart-table"></div>
           </details>
         </div>
@@ -270,11 +269,11 @@
             <p id="education-empty" class="notice" hidden></p>
             <p id="education-note" class="context-note education-note"></p>
           </div>
-          <details id="modality-details" class="modality-details">
-            <summary data-t="modalityDetails"></summary>
+          <section id="modality-panel" class="modality-panel" aria-labelledby="modality-heading">
+            <h3 id="modality-heading" data-t="modalityDetails"></h3>
             <p class="context-note" data-t="modalityChartIntro"></p>
             <div id="modality-chart" class="chart modality-chart" role="img" data-t-aria-label="modalityChartLabel"></div>
-          </details>
+          </section>
         </div>
       </section>
 
@@ -303,21 +302,22 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <div class="footer-identity">
-        <span class="footer-mark">D2</span>
-        <div>
-          <strong>UNICEF Deliverable 2</strong>
-          <span id="footer-status" data-t="releaseStatus"></span>
-        </div>
+      <div class="footer-credit">
+        <span data-t="developedBy"></span>
+        <a href="https://etheric.dev/" target="_blank" rel="noopener noreferrer">etheric.dev</a>
       </div>
-      <div class="release-line">
-        <strong id="footer-release"></strong>
-        <span id="footer-build"></span>
+      <div class="footer-organizations">
+        <span data-footer-org-lang="uk"><a href="https://www.unicef.org/ukraine/" target="_blank" rel="noopener noreferrer">UNICEF Україна</a><span aria-hidden="true">·</span><a href="https://mon.gov.ua/" target="_blank" rel="noopener noreferrer">МОН</a><span aria-hidden="true">·</span><a href="https://iea.gov.ua/" target="_blank" rel="noopener noreferrer">ІОА</a></span>
+        <span data-footer-org-lang="en" hidden><a href="https://www.unicef.org/ukraine/en" target="_blank" rel="noopener noreferrer">UNICEF Ukraine</a><span aria-hidden="true">·</span><a href="https://mon.gov.ua/en" target="_blank" rel="noopener noreferrer">MoES</a><span aria-hidden="true">·</span><a href="https://iea.gov.ua/en/" target="_blank" rel="noopener noreferrer">IEA</a></span>
       </div>
       <nav data-t-aria-label="supportingPages">
         <a data-page="methodology" data-t="methodology"></a>
         <a data-page="data" data-t="dataRelease"></a>
       </nav>
+      <div class="release-line">
+        <strong id="footer-release"></strong>
+        <span id="footer-build"></span>
+      </div>
     </div>
   </footer>
 

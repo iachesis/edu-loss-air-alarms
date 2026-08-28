@@ -1,6 +1,6 @@
 # How Air Alarms Disrupt the School Day in Ukraine
 
-Public analytical dashboard for UNICEF Deliverable 2: **Model for quantification of disruption of educational activities due to air alarms and dashboard**.
+Public analytical dashboard for understanding how recorded air alarms overlap with assumed school time in Ukraine.
 
 The dashboard estimates overlap between recorded air-alarm intervals and an assumed school operating window. It supports public communication, comparative analysis, and policy or donor discussion across Ukraine, oblasts, and hromadas.
 
@@ -10,13 +10,14 @@ The product provides a consistent way to compare how recorded air alarms interse
 
 The dashboard is an analytical model, not a monitoring system for individual schools or learners. Its results describe estimated overlap under a common set of assumptions.
 
-## Three core measures
+## Four core indicators
 
-1. **School time under alarm** — the duration of recorded alarm intervals that overlaps the assumed school operating window, together with its share of available assumed school time.
-2. **School days affected** — the number and share of available assumed school days with at least one positive alarm overlap.
-3. **School-time alarm episodes** — distinct processed alarm episodes with positive overlap during assumed school time.
+1. **Air-alarm time during assumed school hours** — the duration of positive overlap between recorded air-alarm intervals and assumed school operating time during the selected period.
+2. **Share of assumed school time under air alarm** — positive-overlap seconds divided by available assumed school seconds.
+3. **Assumed school days with an air alarm** — the number of assumed school days with at least one positive alarm overlap; the displayed percentage is their share of available assumed school days.
+4. **Air-alarm episodes overlapping assumed school time** — distinct processed alarm episodes with positive overlap during the selected period.
 
-For oblast and national views, absolute values such as hours, affected days, and episodes are averages per active school location. A value such as `87.8` affected days is therefore an average across active school locations, not a fractional calendar day experienced by one institution. Hromada values remain direct geographic results under the governed analytical contract.
+For oblast and national views, absolute values such as hours, affected days, and episodes are averages per active school location over the selected period. A value such as `135.2` episodes for Ukraine in 2025/26 therefore means an average of 135.2 distinct processed episodes per active school location over that school year; it does not mean episodes per day. Hromada values remain direct territorial results under the governed analytical contract.
 
 ## Education context
 

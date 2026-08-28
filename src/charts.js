@@ -2,6 +2,7 @@ const echarts = window.echarts;
 
 import {
     affectedDaysPct,
+    clampedTooltipPosition,
     formatDuration,
     formatNumber,
     isAnalyticallyUnavailable,
@@ -58,7 +59,7 @@ function ariaDescription(kind, measureLabel, lang) {
 function tooltipOptions() {
     return {
         confine: true,
-        position: ['2%', '2%'],
+        position: (point, params, dom, rect, size) => clampedTooltipPosition(point, rect, size.viewSize, size.contentSize),
         backgroundColor: 'rgba(252, 252, 250, .97)',
         borderColor: '#B9BAB5',
         borderWidth: 1,
@@ -255,6 +256,7 @@ export function modalityChart(el, rows, lang, labels) {
         grid: { left: 68, right: 16, top: 18, bottom: 62, containLabel: true },
         xAxis: {
             type: 'value',
+            boundaryGap: [0, '8%'],
             axisLine: { show: false },
             axisTick: { show: false },
             axisLabel: { color: SECONDARY, fontSize: 10, formatter: raw => formatNumber(raw, lang) },
