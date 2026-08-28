@@ -14,7 +14,7 @@ The dashboard is an analytical model, not a monitoring system for individual sch
 
 1. **Air-alarm time during assumed school hours** — the duration of positive overlap between recorded air-alarm intervals and assumed school operating time during the selected period.
 2. **Share of assumed school time under air alarm** — positive-overlap seconds divided by available assumed school seconds.
-3. **Assumed school days with an air alarm** — the number of assumed school days with at least one positive alarm overlap; the displayed percentage is their share of available assumed school days.
+3. **Assumed school days with air alarms during assumed school hours** — the number of assumed school days on which at least one recorded air alarm has positive overlap with assumed school time; the displayed percentage is the **share of available assumed school days with air alarms during assumed school hours**.
 4. **Air-alarm episodes overlapping assumed school time** — distinct processed alarm episodes with positive overlap during the selected period.
 
 For oblast and national views, absolute values such as hours, affected days, and episodes are averages per active school location over the selected period. A value such as `135.2` episodes for Ukraine in 2025/26 therefore means an average of 135.2 distinct processed episodes per active school location over that school year; it does not mean episodes per day. Hromada values remain direct territorial results under the governed analytical contract.

@@ -233,15 +233,14 @@ function renderSummary(row) {
 function setHeadlineMetric(element, text, label, reason = null) {
     element.textContent = text;
     element.classList.toggle('has-availability-reason', Boolean(reason));
+    element.removeAttribute('title');
     if (reason) {
         element.dataset.availabilityReason = reason;
-        element.title = reason;
         element.tabIndex = 0;
         element.setAttribute('aria-label', `${label}: ${reason}`);
     }
     else {
         delete element.dataset.availabilityReason;
-        element.removeAttribute('title');
         element.removeAttribute('tabindex');
         element.removeAttribute('aria-label');
     }

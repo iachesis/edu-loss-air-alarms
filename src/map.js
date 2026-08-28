@@ -129,12 +129,13 @@ export function renderLeafletMap(el, legend, geo, rows, measure, lang, selected,
             if (showFullExtent())
                 onFullExtent?.();
         });
+        // Leaflet intercepts native keyboard activation in this control container.
+        // Prevent the intercepted default and converge on the single click path.
         L.DomEvent.on(button, 'keydown', event => {
             if (event.key !== 'Enter' && event.key !== ' ')
                 return;
             L.DomEvent.preventDefault(event);
-            if (showFullExtent())
-                onFullExtent?.();
+            button.click();
         });
         return container;
     };
