@@ -85,22 +85,29 @@ async function render() {
     const main = document.getElementById('content');
     main.replaceChildren();
     const blocks = page === 'methodology' ? methodologyBlocks() : dataBlocks();
-    for (const block of blocks) {
+    blocks.forEach((block, index) => {
         const section = document.createElement('section');
-        section.className = 'panel prose';
+        section.className = 'prose-section';
+        const sectionIndex = document.createElement('span');
+        sectionIndex.className = 'section-index';
+        sectionIndex.setAttribute('aria-hidden', 'true');
+        sectionIndex.textContent = String(index + 1).padStart(2, '0');
+        const sectionContent = document.createElement('div');
+        sectionContent.className = 'prose';
         const heading = document.createElement('h2');
         heading.textContent = tr(block.heading);
         const paragraph = document.createElement('p');
         paragraph.textContent = block.body;
-        section.append(heading, paragraph);
+        sectionContent.append(heading, paragraph);
         if (block.link) {
             const link = document.createElement('a');
             link.href = block.link;
             link.textContent = block.linkLabel;
-            section.append(link);
+            sectionContent.append(link);
         }
+        section.append(sectionIndex, sectionContent);
         main.append(section);
-    }
+    });
     document.documentElement.lang = lang;
 }
 
