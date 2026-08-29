@@ -10,7 +10,8 @@ export function formatNumber(value, lang, digits = 0) { if (value === null || va
 export function formatDuration(hours, lang) { if (hours === null || hours === undefined || !Number.isFinite(hours))
     return '—'; if (hours < 1)
     return `${formatNumber(Math.round(hours * 60), lang)} ${lang === 'uk' ? 'хв' : 'min'}`; return `${formatNumber(hours, lang, hours < 10 ? 1 : 0)} ${lang === 'uk' ? 'год' : 'hr'}`; }
-export function affectedDaysPct(row) { return row.available_school_days_average_school_location > 0 ? row.affected_school_days_average_school_location / row.available_school_days_average_school_location * 100 : null; }
+export function affectedDaysPct(row) { if (Number.isFinite(row.affected_school_days_pct))
+    return row.affected_school_days_pct; return row.available_school_days_average_school_location > 0 ? row.affected_school_days_average_school_location / row.available_school_days_average_school_location * 100 : null; }
 export function isAnalyticallyUnavailable(row) { return row.coverage_status === 'unavailable' || row.coverage_status === 'not_covered' || row.available_school_seconds_average_school_location <= 0; }
 export function availabilityReasonKey(row) { if (!isAnalyticallyUnavailable(row))
     return null; return row.coverage_status === 'not_covered' ? 'notCovered' : 'unavailable'; }
@@ -72,20 +73,35 @@ export function aggregateRange(rows, start, end) {
     if (!chosen.length)
         return null;
     const first = chosen[0];
-    const n = (k) => chosen.reduce((a, r) => a + (typeof r[k] === 'number' ? r[k] : 0), 0);
+    const requiredFields = ['alarm_seconds_average_school_location', 'available_school_seconds_average_school_location', 'expected_school_seconds_average_school_location', 'affected_school_days_average_school_location', 'available_school_days_average_school_location', 'expected_school_days_average_school_location'];
+    const validComponent = row => !isAnalyticallyUnavailable(row)
+        && Number.isFinite(row.comparable_school_count) && row.comparable_school_count > 0
+        && requiredFields.every(field => Number.isFinite(row[field]));
+    const analytical = chosen.filter(validComponent);
+    const n = (k) => analytical.reduce((a, r) => a + (typeof r[k] === 'number' ? r[k] : 0), 0);
     const alarm = n('alarm_seconds_average_school_location'), available = n('available_school_seconds_average_school_location'), affected = n('affected_school_days_average_school_location'), days = n('available_school_days_average_school_location');
+    const weighted = (k) => analytical.reduce((sum, row) => sum + row[k] * row.comparable_school_count, 0);
+    const alarmWeighted = weighted('alarm_seconds_average_school_location'), availableWeighted = weighted('available_school_seconds_average_school_location'), affectedWeighted = weighted('affected_school_days_average_school_location'), availableDaysWeighted = weighted('available_school_days_average_school_location');
     const years = [...new Set(monthsInRange(start, end).map(schoolYearForMonth))];
     const allNotCovered = chosen.every(r => r.coverage_status === 'not_covered');
-    const hasAnalyticalFailure = chosen.some(r => r.coverage_status === 'unavailable');
-    const coverage = allNotCovered ? 'not_covered' : hasAnalyticalFailure || available <= 0 ? 'unavailable' : chosen.every(r => r.coverage_status === 'complete') ? 'complete' : 'partial';
-    return { ...first, period_type: 'derived_range', period_id: `${start}..${end}`, school_year: years.length === 1 ? years[0] : 'MULTI_YEAR', alarm_seconds_average_school_location: allNotCovered ? null : alarm, alarm_hours_average_school_location: allNotCovered ? null : alarm / 3600, available_school_seconds_average_school_location: available, expected_school_seconds_average_school_location: n('expected_school_seconds_average_school_location'), school_time_under_alarm_pct: available > 0 ? alarm / available * 100 : null, affected_school_days_average_school_location: allNotCovered ? null : affected, available_school_days_average_school_location: allNotCovered ? 0 : days, expected_school_days_average_school_location: n('expected_school_days_average_school_location'), school_time_alarm_episodes_average_school_location: allNotCovered ? null : chosen.length === 1 ? chosen[0].school_time_alarm_episodes_average_school_location : null, coverage_status: coverage, source_precision_label: allNotCovered ? 'not applicable' : aggregateSourcePrecision(chosen), ...rangeEducationContext(chosen, years) };
+    const hasAnalyticalFailure = chosen.some(row => row.coverage_status !== 'not_covered' && !validComponent(row));
+    const coverage = allNotCovered ? 'not_covered' : hasAnalyticalFailure || !analytical.length || availableWeighted <= 0 ? 'unavailable' : chosen.every(r => r.coverage_status === 'complete') ? 'complete' : 'partial';
+    const comparableCounts = new Set(analytical.map(row => row.comparable_school_count));
+    const comparableSchoolCount = comparableCounts.size === 1
+        && [...comparableCounts].every(value => Number.isFinite(value) && value > 0)
+        ? [...comparableCounts][0]
+        : null;
+    const unavailable = coverage === 'unavailable' || coverage === 'not_covered';
+    return { ...first, period_type: 'derived_range', period_id: `${start}..${end}`, school_year: years.length === 1 ? years[0] : 'MULTI_YEAR', alarm_seconds_average_school_location: unavailable ? null : alarm, alarm_hours_average_school_location: unavailable ? null : alarm / 3600, available_school_seconds_average_school_location: unavailable ? null : available, expected_school_seconds_average_school_location: unavailable ? null : n('expected_school_seconds_average_school_location'), school_time_under_alarm_pct: unavailable ? null : alarmWeighted / availableWeighted * 100, affected_school_days_average_school_location: unavailable ? null : affected, available_school_days_average_school_location: unavailable ? null : days, expected_school_days_average_school_location: unavailable ? null : n('expected_school_days_average_school_location'), affected_school_days_pct: unavailable || availableDaysWeighted <= 0 ? null : affectedWeighted / availableDaysWeighted * 100, school_time_alarm_episodes_average_school_location: unavailable ? null : chosen.length === 1 ? chosen[0].school_time_alarm_episodes_average_school_location : null, coverage_status: coverage, source_precision_label: allNotCovered ? 'not applicable' : aggregateSourcePrecision(chosen), comparable_school_count: unavailable ? null : comparableSchoolCount, ...rangeEducationContext(chosen, years) };
 }
 export const COMPARISON_CSV_COLUMNS = ['area_id', 'area_name', 'area_level', 'period_id', 'alarm_hours', 'school_time_under_alarm_pct', 'affected_school_days', 'available_school_days', 'affected_school_days_pct', 'episodes', 'schools', 'learners', 'source_precision', 'coverage', 'analytical_build_id'];
 function csvEscape(value) { const text = String(value ?? ''); return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text; }
 export function buildComparisonCsv(rows, areaName, analyticalBuildId, coverageLabel = value => value) {
     const lines = [COMPARISON_CSV_COLUMNS.join(',')];
     for (const row of rows) {
-        const values = [row.area_id, areaName(row.area_id), row.area_level, row.period_id, row.alarm_hours_average_school_location, row.school_time_under_alarm_pct, row.affected_school_days_average_school_location, row.available_school_days_average_school_location, affectedDaysPct(row), row.school_time_alarm_episodes_average_school_location, row.school_count, row.learners_total, row.source_precision_label, coverageLabel(row.coverage_status), analyticalBuildId];
+        const unavailable = isAnalyticallyUnavailable(row);
+        const analyticalValue = value => unavailable ? null : value;
+        const values = [row.area_id, areaName(row.area_id), row.area_level, row.period_id, analyticalValue(row.alarm_hours_average_school_location), analyticalValue(row.school_time_under_alarm_pct), analyticalValue(row.affected_school_days_average_school_location), analyticalValue(row.available_school_days_average_school_location), analyticalValue(affectedDaysPct(row)), analyticalValue(row.school_time_alarm_episodes_average_school_location), row.school_count, row.learners_total, row.source_precision_label, coverageLabel(row.coverage_status), analyticalBuildId];
         lines.push(values.map(csvEscape).join(','));
     }
     return '\uFEFF' + lines.join('\n');

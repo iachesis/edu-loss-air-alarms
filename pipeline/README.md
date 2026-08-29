@@ -1,6 +1,6 @@
 # Analytical pipeline maintenance package
 
-This directory is the public-safe maintenance source for the UNICEF Deliverable 2 analytical payloads. It is the same executable source used to generate the payloads published by the Stage-B release candidate. It preserves the governed analytical model; its maintenance changes are limited to source acquisition/provenance, fail-closed validation, checkpoint identity, controlled `not_covered` missingness, governed version metadata, and regression evidence.
+This directory is the public-safe maintenance source for the UNICEF Deliverable 2 analytical payloads. It is the executable source used to generate the current release candidate. It preserves the governed analytical model; its maintenance changes are limited to the governed source/provenance controls, controlled missingness semantics, comparable-coverage aggregation, source-reporting propagation, version metadata, and regression evidence.
 
 ## Publication boundary
 
@@ -94,6 +94,6 @@ node --test tests/*.test.mjs
 
 ## Controlled semantics
 
-The canonical `not_covered` status applies to `UA01` and `UA44` because the configured source does not supply their permanent siren regimes under the governed methodology. Their analytical alarm measures remain null and are never converted to zero. Mixed national aggregates retain the correct available and expected denominators and remain partial where covered school locations contribute.
+The canonical `not_covered` status applies to `UA01` and `UA44` because the configured source does not supply their permanent siren regimes under the governed methodology. Their analytical alarm measures remain null and are never converted to zero. `school_count` and learner totals continue to describe the full included education network. `comparable_school_count` is the separate active-school denominator for aggregate analytical absolute values and excludes `not_covered` or otherwise unavailable hromadas without excluding covered true-zero results. Mixed national aggregates remain `partial`; aggregate source reporting preserves `mixed` whenever any applicable constituent is mixed.
 
 The single governed metadata source is [`config/governed_versions.json`](config/governed_versions.json). Required missing or inconsistent entries fail preflight/build. The current governed values are methodology `0.2`, indicator dictionary `0.3`, input data contract `0.1`, processing package `0.1`, local execution package `0.1`, and assumptions `0.1`.

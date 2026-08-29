@@ -161,6 +161,7 @@ def main() -> int:
     parser.add_argument("--repaired-frozen-differential", type=Path, required=True)
     parser.add_argument("--source-differential", type=Path, required=True)
     parser.add_argument("--current-frozen-differential", type=Path, required=True)
+    parser.add_argument("--stage-d-differential", type=Path, required=True)
     parser.add_argument("--output-report", type=Path, required=True)
     args = parser.parse_args()
 
@@ -171,11 +172,19 @@ def main() -> int:
     repaired_frozen = read_json(args.repaired_frozen_differential)
     source_diff = read_json(args.source_differential)
     current_frozen = read_json(args.current_frozen_differential)
+    stage_d = read_json(args.stage_d_differential)
     required_passes = [golden, repaired_frozen, source_diff, current_frozen]
     if any(report.get("status") != "PASS" for report in required_passes):
         raise RuntimeError("Stage-B integration requires PASS for every frozen/source differential")
     if qa.get("hard_failure_count") != 0 or qa.get("checks_passed") != qa.get("checks_total"):
         raise RuntimeError("Stage-B integration requires a hard-failure-free reconciled build")
+    if (
+        stage_d.get("status") != "PASS"
+        or stage_d.get("unexpected_difference_count") != 0
+        or stage_d.get("candidate_build_id") != metadata.get("build_id")
+        or not stage_d.get("same_source_sha256")
+    ):
+        raise RuntimeError("Stage-E integration requires the exact PASS Stage-D correction differential")
 
     oblast_ids = list(metadata["oblast_ids"])
     if len(oblast_ids) != 26:
@@ -220,52 +229,61 @@ def main() -> int:
     release_schema["properties"]["analytical_build_id"] = {"const": metadata["build_id"]}
     write_json(args.data_root / "schemas/release.schema.json", release_schema)
 
+    release_path = args.data_root / "release.json"
+    release = read_json(release_path)
     validation = {
         "schema_version": 1,
         "governing_issue": "https://github.com/iachesis/edu-loss-air-alarms/issues/4",
         "website_release_id": WEBSITE_RELEASE,
         "analytical_build_id": metadata["build_id"],
         "project_fingerprint": metadata["project_fingerprint"],
-        "frozen_executable_control": report_summary(golden),
-        "repaired_code_on_frozen_source": report_summary(repaired_frozen),
-        "current_source_differential": source_diff,
-        "current_build_vs_frozen": report_summary(current_frozen),
+        "starting_analytical_build_id": stage_d["baseline_build_id"],
+        "findings_corrected": ["AAE-D-MAT-01", "AAE-D-MAT-02"],
+        "source_identity": stage_d["source_identity"],
+        "same_source_sha256": stage_d["same_source_sha256"],
+        "analytical_differential": {
+            "status": stage_d["status"],
+            "unexpected_difference_count": stage_d["unexpected_difference_count"],
+            "canonical_summary": stage_d["canonical_summary"],
+            "payload_summary": stage_d["payload_summary"],
+        },
         "fresh_build_qa": qa,
-        "analytical_numeric_values_changed_vs_frozen": False,
-        "authorized_semantic_change": "controlled not-covered status and missingness for UA01 and UA44",
+        "release_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
+        "independent_post_correction_reaudit_required": True,
     }
-    write_json(args.data_root / "stage_b_validation.json", validation)
+    write_json(args.data_root / "stage_e_validation.json", validation)
 
-    release_path = args.data_root / "release.json"
-    release = read_json(release_path)
     provenance = metadata["source_provenance"]
+    source_repository = release.get("source_repository", {})
     release.update({
         "website_release_id": WEBSITE_RELEASE,
         "website_release_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
-        "website_release_date": "2026-08-28",
         "analytical_build_id": metadata["build_id"],
         "analytical_build_status": qa["status"],
         "analytical_source_sha256": metadata["source_sha256"],
         "analytical_source_git_blob_sha1": provenance["upstream_git_blob_sha1"],
         "analytical_source_upstream_commit_sha": provenance["resolved_upstream_commit_sha"],
-        "source_url": provenance["immutable_resolved_raw_url"],
-        "configured_source_url": provenance["configured_source_url"],
+        "source_url": provenance.get("immutable_resolved_raw_url") or release["source_url"],
+        "configured_source_url": provenance.get("configured_source_url") or release["configured_source_url"],
         "source_repository": {
-            "owner": provenance["repository_owner"],
-            "name": provenance["repository_name"],
-            "path": provenance["repository_path"],
-            "branch": provenance["repository_branch"],
+            "owner": provenance.get("repository_owner") or source_repository.get("owner"),
+            "name": provenance.get("repository_name") or source_repository.get("name"),
+            "path": provenance.get("repository_path") or source_repository.get("path"),
+            "branch": provenance.get("repository_branch") or source_repository.get("branch"),
         },
-        "source_retrieval_started_at_utc": provenance["retrieval_started_at_utc"],
-        "source_retrieval_completed_at_utc": provenance["retrieval_completed_at_utc"],
-        "source_retrieved_at_utc": provenance["retrieval_completed_at_utc"],
-        "source_http_content_length_declared": provenance["http_content_length_declared"],
+        "source_retrieval_started_at_utc": provenance.get("retrieval_started_at_utc") or release["source_retrieval_started_at_utc"],
+        "source_retrieval_completed_at_utc": provenance.get("retrieval_completed_at_utc") or release["source_retrieval_completed_at_utc"],
+        "source_retrieved_at_utc": provenance.get("retrieval_completed_at_utc") or release["source_retrieved_at_utc"],
+        "source_http_content_length_declared": provenance.get("http_content_length_declared") or release["source_http_content_length_declared"],
         "source_actual_bytes_received": provenance["actual_bytes_received"],
         "source_expected_resolved_byte_size": provenance["expected_resolved_byte_size"],
         "source_coverage_start_utc": metadata["source_coverage_start_utc"],
         "source_coverage_end_utc": metadata["source_coverage_end_utc"],
         "source_retrieval_timestamp_status": "RECORDED_AND_VERIFIED",
-        "source_provenance_mode": provenance["source_mode"],
+        "source_provenance_mode": release["source_provenance_mode"],
+        "correction_build_source_mode": provenance["source_mode"],
+        "correction_build_source_verification_started_at_utc": provenance["local_verification_started_at_utc"],
+        "correction_build_source_verification_completed_at_utc": provenance["local_verification_completed_at_utc"],
         "source_counts": {
             "input_rows": provenance["input_row_count"],
             "valid_unique_rows": provenance["valid_unique_row_count"],
@@ -292,8 +310,10 @@ def main() -> int:
         "delivery": {
             "unicef_deliverable": 2,
             "product_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
-            "analytical_numeric_values_changed_vs_frozen": False,
+            "analytical_numeric_values_changed_vs_frozen": True,
             "not_covered_semantics_corrected": True,
+            "stage_d_material_corrections": ["AAE-D-MAT-01", "AAE-D-MAT-02"],
+            "independent_post_correction_reaudit_required": True,
         },
         "release_marker": {
             "visible_element": "#footer-release",

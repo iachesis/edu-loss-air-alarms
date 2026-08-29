@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "website_release_id": "AAE-WEB-1.1.0",
+  "analytical_build_id": "AAE-FULL-b8f2d318b6a6266661",
+  "analytical_payload_count": 56,
+  "payload_identity_mismatch_count": 0,
+  "geography_catalogue_updated_entry_count": 1800,
+  "geography_catalogue_not_covered_entry_count": 342,
+  "release_inventory_file_count": 91,
+  "payload_manifest_file_count": 92
+}

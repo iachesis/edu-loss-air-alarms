@@ -34,7 +34,7 @@
       "type": "string"
     },
     "analytical_build_id": {
-      "const": "AAE-FULL-88db64d06afa99610f"
+      "const": "AAE-FULL-b8f2d318b6a6266661"
     },
     "analytical_source_sha256": {
       "type": "string",

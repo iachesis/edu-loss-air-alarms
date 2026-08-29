@@ -39,8 +39,8 @@ function methodologyBlocks() {
         ? { measure: 'Що вимірює', calculation: 'Розрахунок', unit: 'Одиниця вимірювання', aggregate: 'Тлумачення для областей і України' }
         : { measure: 'What it measures', calculation: 'Calculation', unit: 'Unit', aggregate: 'Aggregate interpretation' };
     const aggregate = isUk
-        ? 'Для України та областей абсолютне значення є середнім на одне активне місце розташування закладу освіти.'
-        : 'For Ukraine and oblasts, the absolute value is an average per active school location.';
+        ? 'Для України та областей абсолютне значення є середнім на одне активне місце розташування закладу освіти з порівнюваним охопленням джерелом тривог.'
+        : 'For Ukraine and oblasts, the absolute value is an average per active school location with comparable alarm-source coverage.';
     return isUk ? [
         {
             title: 'Що вимірює цей дашборд',
@@ -115,6 +115,7 @@ function methodologyBlocks() {
             title: 'Як розраховано значення для територій',
             paragraphs: [
                 'Для зважування активним місцем розташування закладу освіти вважається включений запис закладу у вибраному освітньому зрізі, який має валідний зв’язок із громадою та принаймні одного учня. Кожен включений заклад має однакову вагу; кількість учнів як вага не використовується.',
+                'Кількість закладів і учнів описує всю включену освітню мережу. Агреговані показники тривог використовують як аналітичний знаменник лише активні місця розташування закладів освіти з порівнюваним охопленням джерелом тривог.',
             ],
             subsections: [
                 { title: 'Громада', paragraphs: ['Значення розраховано для громади в цілому; це не середнє значення на один заклад.'] },
@@ -122,7 +123,7 @@ function methodologyBlocks() {
                     title: 'Область та Україна',
                     bullets: [
                         'Громади зважуються за кількістю активних закладів освіти.',
-                        'Час, кількість днів і кількість епізодів є середніми на одне активне місце розташування закладу освіти.',
+                        'Час, кількість днів і кількість епізодів є середніми на одне активне місце розташування закладу освіти з порівнюваним охопленням джерелом тривог.',
                         'Частки розраховуються зі зважених чисельників і знаменників, а не як середнє значення відсотків.',
                         'Години тривог у громадах не можна просто додати, щоб отримати загальнонаціональне значення.',
                     ],
@@ -227,6 +228,7 @@ function methodologyBlocks() {
             title: 'How territory-level results are calculated',
             paragraphs: [
                 'For weighting, an active school location is an included school record in the selected education snapshot with a valid hromada link and at least one learner. Each included school contributes one unit of weight; learner counts are not used as weights.',
+                'School and learner totals describe the full included education network. Aggregate alarm measures use only active school locations with comparable alarm-source coverage as their analytical denominator.',
             ],
             subsections: [
                 { title: 'Hromada', paragraphs: ['The value is calculated for the hromada as a whole; it is not an average per school.'] },
@@ -234,7 +236,7 @@ function methodologyBlocks() {
                     title: 'Oblast and Ukraine',
                     bullets: [
                         'Hromadas are weighted by their number of active schools.',
-                        'Hours, days and episode counts are averages per active school location.',
+                        'Hours, days and episode counts are averages per active school location with comparable alarm-source coverage.',
                         'Shares are calculated from weighted numerators and denominators; percentages are not averaged.',
                         'Hromada alarm hours cannot simply be summed to produce a national figure.',
                     ],
@@ -294,7 +296,7 @@ function dataBlocks() {
             {
                 title: 'Освітні дані',
                 paragraphs: [
-                    'Кількість закладів і учнів походить із вибраних зрізів даних на рівні закладів освіти. Ці дані використано лише для формування агрегованого освітнього контексту.',
+                    'Кількість закладів і учнів походить із вибраних зрізів даних на рівні закладів освіти та описує всю включену освітню мережу. Агреговані показники тривог використовують лише вагу активних місць розташування закладів освіти з порівнюваним охопленням джерелом тривог.',
                 ],
                 table: { headers: ['Навчальний рік', 'Використаний зріз'], rows: SNAPSHOTS.map(([year, date]) => [year, formatDate(date)]) },
             },
@@ -358,7 +360,7 @@ function dataBlocks() {
         {
             title: 'Education data',
             paragraphs: [
-                'School and learner counts come from selected school-level education snapshots used only to create aggregated education context.',
+                'School and learner counts come from selected school-level education snapshots and describe the full included education network. Aggregate alarm measures use only the weight of active school locations with comparable alarm-source coverage.',
             ],
             table: { headers: ['School year', 'Snapshot used'], rows: SNAPSHOTS.map(([year, date]) => [year, formatDate(date)]) },
         },

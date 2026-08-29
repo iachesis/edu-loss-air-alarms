@@ -69,6 +69,7 @@ class SemanticsMetadataTests(unittest.TestCase):
             self.assertIsNone(row["alarm_seconds"])
             self.assertIsNone(row["alarm_hours"])
             self.assertEqual(row["available_school_seconds"], 0)
+            self.assertEqual(row["comparable_school_count"], 0)
             self.assertIsNone(row["school_time_under_alarm_pct"])
 
         oblast = aggregate_multi_area(monthly, "oblast")
@@ -76,11 +77,14 @@ class SemanticsMetadataTests(unittest.TestCase):
         self.assertEqual(crimea["coverage_status"], "not_covered")
         self.assertIsNone(crimea["alarm_seconds_average_school_location"])
         self.assertEqual(crimea["school_count"], 0)
+        self.assertEqual(crimea["comparable_school_count"], 0)
 
         national = aggregate_multi_area(monthly, "national")[0]
         self.assertEqual(national["coverage_status"], "partial")
         self.assertGreater(national["available_school_seconds_average_school_location"], 0)
         self.assertIsNotNone(national["alarm_seconds_average_school_location"])
+        self.assertEqual(national["school_count"], 2)
+        self.assertEqual(national["comparable_school_count"], 1)
 
         national_year = aggregate_multi_area(yearly, "national")[0]
         self.assertEqual(national_year["coverage_status"], "partial")

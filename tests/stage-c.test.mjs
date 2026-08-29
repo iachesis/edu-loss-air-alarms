@@ -61,7 +61,8 @@ test('comparison uses four primary columns and retains technical CSV fields', ()
     assert.match(columns, /'alarm_hours_average_school_location', 'hours'/);
     assert.match(columns, /'affected_school_days_pct', 'days'/);
     assert.doesNotMatch(columns, /'precision'|'coverage'/);
-    assert.match(main, /comparisonTechnicalDetails\(row\)/);
+    assert.match(main, /comparisonSourceInfoTrigger\(row\)/);
+    assert.doesNotMatch(main, /comparisonTechnicalDetails|comparison-technical|comparison-card-technical/);
     assert.match(logic, /'source_precision', 'coverage'/);
 });
 
@@ -72,6 +73,8 @@ test('affected-days formulas and machine fields remain unchanged', () => {
 });
 
 test('full-extent control converges intercepted keyboard activation on its click path', () => {
+    assert.match(map, /L\.control\(\{ position: 'topright' \}\)/);
+    assert.doesNotMatch(map, /position: 'bottomright'/);
     assert.match(map, /button\.type = 'button'/);
     assert.match(map, /button\.title = label/);
     assert.match(map, /button\.setAttribute\('aria-label', label\)/);

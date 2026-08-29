@@ -1,7 +1,19 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from math import isfinite
 from typing import Any, Iterable
+
+
+COMPARABLE_ANALYTICAL_FIELDS = (
+    "alarm_seconds",
+    "available_school_seconds",
+    "expected_school_seconds",
+    "affected_school_days",
+    "available_school_days",
+    "expected_school_days",
+    "school_time_alarm_episodes",
+)
 
 
 def precision_label(levels: set[str]) -> str:
@@ -14,6 +26,18 @@ def precision_label(levels: set[str]) -> str:
         return "oblast allocation"
     if len(levels) > 1:
         return "mixed"
+    return "not applicable"
+
+
+def aggregate_precision_label(labels: Iterable[str]) -> str:
+    applicable = {label for label in labels if label and label != "not applicable"}
+    if not applicable:
+        return "not applicable"
+    if "mixed" in applicable or len(applicable) > 1:
+        return "mixed"
+    label = next(iter(applicable))
+    if label in {"hromada", "raion allocation", "oblast allocation"}:
+        return label
     return "not applicable"
 
 
@@ -30,6 +54,35 @@ def coverage_status(
     if available_seconds <= 0:
         return "unavailable"
     if abs(available_seconds - expected_seconds) < 0.5:
+        return "complete"
+    return "partial"
+
+
+def _is_finite_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and isfinite(float(value))
+
+
+def _is_comparable_member(row: dict[str, Any]) -> bool:
+    if int(row.get("school_count", 0)) <= 0:
+        return False
+    if row.get("coverage_status") not in {"complete", "partial"}:
+        return False
+    if not all(_is_finite_number(row.get(field)) for field in COMPARABLE_ANALYTICAL_FIELDS):
+        return False
+    return (
+        float(row["available_school_seconds"]) > 0
+        and float(row["expected_school_seconds"]) > 0
+    )
+
+
+def _aggregate_coverage_status(members: list[dict[str, Any]], comparable_school_count: int) -> str:
+    statuses = [str(member.get("coverage_status") or "") for member in members]
+    statuses = [status for status in statuses if status]
+    if statuses and all(status == "not_covered" for status in statuses):
+        return "not_covered"
+    if comparable_school_count <= 0:
+        return "unavailable"
+    if statuses and all(status == "complete" for status in statuses):
         return "complete"
     return "partial"
 
@@ -95,6 +148,13 @@ def _aggregate_hromada(
             target["component_coverage_statuses"],
         )
         unavailable_by_contract = status == "not_covered"
+        school_count = int(edu.get("school_count", 0))
+        comparable_school_count = school_count if (
+            school_count > 0
+            and status in {"complete", "partial"}
+            and available > 0
+            and target["expected_school_seconds"] > 0
+        ) else 0
         result = {
             "area_level": "hromada",
             "oblast_id": meta["oblast_id"],
@@ -114,7 +174,8 @@ def _aggregate_hromada(
             "school_time_alarm_episodes": None if unavailable_by_contract else len(target["episode_ids"]),
             "source_precision_label": precision_label(target["source_levels"]),
             "coverage_status": status,
-            "school_count": int(edu.get("school_count", 0)),
+            "school_count": school_count,
+            "comparable_school_count": comparable_school_count,
             "learners_total": int(edu.get("learners_total", 0)),
             "learners_offline": int(edu.get("learners_offline", 0)),
             "learners_online": int(edu.get("learners_online", 0)),
@@ -139,11 +200,16 @@ def aggregate_multi_area(
 
     out: list[dict[str, Any]] = []
     for (area_id, period_type, period_id), members in groups.items():
-        weighted_members = [m for m in members if int(m.get("school_count", 0)) > 0]
-        total_schools = sum(int(m["school_count"]) for m in weighted_members)
-        if total_schools > 0:
+        school_members = [m for m in members if int(m.get("school_count", 0)) > 0]
+        total_schools = sum(int(m.get("school_count", 0)) for m in members)
+        comparable_members = [member for member in school_members if _is_comparable_member(member)]
+        comparable_schools = sum(int(member["school_count"]) for member in comparable_members)
+        if comparable_schools > 0:
             def weighted(field: str) -> float:
-                return sum(float(m.get(field) or 0) * int(m["school_count"]) for m in weighted_members) / total_schools
+                return sum(
+                    float(member[field]) * int(member["school_count"])
+                    for member in comparable_members
+                ) / comparable_schools
             alarm_seconds = weighted("alarm_seconds")
             available_seconds = weighted("available_school_seconds")
             expected_seconds = weighted("expected_school_seconds")
@@ -152,28 +218,13 @@ def aggregate_multi_area(
             expected_days = weighted("expected_school_days")
             episodes = weighted("school_time_alarm_episodes")
         else:
-            alarm_seconds = available_seconds = expected_seconds = 0.0
-            affected_days = available_days = expected_days = episodes = 0.0
+            alarm_seconds = available_seconds = expected_seconds = None
+            affected_days = available_days = expected_days = episodes = None
 
-        status_members = weighted_members if total_schools > 0 else members
-        status = coverage_status(
-            available_seconds,
-            expected_seconds,
-            [m.get("coverage_status", "") for m in status_members],
+        status = _aggregate_coverage_status(members, comparable_schools)
+        precision = aggregate_precision_label(
+            member.get("source_precision_label", "") for member in members
         )
-        unavailable_by_contract = status == "not_covered"
-
-        levels = {m["source_precision_label"] for m in members if m["source_precision_label"] != "not applicable"}
-        if levels == {"hromada"}:
-            precision = "hromada"
-        elif levels == {"raion allocation"}:
-            precision = "raion allocation"
-        elif levels == {"oblast allocation"}:
-            precision = "oblast allocation"
-        elif len(levels) > 1:
-            precision = "mixed"
-        else:
-            precision = "not applicable"
 
         out.append({
             "area_level": area_level,
@@ -181,24 +232,26 @@ def aggregate_multi_area(
             "school_year": members[0]["school_year"],
             "period_type": period_type,
             "period_id": period_id,
-            "alarm_seconds_average_school_location": None if unavailable_by_contract else alarm_seconds,
-            "alarm_hours_average_school_location": None if unavailable_by_contract else round(alarm_seconds / 3600, 6),
+            "alarm_seconds_average_school_location": alarm_seconds,
+            "alarm_hours_average_school_location": None if alarm_seconds is None else round(alarm_seconds / 3600, 6),
             "available_school_seconds_average_school_location": available_seconds,
             "expected_school_seconds_average_school_location": expected_seconds,
-            "school_time_under_alarm_pct": None if available_seconds <= 0 else alarm_seconds / available_seconds * 100,
-            "affected_school_days_average_school_location": None if unavailable_by_contract else affected_days,
+            "school_time_under_alarm_pct": None if available_seconds is None or available_seconds <= 0 else alarm_seconds / available_seconds * 100,
+            "affected_school_days_average_school_location": affected_days,
             "available_school_days_average_school_location": available_days,
             "expected_school_days_average_school_location": expected_days,
-            "school_time_alarm_episodes_average_school_location": None if unavailable_by_contract else episodes,
+            "school_time_alarm_episodes_average_school_location": episodes,
             "source_precision_label": precision,
             "coverage_status": status,
             "school_count": total_schools,
+            "comparable_school_count": comparable_schools,
             "learners_total": sum(int(m.get("learners_total", 0)) for m in members),
             "learners_offline": sum(int(m.get("learners_offline", 0)) for m in members),
             "learners_online": sum(int(m.get("learners_online", 0)) for m in members),
             "learners_mixed": sum(int(m.get("learners_mixed", 0)) for m in members),
             "education_snapshot_date": members[0].get("education_snapshot_date"),
             "hromada_count": len(members),
-            "weighted_hromada_count": len(weighted_members),
+            "weighted_hromada_count": len(school_members),
+            "comparable_hromada_count": len(comparable_members),
         })
     return sorted(out, key=lambda r: (r["period_id"], r["area_id"]))
