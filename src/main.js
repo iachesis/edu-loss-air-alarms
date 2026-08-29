@@ -51,6 +51,7 @@ async function ensureHromada(oblastId) {
     }
 }
 function parentOblast(id) { return data.lookup.hromadas[id]?.oblast_id ?? (data.lookup.oblasts[id] ? id : undefined); }
+function parentArea(id) { return data.lookup.hromadas[id]?.oblast_id ?? (data.lookup.oblasts[id] ? 'UA' : undefined); }
 function nameOf(id, lang = state.lang) { if (id === 'UA')
     return data.lookup.national.UA[lang]; const x = data.lookup.oblasts[id] ?? data.lookup.hromadas[id]; return x?.[lang] ?? id; }
 function sourcePrecisionText(value) { const keys = { hromada: 'sourcePrecisionHromada', mixed: 'sourcePrecisionMixed', 'not applicable': 'sourcePrecisionNotApplicable', 'oblast allocation': 'sourcePrecisionOblast', 'raion allocation': 'sourcePrecisionRaion' }; return keys[value] ? tr(keys[value]) : tr('unavailable'); }
@@ -184,17 +185,19 @@ function insightPeriodClause() {
         ? `За вибраний період (${start} — ${end})`
         : `Across the selected period (${start}–${end})`;
 }
-function renderHromadaNavigation() {
-    const navigation = $('hromada-navigation');
-    const button = $('back-to-oblast');
-    const hromada = data.lookup.hromadas[state.areaId];
-    if (!hromada) {
-        navigation.hidden = true;
+function renderContextNavigation() {
+    const button = $('back-to-parent');
+    const parentId = parentArea(state.areaId);
+    if (!parentId) {
+        button.hidden = true;
         button.textContent = '';
+        button.removeAttribute('aria-label');
         return;
     }
-    navigation.hidden = false;
-    button.textContent = tr('backToOblast', { oblast: nameOf(hromada.oblast_id) });
+    const label = parentId === 'UA' ? tr('backToUkraine') : tr('backToOblast', { oblast: nameOf(parentId) });
+    button.hidden = false;
+    button.textContent = label;
+    button.setAttribute('aria-label', label.replace(/^←\s*/, ''));
 }
 function renderSummary(row) {
     $('summary-context').textContent = periodHeading();
@@ -433,6 +436,23 @@ function appendDefinition(list, label, shown) {
     item.append(term, valueElement);
     list.append(item);
 }
+function appendCoverageDefinition(list, row) {
+    const item = document.createElement('div');
+    const term = document.createElement('dt');
+    const valueElement = document.createElement('dd');
+    term.textContent = tr('coverage');
+    const shown = statusText(row.coverage_status);
+    if (row.coverage_status === 'complete')
+        valueElement.textContent = shown;
+    else {
+        const status = document.createElement('span');
+        status.className = `tooltip-status tooltip-status-${row.coverage_status.replace('_', '-')}`;
+        status.textContent = shown;
+        valueElement.append(status);
+    }
+    item.append(term, valueElement);
+    list.append(item);
+}
 let activeSourceInfoTrigger = null;
 function sourceInfoTooltip() {
     let tooltip = document.getElementById('source-info-tooltip');
@@ -479,7 +499,7 @@ function showSourceInfoTooltip(trigger, row) {
     const tooltip = sourceInfoTooltip();
     const list = document.createElement('dl');
     appendDefinition(list, tr('precision'), sourcePrecisionText(row.source_precision_label));
-    appendDefinition(list, tr('coverage'), statusText(row.coverage_status));
+    appendCoverageDefinition(list, row);
     tooltip.replaceChildren(list);
     tooltip.hidden = false;
     tooltip.style.visibility = 'hidden';
@@ -541,14 +561,8 @@ window.addEventListener('scroll', repositionActiveSourceInfoTooltip, true);
 function comparisonSourceInfoTrigger(row) {
     const trigger = document.createElement('button');
     trigger.type = 'button';
-    if (row.coverage_status === 'complete') {
-        trigger.className = 'source-info-icon';
-        trigger.textContent = 'i';
-    }
-    else {
-        trigger.className = `status-badge status-${row.coverage_status}`;
-        trigger.textContent = statusText(row.coverage_status);
-    }
+    trigger.className = 'source-info-icon';
+    trigger.textContent = 'i';
     return bindSourceInfoTrigger(trigger, row);
 }
 function renderComparison() {
@@ -727,7 +741,7 @@ function updateControls() {
 async function render() {
     applyStaticTranslations();
     updateControls();
-    renderHromadaNavigation();
+    renderContextNavigation();
     $('fatal-error').hidden = true;
     const oblastId = parentOblast(state.areaId);
     const loaded = oblastId ? await ensureHromada(oblastId) : true;
@@ -802,8 +816,8 @@ function bind() {
             return;
         $('map-action-status').textContent = mapActions.fitSelected() ? tr('mapFitSuccess') : tr('mapFitUnavailable');
     });
-    $('back-to-oblast').addEventListener('click', () => { const oblastId = parentOblast(state.areaId); if (oblastId)
-        selectArea(oblastId); });
+    $('back-to-parent').addEventListener('click', () => { const parentId = parentArea(state.areaId); if (parentId)
+        selectArea(parentId); });
     document.querySelectorAll('.data-details').forEach(details => details.addEventListener('toggle', updateDataDisclosures));
     $('reset-filters').addEventListener('click', () => {
         const lang = state.lang;

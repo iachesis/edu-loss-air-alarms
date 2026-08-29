@@ -365,9 +365,36 @@ summary:focus-visible,
 }
 
 .context-navigation {
-    margin-top: .8rem;
-    padding-top: .7rem;
-    border-top: 1px solid var(--hairline);
+    display: flex;
+    align-items: center;
+    min-height: 2.15rem;
+    margin-top: .45rem;
+}
+
+.context-navigation-button {
+    min-height: 30px;
+    padding: .15rem 0;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    color: var(--secondary);
+    cursor: pointer;
+    font-family: var(--font-interface);
+    font-size: .76rem;
+    font-weight: 650;
+    line-height: 1.25;
+    text-align: left;
+}
+
+.context-navigation-button:hover,
+.context-navigation-button:focus-visible {
+    border-bottom-color: var(--signal);
+    color: var(--signal-dark);
+}
+
+.context-navigation-button:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
 }
 
 .button-primary,
@@ -1075,53 +1102,14 @@ details summary {
 }
 
 .source-info-icon:hover,
-.source-info-icon:focus-visible,
-.source-info-trigger.status-badge:hover,
-.source-info-trigger.status-badge:focus-visible {
+.source-info-icon:focus-visible {
     border-color: var(--signal) !important;
     color: var(--signal-dark);
 }
 
-.source-info-icon:focus-visible,
-.source-info-trigger.status-badge:focus-visible {
+.source-info-icon:focus-visible {
     outline: 3px solid var(--focus);
     outline-offset: 2px;
-}
-
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    min-height: 1.35rem;
-    padding: .08rem .35rem;
-    border: 1px solid var(--hairline-strong);
-    border-radius: 999px;
-    color: var(--secondary);
-    font-family: var(--font-mono);
-    font-size: .58rem;
-    font-style: normal;
-    font-weight: 650;
-    letter-spacing: .02em;
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-.status-not_covered,
-.status-unavailable {
-    border-color: rgba(157, 62, 43, .55);
-    color: var(--signal-dark);
-}
-
-.source-info-trigger.status-badge {
-    min-height: 1.35rem !important;
-    padding: .08rem .35rem !important;
-    border: 1px solid var(--hairline-strong) !important;
-    color: var(--secondary);
-}
-
-.source-info-trigger.status-not_covered,
-.source-info-trigger.status-unavailable {
-    border-color: rgba(157, 62, 43, .55) !important;
-    color: var(--signal-dark);
 }
 
 .source-info-tooltip {
@@ -1157,6 +1145,22 @@ details summary {
     font-size: .76rem;
     font-weight: 650;
     line-height: 1.35;
+}
+
+.tooltip-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.35rem;
+    padding: .08rem .38rem;
+    border: 1px solid rgba(157, 62, 43, .55);
+    border-radius: 999px;
+    background: rgba(173, 79, 56, .08);
+    color: var(--signal-dark);
+    font-family: var(--font-mono);
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    line-height: 1.2;
 }
 
 .selected-measure {
