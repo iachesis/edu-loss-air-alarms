@@ -1,6 +1,6 @@
 # Analytical pipeline maintenance package
 
-This directory is the public-safe maintenance source for the UNICEF Deliverable 2 analytical payloads. It is the executable source used to generate the current release candidate. It preserves the governed analytical model; its maintenance changes are limited to the governed source/provenance controls, controlled missingness semantics, comparable-coverage aggregation, source-reporting propagation, version metadata, and regression evidence.
+This directory is the public-safe maintenance source for the UNICEF Deliverable 2 analytical payloads. It is the executable source used to generate the current public release. It preserves the governed analytical model; its maintenance changes are limited to the governed source/provenance controls, controlled missingness semantics, comparable-coverage aggregation, source-reporting propagation, version metadata, and regression evidence. A future pipeline refresh is integrated as a reviewable candidate and becomes a public release only through a separate explicit promotion decision.
 
 ## Publication boundary
 

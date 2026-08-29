@@ -1,7 +1,7 @@
 {
   "website_release_id": "AAE-WEB-1.1.0",
-  "website_release_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
-  "website_release_date": "2026-08-28",
+  "website_release_status": "FINAL_PUBLIC_RELEASE",
+  "website_release_date": "2026-08-29",
   "analytical_build_id": "AAE-FULL-b8f2d318b6a6266661",
   "analytical_build_status": "PASS_WITH_REVIEW_FLAGS",
   "analytical_source_sha256": "108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445",
@@ -537,20 +537,20 @@
     "payload_validation": "JSON Schema Draft 2020-12 through Python jsonschema 4.26.0",
     "build": "Static HTML, CSS and JavaScript site; no build step, Node.js or npm required"
   },
-  "publication_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
+  "publication_status": "FINAL_PUBLIC_RELEASE",
   "package_version": "1.1.0",
   "node_required": false,
   "runtime_external_network_required": false,
   "delivery": {
     "unicef_deliverable": 2,
-    "product_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
+    "product_status": "FINAL_PUBLIC_RELEASE",
     "analytical_numeric_values_changed_vs_frozen": true,
     "not_covered_semantics_corrected": true,
     "stage_d_material_corrections": [
       "AAE-D-MAT-01",
       "AAE-D-MAT-02"
     ],
-    "independent_post_correction_reaudit_required": true
+    "independent_post_correction_reaudit_required": false
   },
   "release_marker": {
     "visible_element": "#footer-release",

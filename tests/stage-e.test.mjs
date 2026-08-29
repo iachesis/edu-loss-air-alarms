@@ -61,12 +61,12 @@ test('no positive oblast aggregate retains a false not-applicable label', () => 
     assert.deepEqual(falseNotApplicable, []);
 });
 
-test('machine-readable schema and release evidence bind the corrected candidate', () => {
+test('machine-readable schema and historical Stage-E evidence bind the corrected build', () => {
     assert.ok(schema.required.includes('comparable_school_count'));
     assert.equal(schema.properties.comparable_school_count.minimum, 0);
     assert.equal(release.analytical_build_id, 'AAE-FULL-b8f2d318b6a6266661');
     assert.equal(release.analytical_source_sha256, '108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445');
-    assert.equal(release.website_release_status, 'CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE');
+    assert.equal(release.website_release_status, 'FINAL_PUBLIC_RELEASE');
     assert.deepEqual(release.delivery.stage_d_material_corrections, ['AAE-D-MAT-01', 'AAE-D-MAT-02']);
     assert.equal(validation.analytical_differential.status, 'PASS');
     assert.equal(validation.analytical_differential.unexpected_difference_count, 0);

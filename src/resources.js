@@ -3,7 +3,7 @@ export const resources = {
         translation: {
             appTitle: 'Повітряні тривоги та навчальний день в Україні',
             subtitle: 'Оцінка перетину зафіксованих повітряних тривог із розрахунковим навчальним часом у 2022/23–2025/26 навчальних роках.',
-            releaseStatus: 'Кандидат на публічний реліз',
+            releaseStatus: 'Фінальний публічний реліз',
             developedBy: 'Розроблено',
             skipToContent: 'Перейти до основного вмісту',
             language: 'Мова',
@@ -182,7 +182,7 @@ export const resources = {
         translation: {
             appTitle: 'Air Alarms and the School Day in Ukraine',
             subtitle: 'Estimated overlap between recorded air alarms and modelled school hours, 2022/23–2025/26.',
-            releaseStatus: 'Public release candidate',
+            releaseStatus: 'Final public release',
             developedBy: 'Developed by',
             skipToContent: 'Skip to main content',
             language: 'Language',

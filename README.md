@@ -2,6 +2,8 @@
 
 Public analytical dashboard showing estimated overlap between recorded air alarms and modelled school hours in Ukraine, 2022/23–2025/26.
 
+**Live dashboard:** [https://alarms.etheric.dev/](https://alarms.etheric.dev/)
+
 The dashboard supports comparison across Ukraine, oblasts and hromadas. It measures overlap under a common school-time model; it does not observe actual lesson cancellations, attendance, shelter time or learning loss.
 
 ## Modelled school hours
@@ -84,7 +86,7 @@ data/*_monthly.json        Monthly analytical payloads
 data/*_school_year.json    School-year analytical payloads
 pipeline/                  Reproducible analytical pipeline and tests
 pipeline/config/           Versions, source contract and input manifest
-pipeline/evidence/stage-b/ Regression and integration evidence
+pipeline/evidence/         Historical regression, correction and integration evidence
 pipeline/tests/            Synthetic regression tests; no school-level rows
 vendor/                    Vendored browser libraries
 ```
@@ -112,7 +114,7 @@ node --test tests/*.test.mjs
 ## Release information
 
 - Website release ID: `AAE-WEB-1.1.0`
-- Website status: release candidate
+- Website status: final public release
 - Analytical build ID: `AAE-FULL-b8f2d318b6a6266661`
 - Air-alarm source: [Ukrainian Air Raid Sirens Dataset — file used for this release](https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/f3bbc50ab34a8100018f2d95f45c6ba053b0c77a/datasets/official_data_uk.csv)
 - Source coverage: 15 March 2022 through 28 August 2026 UTC

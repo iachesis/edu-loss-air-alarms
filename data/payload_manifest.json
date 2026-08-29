@@ -723,8 +723,8 @@
     },
     {
       "path": "release.json",
-      "size_bytes": 20853,
-      "sha256": "5c9776cc5a455785104cfd26dc7472048a7bd7ba5840680ed9ff894099ec8f00"
+      "size_bytes": 20794,
+      "sha256": "e89c9c3f5bc16b5f6dd2e17ec1dcff84b11592505eb95240ad1f5b47cfd4384d"
     },
     {
       "path": "schemas/payload-row.schema.json",

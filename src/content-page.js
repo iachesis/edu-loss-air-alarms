@@ -280,7 +280,7 @@ function dataBlocks() {
             {
                 title: 'Реліз у цифрах',
                 definitions: [
-                    ['Статус', 'Кандидат на реліз'],
+                    ['Статус', 'Фінальний публічний реліз'],
                     ['Навчальні роки', '2022/23–2025/26'],
                     ['Дані про повітряні тривоги до', coverageEnd],
                 ],
@@ -344,7 +344,7 @@ function dataBlocks() {
         {
             title: 'Release at a glance',
             definitions: [
-                ['Status', 'Release candidate'],
+                ['Status', 'Final public release'],
                 ['School years included', '2022/23–2025/26'],
                 ['Air-alarm data through', coverageEnd],
             ],
