@@ -45,10 +45,7 @@
   </header>
 
   <main id="main-content" class="page-shell">
-    <div id="loading" role="status" data-t="loading"></div>
     <div id="fatal-error" class="fatal-error" role="alert" hidden></div>
-    <div id="parameter-notice" class="notice" hidden></div>
-    <div id="area-load-status" class="notice" role="status" hidden></div>
 
     <div id="dashboard" hidden>
       <section class="instrument-toolbar" aria-labelledby="choose-heading">
@@ -171,10 +168,10 @@
               </div>
             </div>
           </div>
-          <p id="map-error" class="notice" hidden></p>
           <p id="map-action-status" class="map-action-status" role="status" aria-live="polite"></p>
           <div class="map-stage">
-            <div id="map-container" class="map-container" role="region" data-t-aria-label="mapLabel"></div>
+            <div id="map-container" class="map-container" role="region" data-t-aria-label="mapLabel" aria-describedby="map-error"></div>
+            <p id="map-error" class="map-stage-message" role="status" aria-live="polite" aria-atomic="true" hidden></p>
             <div id="map-legend" class="map-legend"></div>
           </div>
           <p class="context-note map-alternative" data-t="mapAlternative"></p>
@@ -201,8 +198,6 @@
           <button type="button" data-temporal="school_years" aria-pressed="false" data-t="schoolYearComparison"></button>
           <button type="button" data-temporal="heatmap" aria-pressed="false" data-t="heatmap"></button>
         </div>
-        <p id="chart-error" class="notice" hidden></p>
-
         <div id="monthly-panel">
           <h3 data-t="monthlyTrend"></h3>
           <div id="monthly-chart" class="chart" role="img" data-t-aria-label="monthlyChartLabel"></div>
@@ -249,7 +244,6 @@
           </label>
           <div class="comparison-statuses">
             <p id="comparison-result-count" class="result-count" aria-live="polite"></p>
-            <p id="csv-status" class="result-count" role="status" aria-live="polite"></p>
           </div>
         </div>
         <div id="comparison-cards" class="comparison-cards"></div>
@@ -350,5 +344,9 @@
       <button class="button-primary" value="close" data-t="close"></button>
     </form>
   </dialog>
+
+  <div id="app-message-region" class="app-message-region" role="status" aria-live="polite" aria-atomic="true">
+    <p id="app-message" class="app-message app-message-info"></p>
+  </div>
 </body>
 </html>

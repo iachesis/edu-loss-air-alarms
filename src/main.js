@@ -7,6 +7,9 @@ const $ = (id) => document.getElementById(id);
 let data, state, searchItems, fuse, mapActions, currentRows = [];
 let sortKey = 'school_time_under_alarm_pct', sortDirection = -1;
 let lastModalityRows = [];
+let activeAppMessageKey = null;
+let appMessageDismissTimer = null;
+let appMessageClearTimer = null;
 const PERIOD_MODE_TRANSLATIONS = {
     school_year: 'wholeSchoolYear',
     month: 'month',
@@ -18,6 +21,33 @@ const TREND_MEASURE_TRANSLATIONS = {
     school_time_under_alarm_pct: 'alarmShare',
     affected_school_days_pct: 'daysShare',
 };
+function dismissAppMessage(key = activeAppMessageKey) {
+    if (!activeAppMessageKey || key !== activeAppMessageKey)
+        return;
+    clearTimeout(appMessageDismissTimer);
+    clearTimeout(appMessageClearTimer);
+    const message = $('app-message');
+    message.classList.remove('is-visible');
+    activeAppMessageKey = null;
+    appMessageClearTimer = setTimeout(() => {
+        if (!message.classList.contains('is-visible'))
+            message.textContent = '';
+    }, 180);
+}
+function showAppMessage(text, { kind = 'info', persistent = false, duration = 4000, key = 'general' } = {}) {
+    clearTimeout(appMessageDismissTimer);
+    clearTimeout(appMessageClearTimer);
+    const region = $('app-message-region');
+    const message = $('app-message');
+    region.setAttribute('role', kind === 'error' ? 'alert' : 'status');
+    region.setAttribute('aria-live', kind === 'error' ? 'assertive' : 'polite');
+    message.className = `app-message app-message-${kind}`;
+    message.textContent = text;
+    activeAppMessageKey = key;
+    message.classList.add('is-visible');
+    if (!persistent)
+        appMessageDismissTimer = setTimeout(() => dismissAppMessage(key), duration);
+}
 function normalize(raw) { if (raw.area_level !== 'hromada')
     return raw; return { area_level: 'hromada', area_id: raw.hromada_id, school_year: raw.school_year, period_type: raw.period_type, period_id: raw.period_id, alarm_seconds_average_school_location: raw.alarm_seconds, alarm_hours_average_school_location: raw.alarm_hours, available_school_seconds_average_school_location: raw.available_school_seconds, expected_school_seconds_average_school_location: raw.expected_school_seconds, school_time_under_alarm_pct: raw.school_time_under_alarm_pct, affected_school_days_average_school_location: raw.affected_school_days, available_school_days_average_school_location: raw.available_school_days, expected_school_days_average_school_location: raw.expected_school_days, school_time_alarm_episodes_average_school_location: raw.school_time_alarm_episodes, source_precision_label: raw.source_precision_label, coverage_status: raw.coverage_status, school_count: raw.school_count, comparable_school_count: raw.comparable_school_count, learners_total: raw.learners_total, learners_offline: raw.learners_offline, learners_online: raw.learners_online, learners_mixed: raw.learners_mixed, education_snapshot_date: raw.education_snapshot_date }; }
 async function json(path) { const r = await fetch(path); if (!r.ok)
@@ -28,22 +58,19 @@ async function ensureHromada(oblastId) {
         return false;
     if (data.hromadaMonthly[oblastId])
         return true;
-    const status = $('area-load-status');
-    status.hidden = false;
-    status.textContent = tr('loadingArea');
+    showAppMessage(tr('loadingArea'), { kind: 'loading', persistent: true, key: 'area-loading' });
     $('dashboard').setAttribute('aria-busy', 'true');
     try {
         const [m, y, g] = await Promise.all([json(`./data/hromada_monthly_${oblastId}.json`), json(`./data/hromada_school_year_${oblastId}.json`), json(`./data/geography/hromadas/${oblastId}.geojson`)]);
         data.hromadaMonthly[oblastId] = m.map(normalize);
         data.hromadaYear[oblastId] = y.map(normalize);
         data.hromadaGeo[oblastId] = g;
-        status.hidden = true;
+        dismissAppMessage('area-loading');
         return true;
     }
     catch (error) {
         console.error(error);
-        status.hidden = false;
-        status.textContent = tr('loadAreaFailed');
+        showAppMessage(tr('loadAreaFailed'), { kind: 'error', duration: 6000, key: 'area-loading' });
         return false;
     }
     finally {
@@ -383,7 +410,7 @@ async function renderTime() {
     $('monthly-panel').hidden = state.temporalView !== 'monthly';
     $('year-panel').hidden = state.temporalView !== 'school_years';
     $('heatmap-panel').hidden = state.temporalView !== 'heatmap';
-    $('chart-error').hidden = true;
+    dismissAppMessage('chart-error');
     renderChartTable($('monthly-data'), monthly, 'period_id');
     renderChartTable($('year-data'), yearly, 'school_year');
     renderChartTable($('heatmap-data'), monthly, 'period_id');
@@ -403,11 +430,10 @@ async function renderTime() {
     }
     catch (error) {
         console.error(error);
-        $('chart-error').hidden = false;
-        $('chart-error').textContent = tr('chartUnavailable');
+        showAppMessage(tr('chartUnavailable'), { kind: 'error', duration: 6000, key: 'chart-error' });
     }
 }
-async function renderMapAndTable() { const scope = mapScopeForArea(state.areaId, data.lookup), oblastId = scope.oblastId, atHromada = scope.level === 'hromada'; $('map-action-status').textContent = ''; $('csv-status').textContent = ''; if (atHromada && !(await ensureHromada(oblastId))) {
+async function renderMapAndTable() { const scope = mapScopeForArea(state.areaId, data.lookup), oblastId = scope.oblastId, atHromada = scope.level === 'hromada'; $('map-action-status').textContent = ''; if (atHromada && !(await ensureHromada(oblastId))) {
     currentRows = [];
     renderComparison();
     mapActions = null;
@@ -728,7 +754,7 @@ function renderInterpretation(row) {
         details.push(tr(coverageKey));
     $('precision-text').textContent = details.join(' ');
 }
-function downloadCsv() { const csv = buildComparisonCsv(currentRows, id => nameOf(id), data.release.analytical_build_id, statusText); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); $('csv-status').textContent = tr('csvPrepared', { count: currentRows.length }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
+function downloadCsv() { const csv = buildComparisonCsv(currentRows, id => nameOf(id), data.release.analytical_build_id, statusText); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); const objectUrl = URL.createObjectURL(blob); a.href = objectUrl; a.download = `aae_${data.release.analytical_build_id}_${state.areaId}_${periodBounds(state).start}_${periodBounds(state).end}.csv`; a.hidden = true; document.body.append(a); a.click(); a.remove(); showAppMessage(tr('csvPrepared', { count: currentRows.length }), { kind: 'success', duration: 3500, key: 'csv-prepared' }); setTimeout(() => URL.revokeObjectURL(objectUrl), 0); }
 function updateControls() {
     populatePeriodControls();
     $('map-measure').value = state.mapMeasure;
@@ -837,6 +863,7 @@ function bind() {
 async function init() { try {
     const requestedLanguage = new URLSearchParams(location.search).get('lang');
     await initI18n(requestedLanguage === 'en' ? 'en' : 'uk');
+    showAppMessage(tr('loading'), { kind: 'loading', persistent: true, key: 'initial-loading' });
     data = await loadData();
     searchItems = createSearchItems(data.lookup).filter(x => x.level !== 'hromada' || data.lookup.prototype_hromada_oblasts.includes(x.oblastId));
     fuse = createGeographyFuse(searchItems);
@@ -847,20 +874,19 @@ async function init() { try {
     if (releaseMarker !== data.release.website_release_id || document.body.dataset.releaseId !== data.release.website_release_id)
         throw new Error(tr('releaseMismatch'));
     bind();
-    $('loading').hidden = true;
     $('dashboard').hidden = false;
     document.documentElement.dataset.releaseId = data.release.website_release_id;
     $('footer-release').textContent = data.release.website_release_id;
     $('footer-build').textContent = ` · ${data.release.analytical_build_id}`;
-    if (parsed.corrected) {
-        $('parameter-notice').hidden = false;
-        $('parameter-notice').textContent = tr('invalidParams');
-    }
     await render();
+    if (parsed.corrected)
+        showAppMessage(tr('invalidParams'), { kind: 'info', duration: 4500, key: 'invalid-parameters' });
+    else
+        dismissAppMessage('initial-loading');
 }
 catch (e) {
     console.error(e);
-    $('loading').hidden = true;
+    dismissAppMessage();
     $('fatal-error').hidden = false;
     $('fatal-error').textContent = `${tr('fatal')} ${tr('fatalHelp')}`;
 } }
