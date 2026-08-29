@@ -79,6 +79,11 @@ function categoryAxis(data) {
     };
 }
 
+export function chartShortMonthLabel(periodId, lang) {
+    const label = monthLabel(periodId, lang, true);
+    return lang === 'en' ? label.slice(0, 3) : label;
+}
+
 function cartesianOptions(measure, measureLabel, lang) {
     return {
         aria: { enabled: true },
@@ -120,7 +125,7 @@ export function monthlyChart(el, rows, measure, measureLabel, lang, onMonth) {
             },
         },
         xAxis: {
-            ...categoryAxis(data.map(row => monthLabel(row.period_id, lang, true))),
+            ...categoryAxis(data.map(row => chartShortMonthLabel(row.period_id, lang))),
             axisLabel: { color: SECONDARY, fontFamily: INTERFACE_FONT, fontSize: 11, rotate: 30 },
         },
         series: [{

@@ -5,9 +5,17 @@ import test from 'node:test';
 
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 const readJson = path => JSON.parse(read(path));
+const index = read('../index.html');
 const main = read('../src/main.js');
 const styles = read('../src/styles.css');
 const map = read('../src/map.js');
+const charts = read('../src/charts.js');
+const resourcesSource = read('../src/resources.js');
+const logicSource = read('../src/logic.js');
+const resources = (await import(`data:text/javascript;base64,${Buffer.from(resourcesSource).toString('base64')}`)).resources;
+const { monthLabel } = await import(`data:text/javascript;base64,${Buffer.from(logicSource).toString('base64')}`);
+const chartLabelHelperSource = charts.match(/export function chartShortMonthLabel\(periodId, lang\) \{[\s\S]*?\n\}/)?.[0] ?? '';
+const chartShortMonthLabel = new Function('monthLabel', `${chartLabelHelperSource.replace('export ', '')}; return chartShortMonthLabel;`)(monthLabel);
 const release = readJson('../data/release.json');
 const manifest = readJson('../data/payload_manifest.json');
 const oblastYears = readJson('../data/oblast_school_year.json');
@@ -19,23 +27,69 @@ test('comparison source details use compact inline triggers without row-expandin
     assert.match(main, /cardTitle\.append\(cardArea, comparisonSourceInfoTrigger\(row\)\)/);
 });
 
-test('complete rows use an info icon while exceptional rows use the badge itself', () => {
+test('every desktop and mobile comparison row uses the same circular info trigger', () => {
     const factory = main.match(/function comparisonSourceInfoTrigger\(row\) \{[\s\S]*?\n\}/)?.[0] ?? '';
-    assert.match(factory, /coverage_status === 'complete'/);
     assert.match(factory, /source-info-icon/);
-    assert.match(factory, /else[\s\S]*?status-badge status-\$\{row\.coverage_status\}/);
+    assert.doesNotMatch(factory, /coverage_status|status-badge|statusText/);
     assert.equal((factory.match(/document\.createElement\('button'\)/g) ?? []).length, 1);
-    assert.match(styles, /\.source-info-trigger\.status-badge\s*\{[\s\S]*?min-height: 1\.35rem !important/);
+    assert.match(main, /areaLine\.append\(comparisonSourceInfoTrigger\(row\)\)/);
+    assert.match(main, /cardTitle\.append\(cardArea, comparisonSourceInfoTrigger\(row\)\)/);
+    assert.doesNotMatch(main, /className = `status-badge|textContent = statusText\(row\.coverage_status\)/);
+    assert.doesNotMatch(styles, /\.source-info-trigger\.status-badge|\.status-badge\s*\{/);
 });
 
-test('one body-level floating tooltip exposes reporting level and coverage', () => {
+test('one body-level floating tooltip exposes reporting level and styled exceptional coverage', () => {
     assert.match(main, /tooltip\.setAttribute\('role', 'tooltip'\)/);
     assert.match(main, /document\.body\.append\(tooltip\)/);
     assert.match(main, /appendDefinition\(list, tr\('precision'\), sourcePrecisionText\(row\.source_precision_label\)\)/);
-    assert.match(main, /appendDefinition\(list, tr\('coverage'\), statusText\(row\.coverage_status\)\)/);
+    assert.match(main, /appendCoverageDefinition\(list, row\)/);
+    const coverage = main.match(/function appendCoverageDefinition\(list, row\) \{[\s\S]*?\n\}/)?.[0] ?? '';
+    assert.match(coverage, /coverage_status === 'complete'[\s\S]*?valueElement\.textContent = shown/);
+    assert.match(coverage, /tooltip-status tooltip-status-\$\{row\.coverage_status\.replace\('_', '-'\)\}/);
+    assert.match(coverage, /status\.textContent = shown/);
+    assert.match(styles, /\.tooltip-status\s*\{[\s\S]*?var\(--signal-dark\)/);
     assert.match(styles, /\.source-info-tooltip\s*\{[\s\S]*?position: fixed;/);
     assert.match(styles, /pointer-events: none;/);
     assert.doesNotMatch(main, /tableRow\.append\([^)]*source-info-tooltip/);
+});
+
+test('context navigation is hierarchical, state-preserving and non-actionable at Ukraine', () => {
+    assert.match(index, /<div id="context-navigation" class="context-navigation">\s*<button id="back-to-parent"[^>]+hidden>/);
+    assert.equal(resources.en.translation.backToUkraine, '← Back to Ukraine');
+    assert.equal(resources.uk.translation.backToUkraine, '← Назад до України');
+    assert.equal(resources.en.translation.backToOblast, '← Back to {{oblast}}');
+    assert.equal(resources.uk.translation.backToOblast, '← Назад до {{oblast}}');
+    const renderer = main.match(/function renderContextNavigation\(\) \{[\s\S]*?\n\}/)?.[0] ?? '';
+    assert.match(renderer, /parentArea\(state\.areaId\)/);
+    assert.match(renderer, /if \(!parentId\)[\s\S]*?button\.hidden = true/);
+    assert.match(renderer, /parentId === 'UA' \? tr\('backToUkraine'\) : tr\('backToOblast'/);
+    assert.match(renderer, /button\.hidden = false/);
+    assert.doesNotMatch(renderer, /navigation\.hidden/);
+    const selection = main.split('\n').find(line => line.startsWith('async function selectArea(id)')) ?? '';
+    assert.match(selection, /^async function selectArea\(id\) \{ state\.areaId = id;/);
+    assert.doesNotMatch(selection, /periodMode|schoolYear|month|rangeStart|rangeEnd|mapMeasure|trendMeasure|temporalView|lang\s*=/);
+    assert.match(main, /'back-to-parent'\)\.addEventListener\('click',[\s\S]*?parentArea\(state\.areaId\)[\s\S]*?selectArea\(parentId\)/);
+});
+
+test('context navigation reserves one compact row without moving the hero', () => {
+    const slot = styles.match(/\.context-navigation\s*\{[\s\S]*?\n\}/)?.[0] ?? '';
+    assert.match(slot, /display: flex/);
+    assert.match(slot, /min-height: 2\.15rem/);
+    assert.match(slot, /margin-top: \.45rem/);
+    assert.doesNotMatch(index, /id="context-navigation"[^>]+hidden/);
+    assert.ok(index.indexOf('id="context-navigation"') < index.indexOf('class="hero-analysis"'));
+    assert.match(styles, /\.context-navigation-button\s*\{[\s\S]*?background: transparent;[\s\S]*?border: 0;/);
+});
+
+test('monthly chart uses three-letter English labels without changing Ukrainian or long labels', () => {
+    const periods = ['2024-09', '2024-10', '2024-11', '2024-12', '2025-01', '2025-02', '2025-03', '2025-04', '2025-05', '2025-06'];
+    assert.deepEqual(periods.map(period => chartShortMonthLabel(period, 'en')), ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']);
+    assert.ok(periods.map(period => chartShortMonthLabel(period, 'en')).every(label => label.length === 3));
+    assert.deepEqual(periods.map(period => chartShortMonthLabel(period, 'uk')), periods.map(period => monthLabel(period, 'uk', true)));
+    assert.match(charts, /categoryAxis\(data\.map\(row => chartShortMonthLabel\(row\.period_id, lang\)\)\)/);
+    assert.match(charts, /<strong>\$\{monthLabel\(row\.period_id, lang\)\}<\/strong>/);
+    assert.match(charts, /const monthsEn = \['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'\]/);
+    assert.match(charts, /const monthsUk = \['Вер', 'Жов', 'Лис', 'Гру', 'Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер'\]/);
 });
 
 test('tooltip interaction supports pointer, keyboard focus, touch fallback and cleanup', () => {

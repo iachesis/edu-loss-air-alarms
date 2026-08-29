@@ -44,11 +44,12 @@ test('hromada reporting level has a real label and source geography replaces geo
     assert.notEqual(resources.uk.translation.precision, 'Географічна точність');
 });
 
-test('complete coverage remains visually quiet while exceptional statuses stay visible', () => {
+test('comparison coverage stays inside the source tooltip while interpretation remains truthful', () => {
     const trigger = main.match(/function comparisonSourceInfoTrigger\(row\) \{[\s\S]*?\n\}/)?.[0] ?? '';
     const interpretation = main.match(/function renderInterpretation\(row\) \{[\s\S]*?\n\}/)?.[0] ?? '';
-    assert.match(trigger, /coverage_status === 'complete'[\s\S]*?source-info-icon/);
-    assert.match(trigger, /else[\s\S]*?status-badge/);
+    assert.match(trigger, /source-info-icon/);
+    assert.doesNotMatch(trigger, /coverage_status|status-badge|statusText/);
+    assert.match(main, /function appendCoverageDefinition\(list, row\)/);
     assert.match(interpretation, /coverageDescriptionKey\(row\)/);
     assert.doesNotMatch(interpretation, /complete:/);
 });
