@@ -2,7 +2,7 @@
   "website_release_id": "AAE-WEB-1.1.0",
   "website_release_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
   "website_release_date": "2026-08-28",
-  "analytical_build_id": "AAE-FULL-88db64d06afa99610f",
+  "analytical_build_id": "AAE-FULL-b8f2d318b6a6266661",
   "analytical_build_status": "PASS_WITH_REVIEW_FLAGS",
   "analytical_source_sha256": "108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445",
   "source_url": "https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/f3bbc50ab34a8100018f2d95f45c6ba053b0c77a/datasets/official_data_uk.csv",
@@ -208,267 +208,267 @@
     {
       "path": "geography_lookup.json",
       "size_bytes": 4116200,
-      "sha256": "f99e8738c35a4a227978a17b3dd981271612c104128c6e3d2afc4475b125fdfe"
+      "sha256": "2a81d4af81e5399b6657fcd64c5daaa6818a3003a56f856c94833a54c0dbb3b1"
     },
     {
       "path": "hromada_monthly_UA01.json",
-      "size_bytes": 7623482,
-      "sha256": "b8ec7ccb1cd2f6568f14f186251145bc1ab414f110a92cc78a18511a3851fe36"
+      "size_bytes": 7962842,
+      "sha256": "5fc380b4b403a1e583c01b15a912d6fa3db022f17cc520cc97e6b9fa53670c32"
     },
     {
       "path": "hromada_monthly_UA05.json",
-      "size_bytes": 1621017,
-      "sha256": "c259f974f3921789ee01a6b0f839887e0a975021b18109d0b707bd62171fa12a"
+      "size_bytes": 1692657,
+      "sha256": "fff846a29eca06b5e1262ba28df26e11cb1e0f527da641a788df1e1ff5553a46"
     },
     {
       "path": "hromada_monthly_UA07.json",
-      "size_bytes": 1387285,
-      "sha256": "eb5869c7e1297fc7081fb8b37575f05d04f9706a647bef4737ffddb2d2c527b5"
+      "size_bytes": 1448835,
+      "sha256": "aabad0de0c2d266854966f999e9127281d371f373202af70b3ce30fd7547815e"
     },
     {
       "path": "hromada_monthly_UA12.json",
-      "size_bytes": 2224180,
-      "sha256": "7e60f7bb542a3fa8bf9fc3f07d10c7f18539a7a048b23cfa5f1207760e7a2f52"
+      "size_bytes": 2321360,
+      "sha256": "163bca62d079f5797a03eaa719bd547de263ddd6196b73fed5aa4e07a56f3c63"
     },
     {
       "path": "hromada_monthly_UA14.json",
-      "size_bytes": 1704148,
-      "sha256": "3eb66c315ac6f86a3efcfec5fb840e79c7e2ecf387e6fbc7383b9b9427ee4569"
+      "size_bytes": 1778328,
+      "sha256": "ecac9ac78940454e952a8223c1a2a7d34c20a184d60c3c7c9b179aa17678f459"
     },
     {
       "path": "hromada_monthly_UA18.json",
-      "size_bytes": 1698283,
-      "sha256": "01ffd2d33672c5b05b7e57fba88321d4f45eb7763248421485bdb41f7d1da91b"
+      "size_bytes": 1773123,
+      "sha256": "d013b68ddab811362835360c0bb50da9392c43a3e9502d2abf0b3bad16491dbf"
     },
     {
       "path": "hromada_monthly_UA21.json",
-      "size_bytes": 1644017,
-      "sha256": "c52b96996dc32ae915629aac88769076f1717d5164515d58c4c857f1bf19b947"
+      "size_bytes": 1716457,
+      "sha256": "1345189b753878ba5dd5e128bedcc0f8d710dd2dab62858a87f33a86922ceaa2"
     },
     {
       "path": "hromada_monthly_UA23.json",
-      "size_bytes": 1731415,
-      "sha256": "2d64d6e3d47df05aaf20e47df148ca8a649ffa8ab16733d2c9bc88a950ba2dc1"
+      "size_bytes": 1806605,
+      "sha256": "ed8e483580af9ff136fa86eaee7cc10ca4e1c591ab58dee76f454c14cd8544f3"
     },
     {
       "path": "hromada_monthly_UA26.json",
-      "size_bytes": 1590469,
-      "sha256": "ad8694df805c566adee3749cd78195464444544c2f1647df1b2133473e44d842"
+      "size_bytes": 1660859,
+      "sha256": "12fb19697cb9c75b8ded44041e1f8bc8ae431239d0778f6fa2ec82172d9eda5a"
     },
     {
       "path": "hromada_monthly_UA32.json",
-      "size_bytes": 1779447,
-      "sha256": "0df9b7fc515e4e164309fda4441d9f592220e3f77101464ddcfc2218c997ccda"
+      "size_bytes": 1857857,
+      "sha256": "fb94e9fb0a204068336baaf36285369eafd6393621ac119ec62a59ee6e2179b9"
     },
     {
       "path": "hromada_monthly_UA35.json",
-      "size_bytes": 1265050,
-      "sha256": "480efe600fae5a1bfd6dbb5b9da7ba776367dc22e5b3088ec2cccd1fa2e4bddf"
+      "size_bytes": 1320520,
+      "sha256": "f0b03a7c02e540dfb47acb086f79034da9cb6c31c458916f58e09e5804dd58a5"
     },
     {
       "path": "hromada_monthly_UA44.json",
-      "size_bytes": 935252,
-      "sha256": "226c308eae5dcef291be0ea723d4cdad9819ab22b6760eb9af85558e534d92af"
+      "size_bytes": 976692,
+      "sha256": "f0a0f589ec7abacf0ce85b5d0eb55d1adc1c3825eff29f91744afa50ec19ddc3"
     },
     {
       "path": "hromada_monthly_UA46.json",
-      "size_bytes": 1878273,
-      "sha256": "c525a819a59c54b62f54f1449d36b15c147487efb2060adb7f9ee65b5723c822"
+      "size_bytes": 1961913,
+      "sha256": "1430c332abaa3860a8c4a7a745565acb1ca36b06e6d93fd1092231a8cd191a82"
     },
     {
       "path": "hromada_monthly_UA48.json",
-      "size_bytes": 1344490,
-      "sha256": "85251ee93eec365cde2d94b76c60da9bf09c1172e33b4f6f92e6a835598d743c"
+      "size_bytes": 1403260,
+      "sha256": "8ee3698f1b8971a60a084c43f5a4dda3839ae73336ad9324a58d9a3836eba06b"
     },
     {
       "path": "hromada_monthly_UA51.json",
-      "size_bytes": 2348462,
-      "sha256": "b8b25addf1965293191b8acb928cbf4923aef269f8d3b18675a41ea3ba6bd6a6"
+      "size_bytes": 2451362,
+      "sha256": "ea52ccf89decdd7aa32efb4e0795155581fc0140bb040b648e60f54108c578d1"
     },
     {
       "path": "hromada_monthly_UA53.json",
-      "size_bytes": 1550888,
-      "sha256": "79eecc6a0e8e9cb184c317bcaf6a35a051c37f1edd30e0db8ebedb030c64b1af"
+      "size_bytes": 1618828,
+      "sha256": "5f056247cf30d872b9070c837776d8fa11c863f0710752ddf5bc8edf41fe7284"
     },
     {
       "path": "hromada_monthly_UA56.json",
-      "size_bytes": 1643772,
-      "sha256": "1361b8463935ab25d346c838d9e3e1c1df09de6cb9b32dfd668d5efc4f884675"
+      "size_bytes": 1716112,
+      "sha256": "160aedec136833cb91b952e89b40308479ab32cfd19e2769e5f767fae29b44ba"
     },
     {
       "path": "hromada_monthly_UA59.json",
-      "size_bytes": 1321191,
-      "sha256": "f985eee27260c5cc512b6a0f5b909b2a5a016bf3d1065fb6bc1fe727837005bd"
+      "size_bytes": 1378761,
+      "sha256": "7e58bea02a0a947a2931b13508ba015e30912ba247de1bce63088e512d0c27c5"
     },
     {
       "path": "hromada_monthly_UA61.json",
-      "size_bytes": 1411082,
-      "sha256": "5a72626e22e6b1ea6dd84dd207c0ac6295d140979af0b03af836c0d9450c8551"
+      "size_bytes": 1473752,
+      "sha256": "8002d46db4e4cf2ccce535af8114af571c28cc03c26a6ade5d16177c22a20f4e"
     },
     {
       "path": "hromada_monthly_UA63.json",
-      "size_bytes": 1451685,
-      "sha256": "b3a62084a2037747f7f078ef4f4d9089b8469fff799e927bffe60a80dc109e93"
+      "size_bytes": 1515085,
+      "sha256": "b603fcfcab5d50aad7bdaeaae6a57a3109cd67a8f1277bdcb7bc435e3c2e4c88"
     },
     {
       "path": "hromada_monthly_UA65.json",
-      "size_bytes": 1262954,
-      "sha256": "6c071e1892606ebbf7ee261d69807bd1c85453782225603e852757e465fb8e57"
+      "size_bytes": 1317954,
+      "sha256": "97cac3a1f2d4659dd0d89f1c96ba7d5a973bec0194c097a32fbbd4284982bb10"
     },
     {
       "path": "hromada_monthly_UA68.json",
-      "size_bytes": 1541407,
-      "sha256": "0e7b14c281c077066b948a6216ef5753ac91478f83e0820eaafcd62d27339fc7"
+      "size_bytes": 1609367,
+      "sha256": "3b4fe0e753a9f8380a5429ea6def62d83ac4b2dbbc3b895fb15ac84b51a1413c"
     },
     {
       "path": "hromada_monthly_UA71.json",
-      "size_bytes": 1696403,
-      "sha256": "d50cff2cb2aad4732b4531af9f48c9ff4646566b258e376eefded15b0b0002f1"
+      "size_bytes": 1770933,
+      "sha256": "f4b3cfbefbf05e26f9fa38a01893d1ca01a1c21423e9b2b10899618f84bf0f24"
     },
     {
       "path": "hromada_monthly_UA73.json",
-      "size_bytes": 1335484,
-      "sha256": "16b2e108feee8b28fc2a9158fd890acd9e157f7555307bc9be44dafef73bc19e"
+      "size_bytes": 1394114,
+      "sha256": "4d31ccd295cfcffe30b1961444541b3db11bb92cfd7c7993e7042d39239b7c2d"
     },
     {
       "path": "hromada_monthly_UA74.json",
-      "size_bytes": 1473491,
-      "sha256": "457be8220f0f7cf8e2248047bc477adc8929c4493bcb18fc3bc01744d0b245d6"
+      "size_bytes": 1537931,
+      "sha256": "ee29299bc99d4abe381b1f0cbaeba04428a66e4c51e822d6088ddda0ab2f4165"
     },
     {
       "path": "hromada_monthly_UA80.json",
-      "size_bytes": 26254,
-      "sha256": "e4e826155a13d99088a03ff3fec67469b7d406d02171e33ca74888494ea7a493"
+      "size_bytes": 27454,
+      "sha256": "b039724b42e1032a8148694044b18dcaaffcb3bec81e8f18b2566064f7e89a81"
     },
     {
       "path": "hromada_school_year_UA01.json",
-      "size_bytes": 774470,
-      "sha256": "e07b61645a957e0bd62434a545a2157dac5ad344a283cd308c95d97d949a2c71"
+      "size_bytes": 808406,
+      "sha256": "260d6221a403985c785981edf2552d49cff4e855d6b0bb460aeb9d2e0df38b97"
     },
     {
       "path": "hromada_school_year_UA05.json",
-      "size_bytes": 165655,
-      "sha256": "c28b45cedf1cbc7d8e9aec71702f97af30660c218055a7e644d22f4d025ee88b"
+      "size_bytes": 172819,
+      "sha256": "d64aa1e0c85e270ae2e85e64a4d8f311431bc2963ebc1cb1f2b379702a549759"
     },
     {
       "path": "hromada_school_year_UA07.json",
-      "size_bytes": 141628,
-      "sha256": "1377dfc0600b87e1f32943fce6d340da6e17514222f8dbcf28b8c62a48fdd850"
+      "size_bytes": 147783,
+      "sha256": "44b3f5434e58d559cf243020c2543610edfb1b888cd33f44176b07401f4953a9"
     },
     {
       "path": "hromada_school_year_UA12.json",
-      "size_bytes": 226636,
-      "sha256": "133a54df0854c1e29ef7105e4685b520f26d785262f8dd04616746100d947ea0"
+      "size_bytes": 236354,
+      "sha256": "086d7605fc452882c5e654960fb788284c4f26f9beb4c93d5ac4e91ee5c1ed35"
     },
     {
       "path": "hromada_school_year_UA14.json",
-      "size_bytes": 173989,
-      "sha256": "22c43298837811323dab2a533356bc6819d18e80e45ffa68ba2074c49d3c3f5e"
+      "size_bytes": 181407,
+      "sha256": "049ff40f8e8432dc93346651f089f6e5cea95d85a53bc7e5883bcc4783a40d67"
     },
     {
       "path": "hromada_school_year_UA18.json",
-      "size_bytes": 173184,
-      "sha256": "15ad1347f4d0342f21ea37c04015c2e719c94c5ccda96dd15ad77dabd877a082"
+      "size_bytes": 180668,
+      "sha256": "62d3f2c57fb163a0242cce7fcf96ad8594aee63957c15b4ce7cc501d5dc7087c"
     },
     {
       "path": "hromada_school_year_UA21.json",
-      "size_bytes": 168080,
-      "sha256": "b9820b744b7ea061fadfa5da8adf2f4d5ad65ab5a704e8f03c4bd72dca1173e2"
+      "size_bytes": 175324,
+      "sha256": "70e2c42acd93cffd7b30bb815f5109d4bc19a082e7295f5d4b90ab1202b05f8a"
     },
     {
       "path": "hromada_school_year_UA23.json",
-      "size_bytes": 176359,
-      "sha256": "23218796098e695e033e1e2e0eb6b98c4bcd005bf944fb00c9930f3e29de398f"
+      "size_bytes": 183878,
+      "sha256": "f0c39a64937ea52b13ceb3e03e103658e3cb6261f3ebed85e532715ccc07e57e"
     },
     {
       "path": "hromada_school_year_UA26.json",
-      "size_bytes": 162513,
-      "sha256": "3b76c906949d656af7a6e9f43a74d0cda23754b3ca65b67fa7dbfe3da6187faf"
+      "size_bytes": 169552,
+      "sha256": "963c51fdf4675beb43034566c026a51efc99ecf2d1b94823571df9611ac4d2c9"
     },
     {
       "path": "hromada_school_year_UA32.json",
-      "size_bytes": 181886,
-      "sha256": "7c28a8f24e7c507f69c30694984c20ce85bb42f569b8fd41822299691f8796f1"
+      "size_bytes": 189727,
+      "sha256": "f2ebb735648d97c9dd5fb59caad711c48070035c0cf187f41b407c8302b29e3a"
     },
     {
       "path": "hromada_school_year_UA35.json",
-      "size_bytes": 129341,
-      "sha256": "9badb920a912181436413efaf1ced458235d25e0f581c7e399c681543c27696e"
+      "size_bytes": 134888,
+      "sha256": "92876483a067362873cb30f1f99585aea8d9438b72901c52504641d2d09a4256"
     },
     {
       "path": "hromada_school_year_UA44.json",
-      "size_bytes": 95007,
-      "sha256": "b15bccf3d01903a4b8271af6cbf949d4100c19b8023e250fdc7969c2619d1f73"
+      "size_bytes": 99151,
+      "sha256": "08d791a04df2a034bcc4d87656b73c9151fca6ac62521b720288082a3dbd619a"
     },
     {
       "path": "hromada_school_year_UA46.json",
-      "size_bytes": 191898,
-      "sha256": "55cd221ddb38d0e2418c383fd92955310a7e80083c2e33b07ba189f39d3bf13c"
+      "size_bytes": 200262,
+      "sha256": "00401fe318ac8710fba456fb5f74fe2a97166dae331201c672aa81a25311a961"
     },
     {
       "path": "hromada_school_year_UA48.json",
-      "size_bytes": 137309,
-      "sha256": "8207a4f98fe9fd53fd809e96d8299fe78fb5ec8e04dc9b0c76d6067bdfe1222e"
+      "size_bytes": 143186,
+      "sha256": "1759332a711d337948853e7a9ca700d42679441e5ee0473a4766e18ede1af2da"
     },
     {
       "path": "hromada_school_year_UA51.json",
-      "size_bytes": 239802,
-      "sha256": "a9c93a4419b410541c273a58efe110253b358faa8e7bd9e0c7a9e330337a7dd2"
+      "size_bytes": 250092,
+      "sha256": "894787adbb19da7a7453361caee489b82e2faf24adabe71275213e27f831eced"
     },
     {
       "path": "hromada_school_year_UA53.json",
-      "size_bytes": 158477,
-      "sha256": "4e274538be23aefd9fe9b17d52f3a2d2ea8d41cb4aa285f5f95e40b7e9656c55"
+      "size_bytes": 165271,
+      "sha256": "2b93a185f4f52bef4a289a9caf1abce6e825fd4e73e7196160a9b62ef45a31fc"
     },
     {
       "path": "hromada_school_year_UA56.json",
-      "size_bytes": 167854,
-      "sha256": "d3b7ab9216df43561ad02cd5a2d5d19157b5860bfb7ffe5e30532ad6323b4952"
+      "size_bytes": 175088,
+      "sha256": "5caf31634903754091bed4a7b4e8e0daa760953c425fa83461f80b27414bd2a1"
     },
     {
       "path": "hromada_school_year_UA59.json",
-      "size_bytes": 134873,
-      "sha256": "41c97776fb47ca2dcfda8f4cd80b7ff81a88b021139db8a87f77be0ba6abe978"
+      "size_bytes": 140630,
+      "sha256": "684d35f60a7619b16f844afb46da742b23e1f9ef59ff23dd236515416397621c"
     },
     {
       "path": "hromada_school_year_UA61.json",
-      "size_bytes": 144245,
-      "sha256": "c05008a6164e240c5076b1021665c497aeed56b3cd67517d8d72ec3d259f3958"
+      "size_bytes": 150512,
+      "sha256": "bd268b9079cef9389a7332a5a04a35920f8b2ac86cecf308156707de0508cb89"
     },
     {
       "path": "hromada_school_year_UA63.json",
-      "size_bytes": 147821,
-      "sha256": "a041886cf4ebcc7afee813eeb192b7a6c35761ac536abc6c1e0af4548c79f37a"
+      "size_bytes": 154161,
+      "sha256": "8ca23432c14701c7bf781847f0f6dbd3ca16b192de8a35298829b5c3e25de0da"
     },
     {
       "path": "hromada_school_year_UA65.json",
-      "size_bytes": 129167,
-      "sha256": "9d8277f6cadf26cb11ccf1f6e17958cf0cba9acfce63c7e22500729aadea9615"
+      "size_bytes": 134667,
+      "sha256": "7fc3035a6c3f12929fc9f75a54d8fdb3b726602c60bd7057a86d96569d138e10"
     },
     {
       "path": "hromada_school_year_UA68.json",
-      "size_bytes": 158107,
-      "sha256": "cb225960f54ed2af39e950690a0d2829bd49ed466f1efc71a9c9e4e24bdee075"
+      "size_bytes": 164903,
+      "sha256": "7d735b211f846f23802392801ba4f2bd1d6fd5de32d0d35f678253be9142ef5f"
     },
     {
       "path": "hromada_school_year_UA71.json",
-      "size_bytes": 173079,
-      "sha256": "9383af042b551d47df86c2d099fc3e2ac6dae7a1609fec16947ff94777e66676"
+      "size_bytes": 180532,
+      "sha256": "3624522fbfe6282385413388adba7b8055acae0a17969364815e01cfdfd66096"
     },
     {
       "path": "hromada_school_year_UA73.json",
-      "size_bytes": 136102,
-      "sha256": "e3cc533f510ffaa0198c5a11ce0ed95bca2042f91efbdf0b3fd92638ef67d613"
+      "size_bytes": 141965,
+      "sha256": "0fbe46f6cf4f655240b5b755113a60a82d6cfe48dbc94375259e8069c3a0fac0"
     },
     {
       "path": "hromada_school_year_UA74.json",
-      "size_bytes": 150037,
-      "sha256": "e4e130bf3f6d2ca6a5145089f8e56f7a2481ef46aa3e11dc437331e38d6c59c2"
+      "size_bytes": 156481,
+      "sha256": "4ef4957bfc21189b1ecf3e07ceb978d9ae2ed3c65f9b2c9502b0cc9797de58c4"
     },
     {
       "path": "hromada_school_year_UA80.json",
-      "size_bytes": 2691,
-      "sha256": "2f4030a6bc3b1bc09843f9d54cd61ac6279458195c0f1d3a7c9e8fb1ad3eaf7c"
+      "size_bytes": 2811,
+      "sha256": "cd233e0452d5ead5f6191c719de0d00496024d146d663b41d0fa03e13e6724a4"
     },
     {
       "path": "i18n/en.json",
@@ -483,42 +483,47 @@
     {
       "path": "modality_rules.json",
       "size_bytes": 2448,
-      "sha256": "53534046615b86aa2df876d41688de35153811b18ae21cbccf04dcd2c5c59463"
+      "sha256": "9ae9f3befddc5bdfd92b8fbadba33313be417d6d78b2cd8dc1086038257bfa0a"
     },
     {
       "path": "national_monthly.json",
-      "size_bytes": 35006,
-      "sha256": "77e2aad90a6995b4412448794863c12de6100ae08f9335f2a90bd8e5d6257db5"
+      "size_bytes": 37190,
+      "sha256": "6644d81e770536387e7bd8642dd2d5d5259b239e0ec6181de8676b433ed8a8e0"
     },
     {
       "path": "national_school_year.json",
-      "size_bytes": 3565,
-      "sha256": "5b22f6e09cc9a8e532362a8b0560b6bd3cf80e5f651fa877a5601e946645a846"
+      "size_bytes": 3783,
+      "sha256": "81dc7a80cad13e2bf3f4d4e7132638d2bc03a7294af9c1b3c0e7204c13f04046"
     },
     {
       "path": "oblast_monthly.json",
-      "size_bytes": 883814,
-      "sha256": "70fe6098c947cb78b8e8de15fbc0eeab9b40f85cc98fdb576e51e5acad5265e8"
+      "size_bytes": 945802,
+      "sha256": "2056e6ed9b49ad4e705abda09ef6974afc1fc0b6b5d615ae253f7d25ffdc60d9"
     },
     {
       "path": "oblast_school_year.json",
-      "size_bytes": 90139,
-      "sha256": "a7e4fb0603d7014b317379c57b10862df95f7295805ca9fce4c06d98174f5d26"
+      "size_bytes": 96139,
+      "sha256": "fee367620e57f468258af9140716d72f63f83c622aa69f3a01390023be320f42"
     },
     {
       "path": "schemas/payload-row.schema.json",
-      "size_bytes": 1280,
-      "sha256": "45e7d5a6475d2777047b1e72fb00d835e6a1ab844656b1c2fcb0aacce35e856e"
+      "size_bytes": 1394,
+      "sha256": "5d04b15d13798b73d62dcdb3130f0d29ec5632f88fced90cd4a7aff632ee2c39"
     },
     {
       "path": "schemas/release.schema.json",
       "size_bytes": 2664,
-      "sha256": "295835942bc0e72b175448cd80f388bbd8fe487ed7b5b0c6bdfdcdf751c959bf"
+      "sha256": "6a059b8072c1e574a59e382d5503e28d1739d584f4824c80f377cfbd630e9467"
     },
     {
       "path": "stage_b_validation.json",
       "size_bytes": 3902,
       "sha256": "59be198651270cffc102e86766e947d683478ef0a796713d88600d6387b7b49b"
+    },
+    {
+      "path": "stage_e_validation.json",
+      "size_bytes": 2457,
+      "sha256": "ce4d81689779f88ff473bcf9149d2e4de9cda9eecacac93625ae24404169a2a8"
     }
   ],
   "source_retrieval_timestamp_status": "RECORDED_AND_VERIFIED",
@@ -539,8 +544,13 @@
   "delivery": {
     "unicef_deliverable": 2,
     "product_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
-    "analytical_numeric_values_changed_vs_frozen": false,
-    "not_covered_semantics_corrected": true
+    "analytical_numeric_values_changed_vs_frozen": true,
+    "not_covered_semantics_corrected": true,
+    "stage_d_material_corrections": [
+      "AAE-D-MAT-01",
+      "AAE-D-MAT-02"
+    ],
+    "independent_post_correction_reaudit_required": true
   },
   "release_marker": {
     "visible_element": "#footer-release",
@@ -595,5 +605,8 @@
   },
   "processing_package_version": "0.1",
   "local_execution_package_version": "0.1",
-  "analytical_project_fingerprint": "54d0ce63afe1c2c3cb718ebd17bc594e"
+  "analytical_project_fingerprint": "c4eec820871b41085a4e9343103605a2",
+  "correction_build_source_mode": "explicit_pinned_local_source",
+  "correction_build_source_verification_started_at_utc": "2026-08-29T06:15:29+00:00",
+  "correction_build_source_verification_completed_at_utc": "2026-08-29T06:15:29+00:00"
 }

@@ -10,6 +10,7 @@
     "school_time_under_alarm_pct",
     "coverage_status",
     "school_count",
+    "comparable_school_count",
     "learners_total",
     "education_snapshot_date"
   ],
@@ -51,6 +52,10 @@
       ]
     },
     "school_count": {
+      "type": "number",
+      "minimum": 0
+    },
+    "comparable_school_count": {
       "type": "number",
       "minimum": 0
     },

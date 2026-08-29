@@ -41,6 +41,7 @@ LOG = logging.getLogger("aae.local")
 NUMERIC_INT_FIELDS = {
     "alarm_seconds", "available_school_seconds", "expected_school_seconds", "affected_school_days",
     "available_school_days", "expected_school_days", "school_time_alarm_episodes", "school_count",
+    "comparable_school_count",
     "learners_total", "learners_offline", "learners_online", "learners_mixed",
 }
 NUMERIC_FLOAT_FIELDS = {"alarm_hours", "school_time_under_alarm_pct"}

@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "governing_issue": "https://github.com/iachesis/edu-loss-air-alarms/issues/4",
+  "website_release_id": "AAE-WEB-1.1.0",
+  "analytical_build_id": "AAE-FULL-b8f2d318b6a6266661",
+  "project_fingerprint": "c4eec820871b41085a4e9343103605a2",
+  "starting_analytical_build_id": "AAE-FULL-88db64d06afa99610f",
+  "findings_corrected": [
+    "AAE-D-MAT-01",
+    "AAE-D-MAT-02"
+  ],
+  "source_identity": {
+    "sha256": "108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445",
+    "upstream_commit": "f3bbc50ab34a8100018f2d95f45c6ba053b0c77a",
+    "git_blob_sha1": "c7b84747df0c434cf33d9e8d241c7554ca894168"
+  },
+  "same_source_sha256": true,
+  "analytical_differential": {
+    "status": "PASS",
+    "unexpected_difference_count": 0,
+    "canonical_summary": {
+      "changed_row_count": 79200,
+      "changed_field_count": 81071,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "category_counts": {
+        "EXPECTED_MISSINGNESS_WEIGHTING_CORRECTION": 616,
+        "EXPECTED_SOURCE_PRECISION_CORRECTION": 52,
+        "EXPECTED_DERIVED_METADATA_CHANGE": 80403,
+        "UNEXPECTED": 0
+      }
+    },
+    "payload_summary": {
+      "changed_row_count": 79200,
+      "changed_field_count": 81056,
+      "missing_key_count": 0,
+      "added_key_count": 0,
+      "category_counts": {
+        "EXPECTED_MISSINGNESS_WEIGHTING_CORRECTION": 616,
+        "EXPECTED_SOURCE_PRECISION_CORRECTION": 52,
+        "EXPECTED_DERIVED_METADATA_CHANGE": 80388,
+        "UNEXPECTED": 0
+      }
+    }
+  },
+  "fresh_build_qa": {
+    "build_id": "AAE-FULL-b8f2d318b6a6266661",
+    "status": "PASS_WITH_REVIEW_FLAGS",
+    "review_status": "READY_FOR_INDEPENDENT_REVIEW",
+    "hard_failure_count": 0,
+    "review_flag_count": 850,
+    "checks_passed": 26,
+    "checks_total": 26,
+    "row_counts": {
+      "hromada_monthly": 70920,
+      "hromada_school_year": 7092,
+      "oblast_monthly": 1040,
+      "oblast_school_year": 104,
+      "national_monthly": 40,
+      "national_school_year": 4
+    },
+    "source_counts": {
+      "input_rows": 296882,
+      "duplicate_rows": 113845,
+      "invalid_rows": 2,
+      "unmapped_oblast_rows": 0,
+      "unmapped_raion_rows": 0,
+      "unmapped_hromada_rows": 0,
+      "unsupported_level_rows": 0,
+      "ambiguous_mapping_rows": 0,
+      "long_interval_rows": 848
+    }
+  },
+  "release_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
+  "independent_post_correction_reaudit_required": true
+}

@@ -72,13 +72,19 @@ export function aggregateRange(rows, start, end) {
     if (!chosen.length)
         return null;
     const first = chosen[0];
-    const n = (k) => chosen.reduce((a, r) => a + (typeof r[k] === 'number' ? r[k] : 0), 0);
+    const analytical = chosen.filter(row => !isAnalyticallyUnavailable(row));
+    const n = (k) => analytical.reduce((a, r) => a + (typeof r[k] === 'number' ? r[k] : 0), 0);
     const alarm = n('alarm_seconds_average_school_location'), available = n('available_school_seconds_average_school_location'), affected = n('affected_school_days_average_school_location'), days = n('available_school_days_average_school_location');
     const years = [...new Set(monthsInRange(start, end).map(schoolYearForMonth))];
     const allNotCovered = chosen.every(r => r.coverage_status === 'not_covered');
     const hasAnalyticalFailure = chosen.some(r => r.coverage_status === 'unavailable');
     const coverage = allNotCovered ? 'not_covered' : hasAnalyticalFailure || available <= 0 ? 'unavailable' : chosen.every(r => r.coverage_status === 'complete') ? 'complete' : 'partial';
-    return { ...first, period_type: 'derived_range', period_id: `${start}..${end}`, school_year: years.length === 1 ? years[0] : 'MULTI_YEAR', alarm_seconds_average_school_location: allNotCovered ? null : alarm, alarm_hours_average_school_location: allNotCovered ? null : alarm / 3600, available_school_seconds_average_school_location: available, expected_school_seconds_average_school_location: n('expected_school_seconds_average_school_location'), school_time_under_alarm_pct: available > 0 ? alarm / available * 100 : null, affected_school_days_average_school_location: allNotCovered ? null : affected, available_school_days_average_school_location: allNotCovered ? 0 : days, expected_school_days_average_school_location: n('expected_school_days_average_school_location'), school_time_alarm_episodes_average_school_location: allNotCovered ? null : chosen.length === 1 ? chosen[0].school_time_alarm_episodes_average_school_location : null, coverage_status: coverage, source_precision_label: allNotCovered ? 'not applicable' : aggregateSourcePrecision(chosen), ...rangeEducationContext(chosen, years) };
+    const comparableCounts = new Set(chosen.map(row => row.comparable_school_count));
+    const comparableSchoolCount = years.length === 1 && comparableCounts.size === 1
+        && [...comparableCounts].every(value => Number.isFinite(value) && value >= 0)
+        ? [...comparableCounts][0]
+        : null;
+    return { ...first, period_type: 'derived_range', period_id: `${start}..${end}`, school_year: years.length === 1 ? years[0] : 'MULTI_YEAR', alarm_seconds_average_school_location: allNotCovered ? null : alarm, alarm_hours_average_school_location: allNotCovered ? null : alarm / 3600, available_school_seconds_average_school_location: available > 0 ? available : null, expected_school_seconds_average_school_location: analytical.length ? n('expected_school_seconds_average_school_location') : null, school_time_under_alarm_pct: available > 0 ? alarm / available * 100 : null, affected_school_days_average_school_location: allNotCovered ? null : affected, available_school_days_average_school_location: analytical.length ? days : null, expected_school_days_average_school_location: analytical.length ? n('expected_school_days_average_school_location') : null, school_time_alarm_episodes_average_school_location: allNotCovered ? null : chosen.length === 1 ? chosen[0].school_time_alarm_episodes_average_school_location : null, coverage_status: coverage, source_precision_label: allNotCovered ? 'not applicable' : aggregateSourcePrecision(chosen), comparable_school_count: comparableSchoolCount, ...rangeEducationContext(chosen, years) };
 }
 export const COMPARISON_CSV_COLUMNS = ['area_id', 'area_name', 'area_level', 'period_id', 'alarm_hours', 'school_time_under_alarm_pct', 'affected_school_days', 'available_school_days', 'affected_school_days_pct', 'episodes', 'schools', 'learners', 'source_precision', 'coverage', 'analytical_build_id'];
 function csvEscape(value) { const text = String(value ?? ''); return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text; }

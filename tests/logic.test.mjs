@@ -173,6 +173,19 @@ test('range coverage distinguishes complete, mixed partial and analytical failur
     assert.equal(aggregateRange([complete, component('2024-10', 'unavailable')], '2024-09', '2024-10').coverage_status, 'unavailable');
 });
 
+test('derived ranges carry a stable comparable-school denominator without changing education context', () => {
+    const rows = nationalRows
+        .filter(row => row.school_year === '2025_2026' && ['2025-09', '2025-10'].includes(row.period_id))
+        .map(row => ({ ...row, comparable_school_count: 12723 }));
+    const derived = aggregateRange(rows, '2025-09', '2025-10');
+    assert.equal(derived.school_count, 12800);
+    assert.equal(derived.comparable_school_count, 12723);
+    assert.equal(
+        derived.alarm_seconds_average_school_location,
+        rows.reduce((sum, row) => sum + row.alarm_seconds_average_school_location, 0),
+    );
+});
+
 test('geography catalogue is bound to the candidate build and preserves not-covered identity', () => {
     assert.equal(geography.analytical_build_id, release.analytical_build_id);
     for (const oblastId of ['UA01', 'UA44']) {

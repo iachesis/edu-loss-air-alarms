@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "starting_main_sha": "f5929b18f8b4136d07cca0fe753e7abcfeffbd50",
+  "starting_main_tree": "5dba0944ac4c93155ce7a48140d9eb2e6e9ac8c2",
+  "branch": "stage-d-material-corrections",
+  "analytical_build_id": "AAE-FULL-b8f2d318b6a6266661",
+  "project_fingerprint": "c4eec820871b41085a4e9343103605a2",
+  "source_identity": {
+    "upstream_repository": "Vadimkin/ukrainian-air-raid-sirens-dataset",
+    "upstream_path": "datasets/official_data_uk.csv",
+    "upstream_commit": "f3bbc50ab34a8100018f2d95f45c6ba053b0c77a",
+    "git_blob_sha1": "c7b84747df0c434cf33d9e8d241c7554ca894168",
+    "sha256": "108954bb2bb28db064069de724fbd67a74bd2a581460bb98e59421e887780445",
+    "size_bytes": 40954353,
+    "row_count": 296882
+  },
+  "fresh_build": {
+    "batch_count": 104,
+    "completed_batch_count": 104,
+    "qa_checks_passed": 26,
+    "qa_checks_total": 26,
+    "hard_failure_count": 0,
+    "status": "PASS_WITH_REVIEW_FLAGS",
+    "review_status": "READY_FOR_INDEPENDENT_REVIEW"
+  },
+  "automated_tests": {
+    "pipeline": {
+      "passed": 52,
+      "total": 52
+    },
+    "frontend": {
+      "passed": 55,
+      "total": 55
+    }
+  },
+  "browser_review": {
+    "languages": [
+      "en",
+      "uk"
+    ],
+    "dashboard_states": [
+      "Ukraine 2025/26",
+      "Ukraine 2024/25",
+      "Kyiv Oblast 2025/26",
+      "Sumy Oblast 2025/26",
+      "UA44 not covered",
+      "Bucha hromada"
+    ],
+    "supporting_states": [
+      "Methodology aggregation explanation",
+      "indicator dialogs",
+      "Data and release"
+    ],
+    "responsive_states": [
+      "Ukraine 2025/26 at 1280x720",
+      "Ukraine 2025/26 at 390x844"
+    ],
+    "document_horizontal_overflow": false,
+    "text_collision_observed": false,
+    "console_warning_or_error_count": 0,
+    "failed_first_party_request_count": 0
+  },
+  "analytical_differential_status": "PASS",
+  "unexpected_difference_count": 0,
+  "release_status": "CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE",
+  "independent_post_correction_reaudit_required": true
+}

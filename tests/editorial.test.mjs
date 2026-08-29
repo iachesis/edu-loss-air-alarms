@@ -99,6 +99,15 @@ test('methodology defines active school location and rejects learner-count weigh
     assert.match(content, /Each included school contributes one unit of weight; learner counts are not used as weights\./);
     assert.match(content, /Для зважування активним місцем розташування закладу освіти вважається включений запис закладу у вибраному освітньому зрізі, який має валідний зв’язок із громадою та принаймні одного учня\./);
     assert.match(content, /Кожен включений заклад має однакову вагу; кількість учнів як вага не використовується\./);
+    assert.match(content, /School and learner totals describe the full included education network\. Aggregate alarm measures use only active school locations with comparable alarm-source coverage as their analytical denominator\./);
+    assert.match(content, /Кількість закладів і учнів описує всю включену освітню мережу\. Агреговані показники тривог використовують як аналітичний знаменник лише активні місця розташування закладів освіти з порівнюваним охопленням джерелом тривог\./);
+});
+
+test('aggregate public copy names the comparable alarm-source denominator in both languages', () => {
+    assert.match(resources.en.translation.averageLocation, /average per active school location with comparable alarm-source coverage/i);
+    assert.match(resources.uk.translation.averageLocation, /середньому на одне активне місце розташування закладу освіти з порівнюваним охопленням джерелом тривог/i);
+    assert.match(main, /average per active school location with comparable alarm-source coverage/);
+    assert.match(main, /на одне активне місце розташування закладу освіти з порівнюваним охопленням джерелом тривог/);
 });
 
 test('Ukraine partial coverage copy names Crimea and Luhansk while generic partial copy remains available', () => {
@@ -193,7 +202,7 @@ test('map tooltip always includes the selected measure label and a value or reas
     assert.match(main, /state\.mapMeasure, tr\(TREND_MEASURE_TRANSLATIONS\[state\.mapMeasure\]\), state\.lang/);
 });
 
-test('all 56 analytical payloads match the unchanged manifest identities', () => {
+test('all 56 analytical payloads match the candidate manifest identities', () => {
     assert.equal(manifest.analytical_payload_count, 56);
     assert.equal(manifest.analytical_payloads.length, 56);
     for (const entry of manifest.analytical_payloads) {
@@ -203,9 +212,9 @@ test('all 56 analytical payloads match the unchanged manifest identities', () =>
     }
 });
 
-test('release and analytical build identities remain unchanged', () => {
+test('website release remains stable while the corrected analytical build is bound', () => {
     assert.equal(release.website_release_id, 'AAE-WEB-1.1.0');
-    assert.equal(release.analytical_build_id, 'AAE-FULL-88db64d06afa99610f');
+    assert.equal(release.analytical_build_id, 'AAE-FULL-b8f2d318b6a6266661');
     assert.equal(release.website_release_status, 'CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE');
     assert.equal(manifest.release_id, release.website_release_id);
     assert.equal(manifest.analytical_build_id, release.analytical_build_id);

@@ -17,7 +17,7 @@ Recorded alarm intervals are converted to `Europe/Kyiv`. Exact duplicates are re
 3. **Modelled school days with an air alarm** — a day is counted only when at least one recorded air alarm has positive overlap with modelled school hours on that day. The displayed percentage is the **share of modelled school days with an air alarm**.
 4. **Air-alarm episodes during modelled school hours** — distinct processed air-alarm episodes with at least one positive overlap during the selected period.
 
-For Ukraine and oblasts, hours, days and episode counts are averages per active school location. Hromadas are weighted by their number of active schools. Percentages are calculated from the corresponding weighted totals rather than by averaging percentages.
+For Ukraine and oblasts, hours, days and episode counts are averages per active school location with comparable alarm-source coverage. School and learner totals describe the full included education network; `comparable_school_count` records the active-school weight used for aggregate analytical absolute values. Percentages are calculated from the corresponding weighted totals rather than by averaging percentages.
 
 For a hromada, the value is calculated for the hromada as a whole; it is not an average per school.
 
@@ -113,7 +113,7 @@ node --test tests/*.test.mjs
 
 - Website release ID: `AAE-WEB-1.1.0`
 - Website status: release candidate
-- Analytical build ID: `AAE-FULL-88db64d06afa99610f`
+- Analytical build ID: `AAE-FULL-b8f2d318b6a6266661`
 - Air-alarm source: [Ukrainian Air Raid Sirens Dataset — file used for this release](https://raw.githubusercontent.com/Vadimkin/ukrainian-air-raid-sirens-dataset/f3bbc50ab34a8100018f2d95f45c6ba053b0c77a/datasets/official_data_uk.csv)
 - Source coverage: 15 March 2022 through 28 August 2026 UTC
 - Machine-readable release metadata: [`data/release.json`](data/release.json)
