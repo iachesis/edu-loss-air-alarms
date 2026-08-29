@@ -213,6 +213,7 @@ function renderSummary(row) {
         return;
     }
     const aggregate = row.area_level !== 'hromada';
+    const multiYearDerived = row.period_type === 'derived_range' && row.school_year === 'MULTI_YEAR';
     const digits = aggregate ? 1 : 0;
     const pct = formatNumber(row.school_time_under_alarm_pct, state.lang, 1);
     const hours = formatDuration(row.alarm_hours_average_school_location, state.lang);
@@ -220,12 +221,16 @@ function renderSummary(row) {
     const denominator = formatNumber(row.available_school_days_average_school_location, state.lang, digits);
     if (state.lang === 'uk') {
         $('summary-text').textContent = aggregate
-            ? `${periodClause} зафіксовані повітряні тривоги перетиналися з розрахунковим навчальним часом у середньому протягом ${hours} на одне активне місце розташування закладу освіти з порівнюваним охопленням джерелом тривог на території «${area}». Це становить ${pct}% розрахункового навчального часу, охопленого джерелом. У середньому в ${days} із ${denominator} розрахункових навчальних днів був принаймні один перетин із тривогою.`
+            ? multiYearDerived
+                ? `${periodClause} сума середніх місячних значень часу перетину повітряних тривог із розрахунковим навчальним часом становить ${hours} для активних місць розташування закладів освіти з порівнюваним охопленням джерелом тривог на території «${area}». Відповідна зважена частка розрахункового навчального часу становить ${pct}%. Сума середніх місячних значень навчальних днів із принаймні одним перетином становить ${days} із ${denominator} доступних розрахункових навчальних днів.`
+                : `${periodClause} зафіксовані повітряні тривоги перетиналися з розрахунковим навчальним часом у середньому протягом ${hours} на одне активне місце розташування закладу освіти з порівнюваним охопленням джерелом тривог на території «${area}». Це становить ${pct}% розрахункового навчального часу, охопленого джерелом. У середньому в ${days} із ${denominator} розрахункових навчальних днів був принаймні один перетин із тривогою.`
             : `${periodClause} на території «${area}» зафіксовані повітряні тривоги перетиналися з розрахунковим навчальним часом протягом ${hours}. Це становить ${pct}% розрахункового навчального часу, охопленого джерелом. У ${days} із ${denominator} розрахункових навчальних днів був принаймні один перетин із тривогою.`;
     }
     else {
         $('summary-text').textContent = aggregate
-            ? `${periodClause}, recorded air alarms overlapped with ${hours} of modelled school time on average per active school location with comparable alarm-source coverage in ${area}, equal to ${pct}% of modelled school time with source coverage. An average of ${days} of ${denominator} modelled school days had at least one alarm overlap.`
+            ? multiYearDerived
+                ? `${periodClause}, the monthly average alarm-overlap values sum to ${hours} for active school locations with comparable alarm-source coverage in ${area}. The corresponding weighted share of comparable modelled school time is ${pct}%. The monthly average affected-school-day values sum to ${days} out of ${denominator} available modelled school days.`
+                : `${periodClause}, recorded air alarms overlapped with ${hours} of modelled school time on average per active school location with comparable alarm-source coverage in ${area}, equal to ${pct}% of modelled school time with source coverage. An average of ${days} of ${denominator} modelled school days had at least one alarm overlap.`
             : `${periodClause}, recorded air alarms in ${area} overlapped with ${hours} of modelled school time, equal to ${pct}% of modelled school time with source coverage. ${days} of ${denominator} modelled school days had at least one alarm overlap.`;
     }
     $('aggregation-note').textContent = aggregate ? tr('aggregateMetricContext') : tr('hromadaMetricContext');
