@@ -113,7 +113,7 @@ export function renderLeafletMap(el, legend, geo, rows, measure, measureLabel, l
 
     if (fullExtentControl)
         fullExtentControl.remove();
-    fullExtentControl = L.control({ position: 'bottomright' });
+    fullExtentControl = L.control({ position: 'topright' });
     fullExtentControl.onAdd = () => {
         const container = L.DomUtil.create('div', 'leaflet-bar aae-full-extent-control');
         const button = L.DomUtil.create('button', 'aae-full-extent-button', container);

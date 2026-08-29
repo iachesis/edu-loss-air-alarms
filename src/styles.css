@@ -697,6 +697,8 @@ summary:focus-visible,
 
 .map-stage {
     position: relative;
+    isolation: isolate;
+    z-index: 0;
 }
 
 .map-container {
@@ -1049,6 +1051,43 @@ details summary {
     flex-wrap: wrap;
 }
 
+.source-info-trigger {
+    flex: 0 0 auto;
+    cursor: help;
+}
+
+.source-info-icon {
+    display: inline-grid;
+    width: 21px;
+    height: 21px;
+    min-height: 21px !important;
+    padding: 0 !important;
+    place-items: center;
+    border: 1px solid var(--hairline-strong) !important;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--secondary);
+    font-family: var(--font-editorial);
+    font-size: .75rem;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.source-info-icon:hover,
+.source-info-icon:focus-visible,
+.source-info-trigger.status-badge:hover,
+.source-info-trigger.status-badge:focus-visible {
+    border-color: var(--signal) !important;
+    color: var(--signal-dark);
+}
+
+.source-info-icon:focus-visible,
+.source-info-trigger.status-badge:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+}
+
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -1072,54 +1111,52 @@ details summary {
     color: var(--signal-dark);
 }
 
-.comparison-technical {
-    margin-top: .15rem;
+.source-info-trigger.status-badge {
+    min-height: 1.35rem !important;
+    padding: .08rem .35rem !important;
+    border: 1px solid var(--hairline-strong) !important;
     color: var(--secondary);
 }
 
-.comparison-technical > summary {
-    display: inline-flex;
-    min-height: 28px;
-    align-items: center;
-    border-bottom: 1px dotted var(--hairline-strong);
-    color: var(--secondary);
-    font-family: var(--font-mono);
-    font-size: .61rem;
-    font-weight: 650;
-    letter-spacing: .035em;
+.source-info-trigger.status-not_covered,
+.source-info-trigger.status-unavailable {
+    border-color: rgba(157, 62, 43, .55) !important;
+    color: var(--signal-dark);
 }
 
-.comparison-technical > summary:hover {
-    border-bottom-color: var(--signal);
+.source-info-tooltip {
+    position: fixed;
+    z-index: 100;
+    width: min(260px, calc(100vw - 16px));
+    padding: .65rem .7rem;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 2px;
+    background: rgba(252, 252, 250, .98);
+    box-shadow: 0 8px 20px rgba(21, 23, 25, .14);
     color: var(--ink);
+    pointer-events: none;
 }
 
-.comparison-technical dl {
+.source-info-tooltip dl {
     display: grid;
-    gap: .25rem;
-    margin: .25rem 0 0;
-    padding: .45rem .55rem;
-    border-left: 2px solid var(--hairline);
+    gap: .55rem;
+    margin: 0;
 }
 
-.comparison-technical dl div {
-    display: grid;
-    grid-template-columns: minmax(115px, auto) 1fr;
-    gap: .4rem;
-}
-
-.comparison-technical dt {
+.source-info-tooltip dt {
     color: var(--secondary);
     font-family: var(--font-mono);
     font-size: .58rem;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: .035em;
     text-transform: uppercase;
 }
 
-.comparison-technical dd {
-    margin: 0;
-    font-size: .68rem;
-    font-weight: 600;
+.source-info-tooltip dd {
+    margin: .1rem 0 0;
+    font-size: .76rem;
+    font-weight: 650;
+    line-height: 1.35;
 }
 
 .selected-measure {
@@ -1898,6 +1935,14 @@ dialog code {
         gap: .2rem .75rem;
     }
 
+    .comparison-card-title {
+        display: flex;
+        min-width: 0;
+        gap: .35rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
     .comparison-card summary > .comparison-card-share {
         font-family: var(--font-editorial);
         font-size: 1.25rem;
@@ -1911,13 +1956,7 @@ dialog code {
         font-size: .65rem;
     }
 
-    .comparison-card summary > .status-badge {
-        grid-column: 1 / -1;
-        justify-self: start;
-    }
-
-    .comparison-card-metrics,
-    .comparison-card-technical dl {
+    .comparison-card-metrics {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0;
@@ -1925,8 +1964,7 @@ dialog code {
         border-left: 1px solid var(--hairline);
     }
 
-    .comparison-card-metrics div,
-    .comparison-card-technical dl div {
+    .comparison-card-metrics div {
         min-width: 0;
         padding: .55rem;
         border-right: 1px solid var(--hairline);
@@ -1944,19 +1982,6 @@ dialog code {
         margin: .15rem 0 0;
         font-size: .78rem;
         font-weight: 680;
-    }
-
-    .comparison-card-technical {
-        margin-top: .65rem;
-    }
-
-    .comparison-card-technical h4 {
-        margin: 0 0 .35rem;
-        color: var(--secondary);
-        font-family: var(--font-mono);
-        font-size: .64rem;
-        letter-spacing: .04em;
-        text-transform: uppercase;
     }
 
     .comparison-select {

@@ -419,14 +419,6 @@ catch (e) {
     $('map-error').hidden = false;
     $('map-error').textContent = tr('mapUnavailable');
 } }
-function comparisonStatusBadge(status) {
-    if (status === 'complete')
-        return null;
-    const badge = document.createElement('span');
-    badge.className = `status-badge status-${status}`;
-    badge.textContent = statusText(status);
-    return badge;
-}
 function appendDefinition(list, label, shown) {
     const item = document.createElement('div');
     const term = document.createElement('dt');
@@ -436,18 +428,126 @@ function appendDefinition(list, label, shown) {
     item.append(term, valueElement);
     list.append(item);
 }
-function comparisonTechnicalDetails(row) {
-    const details = document.createElement('details');
-    details.className = 'comparison-technical';
-    const summary = document.createElement('summary');
-    summary.textContent = tr('sourceDetails');
+let activeSourceInfoTrigger = null;
+function sourceInfoTooltip() {
+    let tooltip = document.getElementById('source-info-tooltip');
+    if (tooltip)
+        return tooltip;
+    tooltip = document.createElement('div');
+    tooltip.id = 'source-info-tooltip';
+    tooltip.className = 'source-info-tooltip';
+    tooltip.setAttribute('role', 'tooltip');
+    tooltip.hidden = true;
+    document.body.append(tooltip);
+    return tooltip;
+}
+function positionSourceInfoTooltip(trigger, tooltip) {
+    const margin = 8;
+    const gap = 8;
+    const triggerRect = trigger.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const left = Math.min(
+        window.innerWidth - tooltipRect.width - margin,
+        Math.max(margin, triggerRect.left + triggerRect.width / 2 - tooltipRect.width / 2),
+    );
+    const preferredTop = triggerRect.top - tooltipRect.height - gap;
+    const desiredTop = preferredTop >= margin ? preferredTop : triggerRect.bottom + gap;
+    const top = Math.min(
+        Math.max(margin, window.innerHeight - tooltipRect.height - margin),
+        Math.max(margin, desiredTop),
+    );
+    tooltip.style.left = `${Math.max(margin, left)}px`;
+    tooltip.style.top = `${Math.max(margin, top)}px`;
+}
+function hideSourceInfoTooltip(trigger = activeSourceInfoTrigger) {
+    if (!activeSourceInfoTrigger || trigger !== activeSourceInfoTrigger)
+        return;
+    const tooltip = sourceInfoTooltip();
+    tooltip.hidden = true;
+    tooltip.replaceChildren();
+    activeSourceInfoTrigger.removeAttribute('aria-describedby');
+    activeSourceInfoTrigger = null;
+}
+function showSourceInfoTooltip(trigger, row) {
+    if (activeSourceInfoTrigger && activeSourceInfoTrigger !== trigger)
+        hideSourceInfoTooltip(activeSourceInfoTrigger);
+    const tooltip = sourceInfoTooltip();
     const list = document.createElement('dl');
     appendDefinition(list, tr('precision'), sourcePrecisionText(row.source_precision_label));
     appendDefinition(list, tr('coverage'), statusText(row.coverage_status));
-    details.append(summary, list);
-    return details;
+    tooltip.replaceChildren(list);
+    tooltip.hidden = false;
+    tooltip.style.visibility = 'hidden';
+    activeSourceInfoTrigger = trigger;
+    trigger.setAttribute('aria-describedby', tooltip.id);
+    positionSourceInfoTooltip(trigger, tooltip);
+    tooltip.style.visibility = '';
+}
+function bindSourceInfoTrigger(trigger, row) {
+    let hovered = false;
+    let focused = false;
+    trigger.classList.add('source-info-trigger');
+    trigger.setAttribute('aria-label', `${tr('sourceDetails')}: ${nameOf(row.area_id)}`);
+    trigger.addEventListener('pointerenter', () => {
+        hovered = true;
+        showSourceInfoTooltip(trigger, row);
+    });
+    trigger.addEventListener('pointerleave', () => {
+        hovered = false;
+        if (!focused)
+            hideSourceInfoTooltip(trigger);
+    });
+    trigger.addEventListener('focus', () => {
+        focused = true;
+        showSourceInfoTooltip(trigger, row);
+    });
+    trigger.addEventListener('blur', () => {
+        focused = false;
+        if (!hovered)
+            hideSourceInfoTooltip(trigger);
+    });
+    trigger.addEventListener('pointerdown', event => event.stopPropagation());
+    trigger.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        trigger.focus({ preventScroll: true });
+    });
+    trigger.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+            hideSourceInfoTooltip(trigger);
+            trigger.blur();
+        }
+    });
+    return trigger;
+}
+function repositionActiveSourceInfoTooltip() {
+    if (!activeSourceInfoTrigger)
+        return;
+    if (!activeSourceInfoTrigger.isConnected) {
+        hideSourceInfoTooltip(activeSourceInfoTrigger);
+        return;
+    }
+    const tooltip = sourceInfoTooltip();
+    if (!tooltip.hidden)
+        positionSourceInfoTooltip(activeSourceInfoTrigger, tooltip);
+}
+window.addEventListener('resize', repositionActiveSourceInfoTooltip);
+window.addEventListener('scroll', repositionActiveSourceInfoTooltip, true);
+function comparisonSourceInfoTrigger(row) {
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    if (row.coverage_status === 'complete') {
+        trigger.className = 'source-info-icon';
+        trigger.textContent = 'i';
+    }
+    else {
+        trigger.className = `status-badge status-${row.coverage_status}`;
+        trigger.textContent = statusText(row.coverage_status);
+    }
+    return bindSourceInfoTrigger(trigger, row);
 }
 function renderComparison() {
+    hideSourceInfoTooltip();
     const query = $('comparison-search').value.trim();
     let rows = currentRows;
     if (query) {
@@ -520,8 +620,6 @@ function renderComparison() {
             share: unavailable ? '—' : `${formatNumber(row.school_time_under_alarm_pct, state.lang, 1)}%`,
             hours: formatDuration(unavailable ? null : row.alarm_hours_average_school_location, state.lang),
             days: unavailable ? '—' : `${formatNumber(affectedDaysPct(row), state.lang, 1)}%`,
-            precision: sourcePrecisionText(row.source_precision_label),
-            coverage: statusText(row.coverage_status),
         };
         const tableRow = document.createElement('tr');
         if (row.area_id === state.areaId)
@@ -538,10 +636,8 @@ function renderComparison() {
             areaButton.setAttribute('aria-current', 'true');
         areaButton.addEventListener('click', () => { selectArea(row.area_id); });
         areaLine.append(areaButton);
-        const badge = comparisonStatusBadge(row.coverage_status);
-        if (badge)
-            areaLine.append(badge);
-        rowHeading.append(areaLine, comparisonTechnicalDetails(row));
+        areaLine.append(comparisonSourceInfoTrigger(row));
+        rowHeading.append(areaLine);
         tableRow.append(rowHeading);
         for (const shown of [display.share, display.hours, display.days]) {
             const cell = document.createElement('td');
@@ -555,37 +651,29 @@ function renderComparison() {
         if (row.area_id === state.areaId)
             card.classList.add('current-card');
         const cardSummary = document.createElement('summary');
+        const cardTitle = document.createElement('span');
+        cardTitle.className = 'comparison-card-title';
         const cardArea = document.createElement('strong');
         cardArea.textContent = display.area;
+        cardTitle.append(cardArea, comparisonSourceInfoTrigger(row));
         const cardShare = document.createElement('span');
         cardShare.className = 'comparison-card-share';
         cardShare.textContent = display.share;
         const cardSecondary = document.createElement('small');
         cardSecondary.textContent = `${display.hours} · ${display.days}`;
-        cardSummary.append(cardArea, cardShare, cardSecondary);
-        const cardBadge = comparisonStatusBadge(row.coverage_status);
-        if (cardBadge)
-            cardSummary.append(cardBadge);
+        cardSummary.append(cardTitle, cardShare, cardSecondary);
         const metrics = document.createElement('dl');
         metrics.className = 'comparison-card-metrics';
         appendDefinition(metrics, tr('episodes'), unavailable || row.school_time_alarm_episodes_average_school_location === null ? '—' : formatNumber(row.school_time_alarm_episodes_average_school_location, state.lang, row.area_level === 'hromada' ? 0 : 1));
         appendDefinition(metrics, tr('schools'), formatNumber(row.school_count, state.lang));
         appendDefinition(metrics, tr('learners'), formatNumber(row.learners_total, state.lang));
-        const technical = document.createElement('section');
-        technical.className = 'comparison-card-technical';
-        const technicalHeading = document.createElement('h4');
-        technicalHeading.textContent = tr('technicalDetails');
-        const technicalList = document.createElement('dl');
-        appendDefinition(technicalList, tr('precision'), display.precision);
-        appendDefinition(technicalList, tr('coverage'), display.coverage);
-        technical.append(technicalHeading, technicalList);
         const selectButton = document.createElement('button');
         selectButton.type = 'button';
         selectButton.className = 'button-secondary comparison-select';
         selectButton.textContent = row.area_id === state.areaId ? tr('currentArea') : tr('selectArea');
         selectButton.disabled = row.area_id === state.areaId;
         selectButton.addEventListener('click', () => { selectArea(row.area_id); });
-        card.append(cardSummary, metrics, technical, selectButton);
+        card.append(cardSummary, metrics, selectButton);
         mobile.append(card);
     }
 

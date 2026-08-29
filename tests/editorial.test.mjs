@@ -45,9 +45,10 @@ test('hromada reporting level has a real label and source geography replaces geo
 });
 
 test('complete coverage remains visually quiet while exceptional statuses stay visible', () => {
-    const badge = main.match(/function comparisonStatusBadge\(status\) \{[\s\S]*?\n\}/)?.[0] ?? '';
+    const trigger = main.match(/function comparisonSourceInfoTrigger\(row\) \{[\s\S]*?\n\}/)?.[0] ?? '';
     const interpretation = main.match(/function renderInterpretation\(row\) \{[\s\S]*?\n\}/)?.[0] ?? '';
-    assert.match(badge, /status === 'complete'[\s\S]*?return null/);
+    assert.match(trigger, /coverage_status === 'complete'[\s\S]*?source-info-icon/);
+    assert.match(trigger, /else[\s\S]*?status-badge/);
     assert.match(interpretation, /coverageDescriptionKey\(row\)/);
     assert.doesNotMatch(interpretation, /complete:/);
 });
