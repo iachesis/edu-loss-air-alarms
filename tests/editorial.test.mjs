@@ -126,10 +126,10 @@ test('release at a glance contains reader facts while identifiers remain in tech
         assert.doesNotMatch(opening, /release\.website_release_id/);
         assert.doesNotMatch(opening, /release\.analytical_build_id/);
     }
-    assert.match(englishOpening, /\['Status', 'Release candidate'\]/);
+    assert.match(englishOpening, /\['Status', 'Final public release'\]/);
     assert.match(englishOpening, /\['School years included', '2022\/23–2025\/26'\]/);
     assert.match(englishOpening, /\['Air-alarm data through', coverageEnd\]/);
-    assert.match(ukrainianOpening, /\['Статус', 'Кандидат на реліз'\]/);
+    assert.match(ukrainianOpening, /\['Статус', 'Фінальний публічний реліз'\]/);
     assert.match(ukrainianOpening, /\['Навчальні роки', '2022\/23–2025\/26'\]/);
     assert.match(ukrainianOpening, /\['Дані про повітряні тривоги до', coverageEnd\]/);
     const ukrainianTechnical = content.slice(content.indexOf("title: 'Технічна інформація про реліз'"), content.indexOf("title: 'Release at a glance'"));
@@ -214,10 +214,10 @@ test('all 56 analytical payloads match the candidate manifest identities', () =>
     }
 });
 
-test('website release remains stable while the corrected analytical build is bound', () => {
+test('website release identity remains stable in the final public state', () => {
     assert.equal(release.website_release_id, 'AAE-WEB-1.1.0');
     assert.equal(release.analytical_build_id, 'AAE-FULL-b8f2d318b6a6266661');
-    assert.equal(release.website_release_status, 'CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE');
+    assert.equal(release.website_release_status, 'FINAL_PUBLIC_RELEASE');
     assert.equal(manifest.release_id, release.website_release_id);
     assert.equal(manifest.analytical_build_id, release.analytical_build_id);
 });

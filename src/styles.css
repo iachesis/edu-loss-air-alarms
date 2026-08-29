@@ -222,13 +222,6 @@ summary:focus-visible,
     padding: 0 0 7rem;
 }
 
-#loading {
-    padding: 1.5rem 0;
-    color: var(--secondary);
-    font-family: var(--font-mono);
-    font-size: .78rem;
-}
-
 .instrument-toolbar {
     position: relative;
     z-index: 20;
@@ -726,6 +719,25 @@ summary:focus-visible,
     position: relative;
     isolation: isolate;
     z-index: 0;
+}
+
+.map-stage-message {
+    position: absolute;
+    top: .75rem;
+    left: 50%;
+    z-index: 650;
+    width: min(360px, calc(100% - 7.5rem));
+    margin: 0;
+    padding: .55rem .65rem;
+    transform: translateX(-50%);
+    border: 1px solid var(--danger-line);
+    border-radius: 2px;
+    background: rgba(247, 233, 228, .97);
+    box-shadow: 0 6px 16px rgba(21, 23, 25, .12);
+    color: #59251b;
+    font-size: .76rem;
+    line-height: 1.4;
+    pointer-events: none;
 }
 
 .map-container {
@@ -1443,6 +1455,57 @@ dialog code {
     background: var(--danger-bg);
     color: #59251b;
     font-size: .84rem;
+}
+
+.app-message-region {
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    z-index: 4000;
+    width: min(420px, calc(100vw - 24px));
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.app-message {
+    visibility: hidden;
+    margin: 0;
+    padding: .62rem .75rem;
+    transform: translateY(-6px);
+    border: 1px solid var(--hairline-strong);
+    border-left: 3px solid var(--midnight-soft);
+    border-radius: 2px;
+    background: rgba(252, 252, 250, .98);
+    box-shadow: 0 8px 22px rgba(21, 23, 25, .14);
+    color: var(--ink);
+    font-size: .78rem;
+    font-weight: 620;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity 180ms ease, transform 180ms ease, visibility 0s linear 180ms;
+}
+
+.app-message.is-visible {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+.app-message-success {
+    border-left-color: var(--midnight-soft);
+    background: rgba(233, 238, 237, .98);
+}
+
+.app-message-info,
+.app-message-loading {
+    border-left-color: var(--signal);
+}
+
+.app-message-error {
+    border-color: var(--danger-line);
+    background: rgba(247, 233, 228, .98);
+    color: #59251b;
 }
 
 .visually-hidden {
@@ -2190,6 +2253,12 @@ dialog code {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .app-message,
+    .app-message.is-visible {
+        transform: none;
+        transition: none;
+    }
+
     *,
     *::before,
     *::after {

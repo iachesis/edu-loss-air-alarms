@@ -135,7 +135,7 @@ test('Stage-E reporting precision and analytical payload identities remain autho
     }
     assert.equal(release.analytical_build_id, 'AAE-FULL-b8f2d318b6a6266661');
     assert.equal(release.website_release_id, 'AAE-WEB-1.1.0');
-    assert.equal(release.website_release_status, 'CANDIDATE_PENDING_INDEPENDENT_ACCEPTANCE');
+    assert.equal(release.website_release_status, 'FINAL_PUBLIC_RELEASE');
     assert.equal(manifest.analytical_build_id, release.analytical_build_id);
     assert.equal(manifest.analytical_payload_count, 56);
     for (const entry of manifest.analytical_payloads) {
